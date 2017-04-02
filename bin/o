@@ -1,0 +1,4 @@
+#!/bin/sh
+
+#scite="d:/setups/wscite/scite.exe"
+scite "$@" &

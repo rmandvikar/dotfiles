@@ -1,0 +1,296 @@
+# global config
+
+# include alias: this needs to be before [alias]
+[include]
+	path = alias-work.gitconfig
+
+[core]
+	autocrlf = false
+[rerere]
+	enabled = true
+
+[core]
+	editor 			= scite # '/d/setups/wscite/SciTE.exe'
+	preloadindex 	= true
+	fscache 		= true
+	pager 			= less -x4
+[gc]
+	#auto = 256 #default 6700
+
+[help]
+	autocorrect = 23
+
+[diff]
+	tool 			= winmerge
+	mnemonicPrefix 	= true
+[difftool]
+	prompt 	= false
+[difftool "winmerge"]
+	cmd 	= winmerge.sh "$LOCAL" "$REMOTE" # see gist for winmerge.sh
+
+[merge]
+	tool 			= winmerge
+[mergetool]
+	prompt 			= false
+	keepBackup 		= false
+	keepTemporaries = false
+[mergetool "winmerge"]
+	cmd 			= '/d/setups/WinMerge/WinMergeU.exe' -e -u -wl "$MERGED" # "$REMOTE" "$LOCAL"
+	trustExitCode 	= false
+[mergetool "meld"]
+	keepBackup = false
+	trustExitCode = false
+	cmd = '/c/Program Files (x86)/meld/meld.exe' "$BASE" "$LOCAL" "$REMOTE" -o "$MERGED"
+
+[alias]
+	# note: shell commands (with !) will be executed from the top-level directory of a repository,
+	# which may not necessarily be the current directory. so add 'cd ${GIT_PREFIX:-.} &&' before.
+	alias 	= !"f() { git conf alias.$1; }; f"
+	conf 	= 	!"f() { \
+					arg=$1; \
+					if [ $# -eq 2 ]; then \
+						arg+=".$2"; \
+					fi; \
+					git config --get-regex $arg | sed 's/^alias\\.//' | sed -r 's/\t{4}/\\n/g'; \
+				}; f"
+	
+	## readonly ##
+	s 		= status -s
+	sl 		= status
+	b 		= branch
+	bs 		= branch --sort=committerdate
+	co 		= checkout
+	d 		= diff
+	dt 		= difftool
+	mt 		= mergetool
+	dw 		= diff --color-words=.
+	de 		= diff --ignore-space-at-eol
+	ds 		= diff --ignore-all-space
+	sb 		= show-branch
+	wc 		= whatchanged --oneline
+	rp 		= rev-parse
+	rl 		= rev-list
+	lrcount = rev-list --left-right --count
+	lcount 	= rev-list --left-only --count
+	rcount 	= rev-list --right-only --count
+	note 	= !"f() { git rev-parse --short ${1-HEAD}; }; f"
+	lsf 	= ls-files
+	lst 	= ls-tree
+	#note: 'git symbolic-ref --short HEAD' throws when in 'detached HEAD' state
+	b- 		= !"git rev-parse --abbrev-ref HEAD"
+	rb- 	= !"git rev-parse --abbrev-ref HEAD@{u}"
+	
+	## write ##
+	a 		= add
+	del 	= rm
+	ren 	= mv
+	ac 		= !"git add --all && git commit"
+	acm 	= !"git add --all && git commit -m"
+	c 		= commit
+	cm 		= commit -m
+	ca 		= commit --amend
+	can 	= commit --amend --no-edit
+	#note: 'git commit --amend --all -u --no-edit' does not add untracked files
+	caf 	= !"git add --all && git commit --amend --no-edit" # --date=now
+	hide 	= update-index --assume-unchanged
+	unhide 	= update-index --no-assume-unchanged
+	hidden 	= !"git ls-files -v | grep '^h' | cut -c3- | wrap"
+	unstage = reset
+	#usage: git undo -dx
+	undo 	= !"git reset --hard && git clean -f"
+	cp 		= cherry-pick
+	
+	undomerge 	= reset --merge orig_head
+	undorebase 	= !"f() { \
+					git reset --hard orig_head; \
+					: abort only if rebase is in progress; \
+					test -d ".git/rebase-merge" -o -d ".git/rebase-apply" \
+						&& git rebase --abort; \
+				}; f"
+	
+	## advanced ##
+	# force branches to go to its remote branches
+	#usage: git breset master next dev
+	breset 	= 	!"f() { \
+					if [ -z "$1" ]; then \
+						echo "fatal: no branch given"; \
+						return; \
+					fi; \
+					: get current branch; \
+					currBranch=$(git b-); \
+					for ((i=1;i<=$#;i++)); do \
+						branch=${!i}; \
+						remoteBranch=$(git rev-parse --abbrev-ref $branch@{u}); \
+						if [ "$branch" = "$currBranch" ]; then \
+							: if current branch, then reset --hard; \
+							echo "git reset --hard $remoteBranch"; \
+							git reset --hard $remoteBranch; \
+						else \
+							: else force branch; \
+							echo "git b -f $branch $remoteBranch"; \
+							git b -f $branch $remoteBranch; \
+						fi; \
+					done; \
+				}; f"
+	# fuzzy checkout using a partial branch name
+	#usage: git coe branch
+	coe 	= 	!"f() { \
+					: short-circuit to checkout; \
+					if [ $# -gt 1 ] || [ "$1" == "." ] || [ "$1" == "-" ] || [[ "$1" == *":"* ]]; then \
+						git checkout "$@"; \
+						return; \
+					fi; \
+					: grep for local branches except current; \
+					branches=($(git b | grep -v "^\\*" | grep "$1" | cut -c3-)); \
+					: die if no branches matched; \
+					if [ ${#branches[@]} -eq 0 ]; then \
+						echo "fatal: no branch matched"; \
+						return; \
+					fi; \
+					: die if 2+ branches matched; \
+					if [ ${#branches[@]} -ge 2 ]; then \
+						echo "fatal: multiple branches matched"; \
+						for branch in ${branches[@]}; do \
+							echo -e '  '$branch; \
+						done; \
+						return; \
+					fi; \
+					git checkout ${branches[0]}; \
+				}; f"
+	# rough guess of where current branch is branched from
+	#usage: git bfrom branch1 branch2
+	bfrom = 	!"f() { \
+					: head or current branch; \
+					commit="@"; \
+					: some large number; \
+					min="314159265"; \
+					for ((branch=1;branch<=$#;branch++)); do \
+						: pick branch with least right-only count; \
+						count=($(git rev-list --right-only --count $commit...${!branch})); \
+						if [ $count -lt $min ]; then \
+							min=$count; \
+							target="${!branch}"; \
+						fi; \
+					done; \
+					echo "$target"; \
+				}; f"
+
+[pretty]
+	lgoc 	= "format:%C(auto)%h%C(reset)%C(auto)%d%C(reset) %C(#ffff99)%s%C(reset) - %C(#ffb799)%aN%C(reset)"
+	one 	= "format:%C(auto)%h%C(reset) %C(#ffaaff)(%ar)%C(reset) %C(#ffff99)%s%C(reset) - %C(#ffb799)%aN%C(reset)%C(auto)%d%C(reset)"
+	two 	= "format:%C(auto)%h%C(reset) - %C(#ffeeff)%aD%C(reset) %C(#ffaaff)(%ar)%C(reset)%C(auto)%d%C(reset)%n  %C(#ffff99)%s%C(reset) - %C(#ffb799)%aN%C(reset)"
+[alias]
+	#hint: add --all to see whole repo
+	l 		= log --graph --date=relative --decorate --abbrev-commit --pretty=two
+	last 	= log --graph --date=relative --decorate --abbrev-commit --pretty=two -1
+	lo 		= log --oneline --decorate --abbrev-commit
+	lg  	= log --graph --decorate --abbrev-commit
+	lgo 	= log --graph --oneline --decorate --abbrev-commit
+	lgoc 	= log --graph --date=relative --decorate --abbrev-commit --pretty=lgoc
+	lg1 	= log --graph --date=relative --decorate --abbrev-commit --pretty=one
+	lg2 	= log --graph --date=relative --decorate --abbrev-commit --pretty=two
+
+# default options for commands
+[log]
+	decorate 	= short
+	mailmap 	= true
+	follow 		= true
+
+[push]
+	default = current
+
+[format]
+	pretty = fuller
+
+[status]
+	showUntrackedFiles 	= all
+	#branch 			= true
+	#short 				= true
+
+[merge]
+	log 			= true
+	ff 				= false
+	#conflictStyle 	= diff3
+[merge "ours"]
+	driver = ~/git-merge-keep-ours.sh %O %A %B
+[merge "theirs"]
+	driver = ~/git-merge-keep-theirs.sh %O %A %B
+[branch "master"]
+	mergeOptions = --no-ff
+
+[pull]
+	rebase 	= true
+
+# templates
+[init]
+	templateDir = ~/.git-templates
+[core]
+	hooksPath 	= ~/.git-hooks
+
+# url shortcuts
+# git clone github:rmandvikar/csharp-trie
+[url "https://github.com/"]
+	insteadOf = github:
+#[url "git@github.com:"]
+#	insteadOf = github:
+# git clone gitlab:rmandvikar/<project>
+[url "https://gitlab.com/"]
+	insteadOf = gitlab:
+# git clone rm:csharp-trie
+[url "https://github.com/rmandvikar/"]
+	insteadOf = rm:
+#[url "git@github.com:rmandvikar/"]
+#	insteadOf = rm:
+
+# color: normal, black, red, green, yellow, blue, magenta, cyan, white
+# attribute: bold, dim, ul, blink, reverse
+[color]
+	diff 		= true
+	status 		= true
+	branch 		= true
+	interactive = true
+	ui 			= true
+	pager 		= true
+
+# default colors: http://shallowsky.com/blog/programming/gitcolors.html
+[color "diff"]
+	#plain 		= normal
+	#meta 		= normal
+	commit 		= "#7eb6ff" # ~blue
+	whitespace 	= normal red
+	frag		= bold cyan
+	old 		= "#fc9f9f" # ~red
+	new 		= "#c9ffc9" # ~green
+
+[color "status"]
+	#header 	= white
+	added 		= "#c9ffc9" # ~green
+	changed 	= "#fc9f9f" # ~red
+	untracked 	= "#fc9f9f" # ~red
+	branch 		= cyan
+	nobranch 	= bold red
+
+[color "branch"]
+	current 	= cyan
+	#local 		= green
+	remote 		= bold red
+	upstream 	= bold red
+
+[color "decorate"]
+	#branch 		= normal
+	#remoteBranch 	= normal
+	#tag 			= normal
+	#stash			= normal
+	#HEAD 			= bold cyan
+
+[color "interactive"]
+	prompt 	= "#ff88ff"
+	#header = normal
+	#help 	= normal
+	#error 	= normal
+
+[include]
+	# user
+	path = user.gitconfig
+	# overrides: this needs to be the last line
+	path = overrides.gitconfig

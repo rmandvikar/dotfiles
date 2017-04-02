@@ -1,0 +1,10 @@
+#!/bin/sh
+
+# convert / to \
+args=$(echo "$@" | sed 's/\//\\/g')
+# convert /c to c:
+if [[ "$args" = \\* ]]; then
+	args=$(echo "$args" | sed -e 's/../:&/2' | sed -e 's/^\\//')
+fi
+#echo "$args"
+start "$args"

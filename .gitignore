@@ -1,0 +1,36 @@
+# ignore files
+#*
+# ignore dirs
+/*/
+
+bak/
+*.lnk
+*.gist
+*.session
+*.log
+*.bak
+*.ini
+*.txt
+.gitk
+.bash_history
+.lesshst
+.minttyrc
+.viminfo
+NTUSER*
+
+!.gitignore
+!*.gitconfig
+!*.sh
+!*.properties
+!.bash_profile
+!.bashrc
+!*.lua
+!*.properties
+!/bin/
+!/.git-hooks/
+!/.git-templates/
+!winmerge.empty
+!readme.txt
+
+user.gitconfig
+overrides.gitconfig
