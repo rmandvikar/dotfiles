@@ -228,19 +228,21 @@
 	hooksPath 	= ~/.git-hooks
 
 # url shortcuts
-# git clone github:rmandvikar/csharp-trie
+# git clone h:github:rmandvikar/csharp-trie
 [url "https://github.com/"]
-	insteadOf = github:
-#[url "git@github.com:"]
-#	insteadOf = github:
-# git clone gitlab:rmandvikar/<project>
+	insteadOf = h:github:
+# git clone s:github:rmandvikar/csharp-trie
+[url "git@github.com:"]
+	insteadOf = s:github:
+# git clone h:gitlab:rmandvikar/<project>
 [url "https://gitlab.com/"]
-	insteadOf = gitlab:
-# git clone rm:csharp-trie
+	insteadOf = h:gitlab:
+# git clone h:rm:csharp-trie
 [url "https://github.com/rmandvikar/"]
-	insteadOf = rm:
-#[url "git@github.com:rmandvikar/"]
-#	insteadOf = rm:
+	insteadOf = h:rm:
+# git clone s:rm:csharp-trie
+[url "git@github.com:rmandvikar/"]
+	insteadOf = s:rm:
 
 # color: normal, black, red, green, yellow, blue, magenta, cyan, white
 # attribute: bold, dim, ul, blink, reverse
