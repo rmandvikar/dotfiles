@@ -35,7 +35,7 @@
 	keepBackup 		= false
 	keepTemporaries = false
 [mergetool "winmerge"]
-	cmd 			= '/d/setups/WinMerge/WinMergeU.exe' -e -u -wl "$MERGED" # "$REMOTE" "$LOCAL"
+	cmd 			= WinMergeU -e -u -wl "$MERGED" # "$REMOTE" "$LOCAL"
 	trustExitCode 	= false
 [mergetool "meld"]
 	keepBackup = false

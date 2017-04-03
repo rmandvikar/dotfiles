@@ -7,7 +7,7 @@
 # echo "2: $2"
 # echo "3: $3"
 
-difftool="/d/setups/WinMerge/WinMergeU.exe"
+difftool="WinMergeU"
 NULL="/dev/null"
 empty="$HOME/winmerge.empty"
 
