@@ -8,6 +8,9 @@ removeWordsFromMergeCommit() {
 		merge,)
 			echo "  remove \"remote-tracking\" from merge commit subject"
 			sed -i -e '1 s/Merge remote-tracking branch /Merge branch /' "$1"
+			
+			# Explicitly call commit-msg hook for merge commits.
+			~/.git-hooks/commit-msg "$1"
 			;;
 		*) ;;
 	esac
