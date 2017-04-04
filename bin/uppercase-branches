@@ -1,0 +1,56 @@
+#!/bin/sh
+
+allrefs() {
+	git for-each-ref --sort=committerdate \
+		--format='%(refname:short) ##hack## %(authorname) ##hack## %(committername)' refs/remotes/
+}
+allchars() {
+	allrefs \
+		| awk -F '/[^/]*$' '{ print $1" ##hack## "$0 }' \
+		| awk -F ' ##hack## ' '{ if(tolower($1) != $1 || tolower($2) != $2) { print $0 } }'
+}
+basename_chars() {
+	allrefs \
+		| awk -F '/[^/]*$' '{ print $1" ##hack## "$0 }' \
+		| awk -F ' ##hack## ' '{ if(tolower($1) != $1) { print $0 } }'
+}
+allchars_user() {
+	if [[ -z $1 ]]; then \
+		return
+	fi
+	echo "$@"
+	user=$(echo $@)
+	allchars \
+		| awk -F ' ##hack## ' -v id="$user" '{ if($3==id || $4==id) { print $2 } }'
+}
+basename_chars_user() {
+	if [[ -z $1 ]]; then \
+		return
+	fi
+	echo "$@"
+	user=$(echo $@)
+	basename_chars \
+		| awk -F ' ##hack## ' -v id="$user" '{ if($3==id || $4==id) { print $2 } }'
+}
+pprint() {
+	echo ""
+	echo "$1:"
+	echo ""
+}
+
+main() {
+	if [[ -z "$1" ]]; then
+		echo ""
+		pprint "branches with any upper char"
+		allchars
+		pprint "branches with any upper char in dir/basename"
+		basename_chars
+	else
+		pprint "user: branches with any upper char"
+		allchars_user "$1"
+		pprint "user: branches with any upper char in dir/basename"
+		basename_chars_user "$1"
+	fi
+}
+
+main "$1"
