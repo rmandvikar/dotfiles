@@ -77,11 +77,14 @@ fileCompare() {
 	fi
 }
 # compare files as per git significant content
+#   exclude comments
 fileCompareRelaxed() {
 	text1=$(cat "$1")
 	text2=$(cat "$2")
 	text1=$(validText "$text1")
 	text2=$(validText "$text2")
+	#~ echo "text1 $text1"
+	#~ echo "text2 $text2"
 	if [[ "$text1" == "$text2" ]]; then
 		# true
 		return 0
