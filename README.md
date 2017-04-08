@@ -95,6 +95,13 @@ $ git grep "config" | cut -d':' -f1 | wrap | xargs o
 ```
 
 ```bash
+# To open grepped files with custom cut alias, cutg
+$ git grep "config" | cutg | wrap | xargs o
+# To cut status with custom cut alias, cuts
+$ git diff --name-status | cuts | wrap | xargs o
+```
+
+```bash
 # To open a dir in explorer
 $ e bin/
 $ e .git/hooks
