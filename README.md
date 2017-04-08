@@ -56,10 +56,33 @@ $ git last -2
 $ git coe aste
 ```
 
+###### .gitconfig hook files
+
 ```
 # Use user.gitconfig for user name and email
+#  example:
+    [user]
+        name    = <name>
+        email   = <i@email>
+```
+
+```
 # Use overrides.gitconfig for overriding with your own aliases
+#  example:
+    l = log --decorate --abbrev-commit
+```
+
+```
 # Use alias-work.gitconfig for predefined work aliases
+#  example:
+    ci = commit
+    st = status
+```
+
+```
+# Note that aliases in alias-work.gitconfig 
+#   are overridden by .gitconfig
+#   which are overridden by overrides.gitconfig
 ```
 
 ##### winmerge script
