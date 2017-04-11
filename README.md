@@ -182,6 +182,13 @@ hooks/commit-msg
 # add gerrit Change-Id
 ```
 
+###### skip/apply functions of commit-msg hook
+
+```
+# use .git/hooks/skip-cmc file stub to skip commit message convention (cmc)
+# use .git/hooks/changeid file stub to apply gerrit Change-Id
+```
+
 ##### git prompt script
 
 ```

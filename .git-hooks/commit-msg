@@ -351,6 +351,14 @@ applyCommitMessageConvention() {
 }
 
 # rm:
-applyCommitMessageConvention "$1"
+if [ -f .git/hooks/skip-cmc ]; then
+	echo "  SKIPPING applyCommitMessageConvention: .git/hooks/skip-cmc file present"
+else
+	applyCommitMessageConvention "$1"
+fi
 
-add_ChangeId
+if [ -f .git/hooks/changeid ]; then
+	add_ChangeId
+else
+	echo "  SKIPPING add_ChangeId: .git/hooks/changeid file NOT present"
+fi

@@ -1,0 +1,7 @@
+This file is used to skip the 'applyCommitMessageConvention' function in
+the commit-msg hook.
+
+Note: cmc = commit message convention
+
+To skip the function copy this file to .git/hooks/ dir of the repo and
+remove the '.sample' extension. The desired behavior is default.
