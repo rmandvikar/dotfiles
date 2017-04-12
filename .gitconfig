@@ -217,6 +217,8 @@
 	lgoc 	= log --graph --date=relative --decorate --abbrev-commit --pretty=lgoc
 	lg1 	= log --graph --date=relative --decorate --abbrev-commit --pretty=one
 	lg2 	= log --graph --date=relative --decorate --abbrev-commit --pretty=two
+	l1 		= log --date=relative --decorate --abbrev-commit --pretty=one
+	l2 		= log --date=relative --decorate --abbrev-commit --pretty=two
 
 # default options for commands
 [log]
