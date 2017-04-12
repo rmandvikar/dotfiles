@@ -137,8 +137,10 @@ $ git dictators
 
 ##### git hooks
 
+###### commit-msg hook
+
 ```
-# commit-msg hook to help with 50/72 commit convention
+# help with 50/72 commit message convention
 $ git commit
 (user types commit message in editor)
 hooks/commit-msg
@@ -174,6 +176,17 @@ hooks/commit-msg
   now what? (*/u/a/f/o) o
   original message
 (show editor with very 1st message and any changes are used as is)
+```
+
+```
+# add gerrit Change-Id
+```
+
+###### skip/apply functions of commit-msg hook
+
+```
+# use .git/hooks/skip-cmc file stub to skip commit message convention (cmc)
+# use .git/hooks/changeid file stub to apply gerrit Change-Id
 ```
 
 ##### git prompt script
