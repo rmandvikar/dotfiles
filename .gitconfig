@@ -181,29 +181,34 @@
 				}; f"
 	branched-from 	= !"f() { git bfrom "$@"; }; f"
 
-	# create and/or push branch to gerrit
-	#usage: git pushg [<branch>] [<remote>]
+	# create and/or push current branch to gerrit
+	#usage: git pushg [<branchFrom>] [<remote>]
 	pushg 	= 	!"f() { \
+					: default remote to that of master; \
+					remoteDefault=$(git config --get branch.master.remote); \
+					remote="${2-"$remoteDefault"}"; \
 					: current branch name may not match remote branch; \
-					remoteBranch=$(git rev-parse --abbrev-ref @{u} 2>/dev/null); \
-					if [ -z $remoteBranch ]; then \
+					remotePath=$(git rev-parse --abbrev-ref @{u} 2>/dev/null); \
+					if [ -z $remotePath ]; then \
 						: branch from master as default; \
 						branchFrom=${1-master}; \
+						: remote branch name is same as local branch; \
 						branch=$(git rev-parse --abbrev-ref @); \
-						command=$(echo git push "${2-origin}" "$branchFrom":"$branch"); \
+						remoteBranch="$branch"; \
+						command=$(echo git push "$remote" "$branchFrom":"$remoteBranch"); \
 						echo "$command"; \
 						"$command"; \
 						: track remote branch; \
-						command=$(echo git branch -u "${2-origin}"/"$branch"); \
+						command=$(echo git branch -u "$remote"/"$remoteBranch"); \
 						echo "$command"; \
 						"$command"; \
 					else \
-						remote=$(echo "$remoteBranch" | cut -d'/' -f1); \
-						branch=${remoteBranch#"$remote"/}; \
+						branch=$(git rev-parse --abbrev-ref @); \
+						: get remote name for branch; \
+						remote=$(git config --get branch."$branch".remote); \
+						remoteBranch=${remotePath#"$remote"/}; \
 					fi; \
-					: echo $remoteBranch; \
-					: echo $branch; \
-					command=$(echo git push "${2-origin}" HEAD:refs/for/"$branch"); \
+					command=$(echo git push "$remote" HEAD:refs/for/"$remoteBranch"); \
 					echo "$command"; \
 					"$command"; \
 				}; f"
