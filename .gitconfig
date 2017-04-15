@@ -100,6 +100,7 @@
 	undo 	= !"git reset --hard && git clean -f"
 	cp 		= cherry-pick
 	
+	summarize 	= log --pretty=summary --date=short -1
 	undomerge 	= reset --merge orig_head
 	undorebase 	= !"f() { \
 					git reset --hard orig_head; \
@@ -207,6 +208,7 @@
 	lgoc 	= "format:%C(auto)%h%C(reset)%C(auto)%d%C(reset) %C(#ffff99)%s%C(reset) - %C(#ffb799)%aN%C(reset)"
 	one 	= "format:%C(auto)%h%C(reset) %C(#ffaaff)(%ar)%C(reset) %C(#ffff99)%s%C(reset) - %C(#ffb799)%aN%C(reset)%C(auto)%d%C(reset)"
 	two 	= "format:%C(auto)%h%C(reset) - %C(#ffeeff)%aD%C(reset) %C(#ffaaff)(%ar)%C(reset)%C(auto)%d%C(reset)%n  %C(#ffff99)%s%C(reset) - %C(#ffb799)%aN%C(reset)"
+	summary = "format:%h (\"%s\", %ad)"
 [alias]
 	#hint: add --all to see whole repo
 	l 		= log --graph --date=relative --decorate --abbrev-commit --pretty=two
