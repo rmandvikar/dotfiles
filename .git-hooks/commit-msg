@@ -187,6 +187,12 @@ _gen_ChangeId() {
 }
 
 # rm:
+
+# Colors
+Yellow='\033[1;33m'
+Red='\033[0;31m'
+None='\033[0m' 		# No Color
+
 # Internal fn to format messages with 50/72 convention
 applyCommitMessageConventionInternal() {
 	msg="$1"
@@ -212,7 +218,7 @@ applyCommitMessageConventionInternal() {
 		# hack: warn if subject >$subjectLen chars
 		# with exit, user will have to type message again
 		if [ ${#subject} -gt $subjectLen ]; then
-			echo "  WARNING: subject should be upto $subjectLen chars"
+			echo -e "  ${Yellow}WARNING:${None} subject should be upto $subjectLen chars"
 		fi
 		echo "$subject" | fmt -s -w $subjectLen > "$msgconvention"
 	fi
@@ -355,7 +361,7 @@ checkSemver() {
 	echo "  check if semver line is included"
 	msg="$1"
 	if ! egrep -q "#MAJOR|#MINOR|#PATCH" $msg; then
-		echo -e "  WARNING: #MAJOR #MINOR #PATCH line is NOT included"
+		echo -e "  ${Yellow}WARNING:${None} #MAJOR #MINOR #PATCH line is NOT included"
 	fi
 }
 
