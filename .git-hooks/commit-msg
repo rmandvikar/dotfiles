@@ -350,11 +350,24 @@ applyCommitMessageConvention() {
 	done
 }
 
+# Check if semver line is included
+checkSemver() {
+	echo "  check if semver line is included"
+	msg="$1"
+	if ! egrep -q "#MAJOR|#MINOR|#PATCH" $msg; then
+		echo -e "  WARNING: #MAJOR #MINOR #PATCH line is NOT included"
+	fi
+}
+
 # rm:
 if [ -f .git/hooks/skip-cmc ]; then
 	echo "  SKIPPING applyCommitMessageConvention: .git/hooks/skip-cmc file present"
 else
 	applyCommitMessageConvention "$1"
+fi
+
+if [ -f .git/hooks/check-semver ]; then
+	checkSemver "$1"
 fi
 
 if [ -f .git/hooks/changeid ]; then
