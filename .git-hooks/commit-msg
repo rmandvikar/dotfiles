@@ -289,7 +289,7 @@ fileCompareRelaxed() {
 subjectLen=50
 bodyLen=72
 applyCommitMessageConvention() {
-	echo "  apply $subjectLen/$bodyLen commit message convention"
+	echo " -apply $subjectLen/$bodyLen commit message convention"
 	# msg is user edited
 	msg="$1"
 	# msg.original is copy of msg
@@ -307,14 +307,22 @@ applyCommitMessageConvention() {
 	# read user input below
 	exec < /dev/tty
 	while true; do
-		applyCommitMessageConventionInternal "$msg"
-		if fileCompareRelaxed "$msgconvention" "$msgbak"; then
-			# no change after applying convention, return
-			echo "  no change after applying convention"
-			echo "  done"
-			return;
+		# for merge commit, by default, the editor is shown after the
+		# proposed commit message is created and not before as is for
+		# commit. this results in "no change after applying convention"
+		# which is not desired. so skip 1st apply convention call.
+		if [ -z "$2" ]; then
+			applyCommitMessageConventionInternal "$msg"
+			if fileCompareRelaxed "$msgconvention" "$msgbak"; then
+				# no change after applying convention, return
+				echo "  no change after applying convention"
+				echo "  done"
+				return;
+			fi
+			echo "  changing message"
+		else
+			set --
 		fi
-		echo "  changing message"
 		$editor "$msg"
 		if fileCompare "$msg" "$msgconvention"; then
 			echo "  no manual change"
@@ -358,7 +366,7 @@ applyCommitMessageConvention() {
 
 # Check if semver line is included
 checkSemver() {
-	echo "  check if semver line is included"
+	echo " -check if semver line is included"
 	msg="$1"
 	if ! egrep -q "#MAJOR|#MINOR|#PATCH" $msg; then
 		echo -e "  ${Yellow}WARNING:${None} #MAJOR #MINOR #PATCH line is NOT included"
@@ -367,9 +375,9 @@ checkSemver() {
 
 # rm:
 if [ -f .git/hooks/skip-cmc ]; then
-	echo "  SKIPPING applyCommitMessageConvention: .git/hooks/skip-cmc file present"
+	echo " -SKIPPING applyCommitMessageConvention: .git/hooks/skip-cmc file present"
 else
-	applyCommitMessageConvention "$1"
+	applyCommitMessageConvention "$1" "$2"
 fi
 
 if [ -f .git/hooks/check-semver ]; then
@@ -379,5 +387,5 @@ fi
 if [ -f .git/hooks/changeid ]; then
 	add_ChangeId
 else
-	echo "  SKIPPING add_ChangeId: .git/hooks/changeid file NOT present"
+	echo " -SKIPPING add_ChangeId: .git/hooks/changeid file NOT present"
 fi
