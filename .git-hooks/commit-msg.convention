@@ -27,7 +27,8 @@ applyCommitMessageConventionInternal() {
 		if [ ${#subject} -gt $subjectLen ]; then
 			echo -e "  ${Yellow}WARNING:${None} subject should be upto $subjectLen chars"
 		fi
-		echo "$subject" | fmt -s -w $subjectLen > "$msgconvention"
+		# remove trailing period and format
+		echo "$subject" | sed 's/\.$//' | fmt -s -w $subjectLen > "$msgconvention"
 	fi
 	# apply only if body is not empty
 	rest=$(tail -n +2 "$msgbak")
