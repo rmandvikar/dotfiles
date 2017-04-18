@@ -8,7 +8,10 @@ export None='\033[0m' 		# No Color
 if [ -f .git/hooks/skip-cmc ]; then
 	echo " -SKIPPING commit-msg.convention: .git/hooks/skip-cmc file present"
 else
-	~/.git-hooks/commit-msg.convention "$1" "$2"
+	# apply convention when not in rebase
+	if [ ! -d .git/rebase-merge ] && [ ! -d .git/rebase-apply ]; then
+		~/.git-hooks/commit-msg.convention "$1" "$2"
+	fi
 fi
 
 if [ -f .git/hooks/check-semver ]; then
