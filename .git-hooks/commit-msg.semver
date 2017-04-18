@@ -1,0 +1,12 @@
+#!/bin/sh
+
+# Check if semver line is included
+checkSemver() {
+	echo " -check if semver line is included"
+	msg="$1"
+	if ! egrep -q "#MAJOR|#MINOR|#PATCH" $msg; then
+		echo -e "  ${Yellow}WARNING:${None} #MAJOR #MINOR #PATCH line is NOT included"
+	fi
+}
+
+checkSemver "$1"

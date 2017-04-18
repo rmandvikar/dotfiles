@@ -1,0 +1,175 @@
+#!/bin/sh
+
+# Internal fn to format messages with 50/72 convention
+applyCommitMessageConventionInternal() {
+	msg="$1"
+	msgbak="$msg".bak
+	msgconvention="$msg".convention
+	msgText=$(cat "$msg")
+	# if msg is empty (blank lines and comments) then exit
+	if [[ $(validTextCount "$msgText") -eq 0 ]]; then
+		# exit and let git handle abort or continue (--allow-empty-message)
+		exit
+	fi
+	# cp "$msg" "$msgbak"
+	# clean msg to trim lines and remove starting blank lines
+	echo "$msgText" | sed 's/ *$//' | sed '/./,$! d' > "$msgbak"
+	# subject
+	subject=$(head -n 1 "$msgbak")
+	# echo $subject
+	if [[ "$subject" == "Merge branch"* ]] \
+		|| [[ "$subject" == "Merge remote-tracking branch"* ]]; then
+		echo "  keeping merge commit subject as is"
+		echo "$subject" > "$msgconvention"
+	else
+		# hack: warn if subject >$subjectLen chars
+		# with exit, user will have to type message again
+		if [ ${#subject} -gt $subjectLen ]; then
+			echo -e "  ${Yellow}WARNING:${None} subject should be upto $subjectLen chars"
+		fi
+		# remove trailing period and format
+		echo "$subject" | sed 's/\.$//' | fmt -s -w $subjectLen > "$msgconvention"
+	fi
+	# apply only if body is not empty
+	rest=$(tail -n +2 "$msgbak")
+	if [[ $(validTextCount "$rest") -ne 0 ]]; then
+		# 2nd line should be blank
+		bodylineStart=2
+		line2=$(echo "$rest" | head -n 1)
+		if [[ $(validTextCount "$line2") -ne 0 ]]; then
+			echo "  adding a blank line after subject"
+			bodylineStart=1
+		fi
+		echo "" >> "$msgconvention"
+		# body
+		body=$(echo "$rest" | tail -n +"$bodylineStart")
+		# fmt does not handle '#' properly so filter out
+		echo "$body" | sed '/^#/ d' | fmt -s -w $bodyLen >> "$msgconvention"
+	else
+		echo "" >> "$msgconvention"
+	fi
+	# put back '#' lines by appending
+	echo "$rest" | sed -n '/^#/ p' >> "$msgconvention"
+	# copy .convention to msg
+	cp "$msgconvention" "$msg"
+}
+
+# text count after removing comments
+validText() {
+	text="$1"
+	echo "$text" | sed '/^#/ d'
+}
+# text count after removing spaces (even between words), newlines
+validTextCount() {
+	text="$1"
+	echo $(validText "$text") | tr -d " \r\n" | wc -c
+}
+
+# compare files exactly
+fileCompare() {
+	if cmp --silent "$1" "$2"; then
+		# true
+		return 0
+	else
+		# false
+		return 1
+	fi
+}
+# compare files as per git significant content
+#   exclude comments
+fileCompareRelaxed() {
+	text1=$(cat "$1")
+	text2=$(cat "$2")
+	text1=$(validText "$text1")
+	text2=$(validText "$text2")
+	#~ echo "text1 $text1"
+	#~ echo "text2 $text2"
+	if [[ "$text1" == "$text2" ]]; then
+		# true
+		return 0
+	else
+		# false
+		return 1
+	fi
+}
+
+# Format commit messages with 50/72 convention
+subjectLen=50
+bodyLen=72
+applyCommitMessageConvention() {
+	echo " -apply $subjectLen/$bodyLen commit message convention"
+	# msg is user edited
+	msg="$1"
+	# msg.original is copy of msg
+	msgoriginal="$msg".original
+	# msg.bak is copy of msg
+	msgbak="$msg".bak
+	# msg.convention is for convention
+	msgconvention="$msg".convention
+	# clear
+	> "$msgbak"
+	> "$msgconvention"
+	# copy msg to msgoriginal
+	cp "$msg" "$msgoriginal"
+	editor=$(git config core.editor)
+	# read user input below
+	exec < /dev/tty
+	while true; do
+		# for merge commit, by default, the editor is shown after the
+		# proposed commit message is created and not before as is for
+		# commit. this results in "no change after applying convention"
+		# which is not desired. so skip 1st apply convention call.
+		if [ -z "$2" ]; then
+			applyCommitMessageConventionInternal "$msg"
+			if fileCompareRelaxed "$msgconvention" "$msgbak"; then
+				# no change after applying convention, return
+				echo "  no change after applying convention"
+				echo "  done"
+				return;
+			fi
+			echo "  changing message"
+		else
+			set --
+		fi
+		$editor "$msg"
+		if fileCompare "$msg" "$msgconvention"; then
+			echo "  no manual change"
+			read -p "  now what? (*/u/a/f/o) " ans
+			case $ans in
+				[uU] )
+					# undo and show
+					echo "  undoing";
+					cp "$msgbak" "$msg"
+					$editor "$msg"
+					# if no diff then return
+					if fileCompare "$msg" "$msgbak"; then
+						echo "  no manual change after undo"
+						echo "  done"
+						return;
+					fi
+					;;
+				[aA] )
+					# abort commit by exit
+					echo "  aborting commit";
+					exit 1;;
+				[fF] )
+					# force message
+					echo "  forcing message";
+					$editor "$msg"
+					return;;
+				[oO] )
+					# original message
+					echo "  original message";
+					cp "$msgoriginal" "$msg"
+					$editor "$msg"
+					return;;
+				* )
+					# all ok, so commit
+					echo "  done";
+					return;;
+			esac
+		fi
+	done
+}
+
+applyCommitMessageConvention "$1" "$2"
