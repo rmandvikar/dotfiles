@@ -1,0 +1,50 @@
+#!/bin/bash
+
+#usage: git find-merge <commit> [<branch>]
+#
+# Find the 1st common commit from bottom within first-parent commits
+# and ancestry-path commits.
+#
+# First-parent commits are the merge commits made on given branch
+# since the given commit is forked.
+#
+# Ancestry-path commits are the reachable (child) commits from given
+# commit to the given branch (opposite direction).
+#
+# For input 6b95ad7..dev with --ancestry-path the commit db91dcd is 
+# excluded as it is not reachable (child) from 6b95ad7.
+# 
+# *   70a4637 (dev) Merge branch 'hooks' into dev
+# |\
+# | * 6d93e8e Remove trailing period in subject
+# |/
+# *   0a65ddf Merge branch 'tabs' into dev
+# |\
+# | * 6b95ad7 Make tabs 4 intead of default of 8
+# * | db91dcd Echo warnings in yellow
+# | |
+# | * 958f9c7 Add 'summarize' alias
+# |/
+# *   9d3039f Merge branch 'color-echo' into dev
+# |\
+#
+# It is possible to only filter only merges (--merges) in both commands
+# but it is better to not do so due to ff merges. If the commit is direct
+# linear descendant then we get immediate child commit as output (with 
+# --merges we get no output).
+
+commit=$1
+if [ -z $commit ]; then
+	echo "fatal: commit is required"
+	exit 1;
+fi
+branch=${2-@}
+
+merge=$(grep -f \
+	<(git rev-list --first-parent $commit..$branch) \
+	<(git rev-list --ancestry-path $commit..$branch) \
+		| tail -1)
+
+if [ ! -z $merge ]; then
+	git log -1 $merge
+fi

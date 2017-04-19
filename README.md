@@ -135,6 +135,12 @@ $ e .git/hooks
 $ git dictators
 ```
 
+```bash
+# To find the merge commit when a given commit was merged into a branch
+$ git find-merge <commit>
+$ git find-merge <commit> [<branch>]
+```
+
 ##### git hooks
 
 ###### commit-msg hook
