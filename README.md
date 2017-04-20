@@ -141,6 +141,11 @@ $ git find-merge <commit>
 $ git find-merge <commit> [<branch>]
 ```
 
+```bash
+# To purge merged branches except certain ones
+$ git purge-branches [-n]
+```
+
 ##### git hooks
 
 ###### commit-msg hook
