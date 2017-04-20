@@ -100,6 +100,7 @@
 	undo 	= !"git reset --hard && git clean -f"
 	cp 		= cherry-pick
 	
+	summarize 	= log --pretty=summary --date=short -1
 	undomerge 	= reset --merge orig_head
 	undorebase 	= !"f() { \
 					git reset --hard orig_head; \
@@ -109,8 +110,8 @@
 				}; f"
 	
 	## advanced ##
-	# force branches to go to its remote branches
-	#usage: git breset master next dev
+	# force branches to point to their remote branches
+	#usage: git branch-reset master next dev
 	breset 	= 	!"f() { \
 					: get current branch; \
 					currBranch=$(git b-); \
@@ -134,6 +135,8 @@
 						fi; \
 					done; \
 				}; f"
+	branch-reset 	= !"f() { git breset "$@"; }; f"
+	
 	# fuzzy checkout using a partial branch name
 	#usage: git coe branch
 	coe 	= 	!"f() { \
@@ -159,8 +162,9 @@
 					fi; \
 					git checkout ${branches[0]}; \
 				}; f"
-	# rough guess of where current branch is branched from
-	#usage: git bfrom branch1 branch2
+	
+	# rough guess of which branch in the given branches current branch is branched from
+	#usage: git branched-from branch1 branch2
 	bfrom = 	!"f() { \
 					: head or current branch; \
 					commit="@"; \
@@ -176,29 +180,36 @@
 					done; \
 					echo "$target"; \
 				}; f"
-	# create and/or push branch to gerrit
-	#usage: git pushg [<branch>] [<remote>]
+	branched-from 	= !"f() { git bfrom "$@"; }; f"
+
+	# create and/or push current branch to gerrit
+	#usage: git pushg [<branchFrom>] [<remote>]
 	pushg 	= 	!"f() { \
+					: default remote to that of master; \
+					remoteDefault=$(git config --get branch.master.remote); \
+					remote="${2-"$remoteDefault"}"; \
 					: current branch name may not match remote branch; \
-					remoteBranch=$(git rev-parse --abbrev-ref @{u} 2>/dev/null); \
-					if [ -z $remoteBranch ]; then \
+					remotePath=$(git rev-parse --abbrev-ref @{u} 2>/dev/null); \
+					if [ -z $remotePath ]; then \
 						: branch from master as default; \
 						branchFrom=${1-master}; \
+						: remote branch name is same as local branch; \
 						branch=$(git rev-parse --abbrev-ref @); \
-						command=$(echo git push "${2-origin}" "$branchFrom":"$branch"); \
+						remoteBranch="$branch"; \
+						command=$(echo git push "$remote" "$branchFrom":"$remoteBranch"); \
 						echo "$command"; \
 						"$command"; \
 						: track remote branch; \
-						command=$(echo git branch -u "${2-origin}"/"$branch"); \
+						command=$(echo git branch -u "$remote"/"$remoteBranch"); \
 						echo "$command"; \
 						"$command"; \
 					else \
-						remote=$(echo "$remoteBranch" | cut -d'/' -f1); \
-						branch=${remoteBranch#"$remote"/}; \
+						branch=$(git rev-parse --abbrev-ref @); \
+						: get remote name for branch; \
+						remote=$(git config --get branch."$branch".remote); \
+						remoteBranch=${remotePath#"$remote"/}; \
 					fi; \
-					: echo $remoteBranch; \
-					: echo $branch; \
-					command=$(echo git push "${2-origin}" HEAD:refs/for/"$branch"); \
+					command=$(echo git push "$remote" HEAD:refs/for/"$remoteBranch"); \
 					echo "$command"; \
 					"$command"; \
 				}; f"
@@ -207,6 +218,7 @@
 	lgoc 	= "format:%C(auto)%h%C(reset)%C(auto)%d%C(reset) %C(#ffff99)%s%C(reset) - %C(#ffb799)%aN%C(reset)"
 	one 	= "format:%C(auto)%h%C(reset) %C(#ffaaff)(%ar)%C(reset) %C(#ffff99)%s%C(reset) - %C(#ffb799)%aN%C(reset)%C(auto)%d%C(reset)"
 	two 	= "format:%C(auto)%h%C(reset) - %C(#ffeeff)%aD%C(reset) %C(#ffaaff)(%ar)%C(reset)%C(auto)%d%C(reset)%n  %C(#ffff99)%s%C(reset) - %C(#ffb799)%aN%C(reset)"
+	summary = "format:%h (\"%s\", %ad)"
 [alias]
 	#hint: add --all to see whole repo
 	l 		= log --graph --date=relative --decorate --abbrev-commit --pretty=two

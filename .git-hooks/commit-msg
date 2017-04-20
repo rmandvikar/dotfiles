@@ -187,6 +187,12 @@ _gen_ChangeId() {
 }
 
 # rm:
+
+# Colors
+Yellow='\033[1;33m'
+Red='\033[0;31m'
+None='\033[0m' 		# No Color
+
 # Internal fn to format messages with 50/72 convention
 applyCommitMessageConventionInternal() {
 	msg="$1"
@@ -212,7 +218,7 @@ applyCommitMessageConventionInternal() {
 		# hack: warn if subject >$subjectLen chars
 		# with exit, user will have to type message again
 		if [ ${#subject} -gt $subjectLen ]; then
-			echo "  WARNING: subject should be upto $subjectLen chars"
+			echo -e "  ${Yellow}WARNING:${None} subject should be upto $subjectLen chars"
 		fi
 		echo "$subject" | fmt -s -w $subjectLen > "$msgconvention"
 	fi
@@ -350,11 +356,24 @@ applyCommitMessageConvention() {
 	done
 }
 
+# Check if semver line is included
+checkSemver() {
+	echo "  check if semver line is included"
+	msg="$1"
+	if ! egrep -q "#MAJOR|#MINOR|#PATCH" $msg; then
+		echo -e "  ${Yellow}WARNING:${None} #MAJOR #MINOR #PATCH line is NOT included"
+	fi
+}
+
 # rm:
 if [ -f .git/hooks/skip-cmc ]; then
 	echo "  SKIPPING applyCommitMessageConvention: .git/hooks/skip-cmc file present"
 else
 	applyCommitMessageConvention "$1"
+fi
+
+if [ -f .git/hooks/check-semver ]; then
+	checkSemver "$1"
 fi
 
 if [ -f .git/hooks/changeid ]; then

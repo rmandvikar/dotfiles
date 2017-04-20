@@ -27,3 +27,5 @@ alias g=git
 alias gti=git
 alias gt=git
 alias msbuild="'/c/Program Files (x86)/MSBuild/14.0/Bin/MSBuild.exe'"
+
+tabs 4
