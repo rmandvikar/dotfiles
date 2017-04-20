@@ -134,7 +134,16 @@ applyCommitMessageConvention() {
 		$editor "$msg"
 		if fileCompare "$msg" "$msgconvention"; then
 			echo "  no manual change"
-			read -p "  now what? (*/u/a/f/o) " ans
+			# read -p "now what? (*/undo/abort/force/original) " ans
+			question+="  now what? ("
+			question+="${Prompt}*${None}/"
+			question+="${Prompt}u${None}ndo/"
+			question+="${Prompt}a${None}bort/"
+			question+="${Prompt}f${None}orce/"
+			question+="${Prompt}o${None}riginal"
+			question+=") "
+			echo -e -n "$question"
+			read -p '' ans
 			case $ans in
 				[uU] )
 					# undo and show
