@@ -22,13 +22,19 @@ applyCommitMessageConventionInternal() {
 		echo "  keeping merge commit subject as is"
 		echo "$subject" > "$msgconvention"
 	else
+		# remove trailing period
+		if [[ "$subject" == *. ]]; then
+			echo "  removing trailing period"
+			subject=$(echo "$subject" | sed 's/\.$//')
+		fi
 		# hack: warn if subject >$subjectLen chars
 		# with exit, user will have to type message again
 		if [ ${#subject} -gt $subjectLen ]; then
 			echo -e "  ${Yellow}WARNING:${None} subject should be upto $subjectLen chars"
+			# format
+			subject=$(echo "$subject" | fmt -s -w $subjectLen)
 		fi
-		# remove trailing period and format
-		echo "$subject" | sed 's/\.$//' | fmt -s -w $subjectLen > "$msgconvention"
+		echo "$subject" > "$msgconvention"
 	fi
 	# apply only if body is not empty
 	rest=$(tail -n +2 "$msgbak")
@@ -134,7 +140,16 @@ applyCommitMessageConvention() {
 		$editor "$msg"
 		if fileCompare "$msg" "$msgconvention"; then
 			echo "  no manual change"
-			read -p "  now what? (*/u/a/f/o) " ans
+			# read -p "now what? (*/undo/abort/force/original) " ans
+			question+="  now what? ("
+			question+="${Prompt}*${None}/"
+			question+="${Prompt}u${None}ndo/"
+			question+="${Prompt}a${None}bort/"
+			question+="${Prompt}f${None}orce/"
+			question+="${Prompt}o${None}riginal"
+			question+=") "
+			echo -e -n "$question"
+			read -p '' ans
 			case $ans in
 				[uU] )
 					# undo and show

@@ -1,9 +1,10 @@
 #!/bin/sh
 
 # Colors
-export Yellow='\033[1;33m'
-export Red='\033[0;31m'
-export None='\033[0m' 		# No Color
+export    Yellow='\033[1;33m'
+export       Red='\033[0;31m'
+export    Prompt='\033[38;2;255;136;255m'
+export      None='\033[0m' 		# No Color
 
 if [ -f .git/hooks/skip-cmc ]; then
 	echo " -SKIPPING commit-msg.convention: .git/hooks/skip-cmc file present"
