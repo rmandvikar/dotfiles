@@ -82,16 +82,18 @@
 	
 	## write ##
 	a 		= add
-	del 	= rm
-	ren 	= mv
-	ac 		= !"git add --all && git commit"
-	acm 	= !"git add --all && git commit -m"
 	c 		= commit
 	cm 		= commit -m
+	ac 		= !"git add --all && git c"
+	acm 	= !"git add --all && git cm"
 	ca 		= commit --amend
 	can 	= commit --amend --no-edit
-	#note: 'git commit --amend --all -u --no-edit' does not add untracked files
-	caf 	= !"git add --all && git commit --amend --no-edit" # --date=now
+	#note: 'git commit --amend --all -u' does not add untracked files
+	aca 	= !"git add --all && git ca"
+	#note: add --date=now to change author date
+	acan 	= !"git add --all && git can" # --date=now
+	del 	= rm
+	ren 	= mv
 	hide 	= update-index --assume-unchanged
 	unhide 	= update-index --no-assume-unchanged
 	hidden 	= !"git ls-files -v | grep '^h' | cut -c3- | wrap"

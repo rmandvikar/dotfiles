@@ -4,16 +4,25 @@ echo "hooks/prepare-commit-msg"
 
 # Remove "remote-tracking" from merge commit subject
 removeWordsFromMergeCommit() {
-	case "$2,$3" in
-		merge,)
-			echo "  remove \"remote-tracking\" from merge commit subject"
-			sed -i -e '1 s/Merge remote-tracking branch /Merge branch /' "$1"
-			
-			# Explicitly call commit-msg hook for merge commits.
-			~/.git-hooks/commit-msg "$1"
+	case "$2" in
+		merge)
+			echo " -remove \"remote-tracking\" from merge commit subject"
+			sed -i -e '1 s/^Merge remote-tracking branch /Merge branch /' "$1"
+			;;
+		*) ;;
+	esac
+}
+
+# Explicitly call commit-msg hook for merge commits
+applyCommitHook() {
+	case "$2" in
+		merge)
+			echo " -apply 'commit-msg' hook for merge commit"
+			~/.git-hooks/commit-msg "$1" "prepare-commit-msg"
 			;;
 		*) ;;
 	esac
 }
 
 removeWordsFromMergeCommit "$@"
+applyCommitHook "$@"

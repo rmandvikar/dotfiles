@@ -1,6 +1,6 @@
 # git-setup
 
-A discombobulated potpourri of disparate stuff that's so b0rked and in flux that no proper readme is attempted.
+A discombobulated potpourri of disparate esoteric stuff that's so b0rked and in flux that no proper readme is attempted.
 
 In a nutshell, peel it off like an onion.
 
@@ -135,6 +135,17 @@ $ e .git/hooks
 $ git dictators
 ```
 
+```bash
+# To find the merge commit when a given commit was merged into a branch
+$ git find-merge <commit>
+$ git find-merge <commit> [<branch>]
+```
+
+```bash
+# To purge merged branches except certain ones
+$ git purge-branches [-n]
+```
+
 ##### git hooks
 
 ###### commit-msg hook
@@ -149,31 +160,31 @@ hooks/commit-msg
   changing message
 (user closes editor)
   no manual change
-  now what? (*/u/a/f/o) ↵
+  now what? (*/undo/abort/force/original) ↵
   done
 (commit succeeds)
 
 (user closes editor)
   no manual change
-  now what? (*/u/a/f/o) u
+  now what? (*/undo/abort/force/original) u↵
   undoing
 (show editor with previous message)
 
 (user closes editor)
   no manual change
-  now what? (*/u/a/f/o) a
+  now what? (*/undo/abort/force/original) a↵
   aborting commit
 (commit aborts)
 
 (user closes editor)
   no manual change
-  now what? (*/u/a/f/o) f
+  now what? (*/undo/abort/force/original) f↵
   forcing message
 (show editor and any changes are used as is)
 
 (user closes editor)
   no manual change
-  now what? (*/u/a/f/o) o
+  now what? (*/undo/abort/force/original) o↵
   original message
 (show editor with very 1st message and any changes are used as is)
 ```
