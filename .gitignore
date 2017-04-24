@@ -17,6 +17,7 @@ bak/
 .minttyrc
 .viminfo
 NTUSER*
+work.bashrc
 
 !.gitignore
 !*.gitconfig
