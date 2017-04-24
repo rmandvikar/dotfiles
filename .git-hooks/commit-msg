@@ -1,5 +1,7 @@
 #!/bin/sh
 
+echo "hooks/commit-msg"
+
 # Colors
 export    Yellow='\033[1;33m'
 export       Red='\033[0;31m'
