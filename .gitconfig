@@ -265,6 +265,10 @@
 [pull]
 	rebase 	= true
 
+[branch]
+	autoSetupMerge 		= false
+	autoSetupRebase 	= always
+
 # templates
 [init]
 	templateDir = ~/.git-templates
