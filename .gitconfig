@@ -76,9 +76,6 @@
 	note 	= !"f() { git rev-parse --short ${1-HEAD}; }; f"
 	lsf 	= ls-files
 	lst 	= ls-tree
-	#note: 'git symbolic-ref --short HEAD' throws when in 'detached HEAD' state
-	b- 		= !"git rev-parse --abbrev-ref HEAD"
-	rb- 	= !"git rev-parse --abbrev-ref HEAD@{u}"
 	
 	## write ##
 	a 		= add
@@ -116,7 +113,8 @@
 	#usage: git branch-reset master next dev
 	breset 	= 	!"f() { \
 					: get current branch; \
-					currBranch=$(git b-); \
+					: note: 'git symbolic-ref --short HEAD' throws when in 'detached HEAD' state; \
+					currBranch=$(git rev-parse --abbrev-ref HEAD); \
 					: if no arg, breset current branch; \
 					if [ -z "$1" ]; then \
 						set -- "$currBranch"; \
@@ -264,6 +262,10 @@
 
 [pull]
 	rebase 	= true
+
+[branch]
+	autoSetupMerge 		= false
+	autoSetupRebase 	= always
 
 # templates
 [init]
