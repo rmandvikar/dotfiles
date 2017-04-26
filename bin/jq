@@ -7,7 +7,7 @@ if [ $# -eq 1 ] && [[ $(git cat-file -t "$1" 2>/dev/null) == "commit" ]]; then
 	ticket=$(git log -1 "$commit" --pretty=%s | cut -d' ' -f1 | cut -d'-' -f2)
 	if [[ $ticket =~ [^[:digit:]] ]]; then
 		# ticket not present
-		echo "fatal: no ticket found"
+		echo 1>&2 "fatal: no ticket found"
 		exit 1
 	else
 		jq "$ticket"

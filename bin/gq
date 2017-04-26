@@ -15,7 +15,7 @@ if [ $# -eq 1 ] && [[ $(git cat-file -t "$1" 2>/dev/null) == "commit" ]]; then
 	last=$(git log -1 $commit | tail -1 | sed 's/ *//')
 	if [[ "$last" != Change-Id* ]]; then
 		# changeid not present
-		echo "fatal: no Change-Id found"
+		echo 1>&2 "fatal: no Change-Id found"
 		exit 1
 	fi
 	id=$(echo $last | sed 's/Change-Id: //')
