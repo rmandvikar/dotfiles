@@ -172,10 +172,18 @@
 					min="314159265"; \
 					for ((branch=1;branch<=$#;branch++)); do \
 						: pick branch with least right-only count; \
-						count=($(git rev-list --right-only --count $commit...${!branch})); \
+						count=$(git rev-list --right-only --count $commit...${!branch}); \
+						: echo "${!branch} - $count"; \
 						if [ $count -lt $min ]; then \
 							min=$count; \
 							target="${!branch}"; \
+						elif [ $count -eq $min ]; then \
+							: pick branch if it contains the target branch; \
+							bcount=$(git rev-list --right-only --count "${target}".."${!branch}"); \
+							: echo "    bcount: ${bcount}"; \
+							if [ $bcount -gt 0 ]; then \
+								target="${!branch}"; \
+							fi \
 						fi; \
 					done; \
 					echo "$target"; \
