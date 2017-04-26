@@ -35,8 +35,8 @@
 
 commit=$1
 if [ -z $commit ]; then
-	echo "fatal: commit is required"
-	exit 1;
+	echo 1>&2 "fatal: commit is required"
+	exit 1
 fi
 branch=${2-@}
 
@@ -47,4 +47,6 @@ merge=$(grep -f \
 
 if [ ! -z $merge ]; then
 	git log -1 $merge
+else
+	echo 1>&2 "fatal: no merge commit found"
 fi

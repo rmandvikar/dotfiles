@@ -165,7 +165,7 @@ applyCommitMessageConvention() {
 					;;
 				[aA] )
 					# abort commit by exit
-					echo "  aborting commit";
+					echo 1>&2 "  aborting commit";
 					exit 1;;
 				[fF] )
 					# force message
