@@ -73,7 +73,7 @@
 	lrcount = rev-list --left-right --count
 	lcount 	= rev-list --left-only --count
 	rcount 	= rev-list --right-only --count
-	note 	= !"f() { git rev-parse --short ${1-HEAD}; }; f"
+	note 	= !"f() { git log -1 --pretty=\"format:%H\" ${1-HEAD}; }; f"
 	lsf 	= ls-files
 	lst 	= ls-tree
 	
