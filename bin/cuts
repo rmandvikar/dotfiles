@@ -1,6 +1,4 @@
 #!/bin/sh
 
 # cut and get 3+ chars
-while read data; do
-	echo "$data" | cut -c ${1-3}-
-done
+exec cut -c ${1-3}-
