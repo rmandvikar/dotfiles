@@ -1,6 +1,4 @@
 #!/bin/sh
 
 # cut by : and get field 1
-while read data; do
-	echo "$data" | cut -d ${2-':'} -f ${1-1}
-done
+exec cut -d ${2-':'} -f ${1-1}
