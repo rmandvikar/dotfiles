@@ -1,20 +1,23 @@
 #!/bin/sh
 
-# commit
-#	parse ticket from commit message and pass
+if [ $# -eq 0 ]; then
+	# default to head if no args
+	set -- "HEAD"
+fi
+
 if [ $# -eq 1 ] && [[ $(git cat-file -t "$1" 2>/dev/null) == "commit" ]]; then
+	# commit
+	#	parse ticket from commit message and pass
 	commit="$1"
 	ticket=$(git log -1 "$commit" --pretty=%s | cut -d' ' -f1 | cut -d'-' -f2)
 	if [[ $ticket =~ [^[:digit:]] ]]; then
 		# ticket not present
-		echo "fatal: no ticket found"
+		echo 1>&2 "fatal: no ticket found"
 		exit 1
-	else
-		jq "$ticket"
-		exit
 	fi
+	start chrome --new-window "$JiraUrl$ticket"
+else
+	# query
+	#	pass all args
+	start chrome --new-window "$JiraUrl$*"
 fi
-
-# query
-#	pass all args
-start chrome --new-window "$JiraUrl$*"
