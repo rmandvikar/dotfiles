@@ -1,16 +1,13 @@
 #!/bin/sh
 
-# changeid
-#	pass changeid
-if [ $# -eq 1 ] && [[ "$1" == I* ]] && [ ${#1} == 41 ]; then
-	id="$1"
-	start chrome --new-window "$GerritUrl$id"
-	exit
+if [ $# -eq 0 ]; then
+	# default to head if no args
+	set -- "HEAD"
 fi
 
-# commit
-#	parse changeid from commit message and pass
 if [ $# -eq 1 ] && [[ $(git cat-file -t "$1" 2>/dev/null) == "commit" ]]; then
+	# commit
+	#	parse changeid from commit message and pass
 	commit="$1"
 	last=$(git log -1 $commit | tail -1 | sed 's/ *//')
 	if [[ "$last" != Change-Id* ]]; then
@@ -19,10 +16,9 @@ if [ $# -eq 1 ] && [[ $(git cat-file -t "$1" 2>/dev/null) == "commit" ]]; then
 		exit 1
 	fi
 	id=$(echo $last | sed 's/Change-Id: //')
-	gq "$id"
-	exit
+	start chrome --new-window "$GerritUrl$id"
+else
+	# query
+	#	pass all args
+	start chrome --new-window "$GerritUrl$*"
 fi
-
-# query
-#	pass all args
-start chrome --new-window "$GerritUrl$*"
