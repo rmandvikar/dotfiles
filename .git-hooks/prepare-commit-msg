@@ -1,5 +1,9 @@
 #!/bin/sh
 
+# prepare-commit-msg hook does:
+#	- Remove "remote-tracking" from merge commit subject
+#	- Explicitly call commit-msg hook for merge commits
+
 echo "hooks/prepare-commit-msg"
 
 # Remove "remote-tracking" from merge commit subject

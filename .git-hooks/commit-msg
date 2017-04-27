@@ -1,5 +1,13 @@
 #!/bin/sh
 
+# commit-msg hook does:
+#	1. apply commit message convention
+#		conditionally, warning if skipped
+#	2. check semver
+#		conditionally, no warning if skipped
+#	3. add changeid
+#		conditionally, no warning if skipped
+
 echo "hooks/commit-msg"
 
 # Colors
@@ -8,6 +16,7 @@ export       Red='\033[0;31m'
 export    Prompt='\033[38;2;255;136;255m'
 export      None='\033[0m' 		# No Color
 
+# 1. apply commit message convention
 if [ -f .git/hooks/skip-cmc ]; then
 	echo " -SKIPPING commit-msg.convention: .git/hooks/skip-cmc file present"
 else
@@ -17,12 +26,12 @@ else
 	fi
 fi
 
+# 2. check semver
 if [ -f .git/hooks/check-semver ]; then
 	~/.git-hooks/commit-msg.semver "$1"
 fi
 
+# 3. add changeid
 if [ -f .git/hooks/changeid ]; then
 	~/.git-hooks/commit-msg.changeid "$1"
-else
-	echo " -SKIPPING commit-msg.changeid: .git/hooks/changeid file NOT present"
 fi
