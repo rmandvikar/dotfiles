@@ -13,15 +13,21 @@ massageMergeCommitMessage() {
 	case "$2" in
 		merge)
 			# Remove "remote-tracking" from merge commit subject
-			echo " -remove \"remote-tracking\" from merge commit subject"
-			sed -i '1 s/^Merge remote-tracking branch /Merge branch /' "$1"
+			sed -i '1 s/^Merge remote-tracking branch /Merge branch /w .git/hook.change' "$1"
+			if [ -s .git/hook.change ]; then
+				echo " -remove \"remote-tracking\" from merge commit subject"
+			fi
 			# Uncomment Conflicts section in merge commit body
-			echo " -uncomment \"Conflicts:\" section in merge commit body"
 			sed -i \
-				-e '/^# Conflicts:/,/^#$/ s/..\?/  /' \
+				-e '/^# Conflicts:/,/^#$/ s/..\?/  /w .git/hook.change' \
 				-e 's/^ *Conflicts:/Conflicts:/' \
 				-e 's/^ *$//' \
 				"$1"
+			if [ -s .git/hook.change ]; then
+				echo " -uncomment \"Conflicts:\" section in merge commit body"
+			fi
+			# clean up
+			cleanUp
 			;;
 		*) ;;
 	esac
@@ -37,6 +43,12 @@ applyCommitHook() {
 		*) ;;
 	esac
 }
+
+# clean up
+cleanUp() {
+	rm -f .git/hook.change
+}
+
 
 massageMergeCommitMessage "$@"
 applyCommitHook "$@"
