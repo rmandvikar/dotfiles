@@ -11,12 +11,10 @@ applyCommitMessageConventionInternal() {
 		# exit and let git handle abort or continue (--allow-empty-message)
 		exit
 	fi
-	# cp "$msg" "$msgbak"
 	# clean msg to trim lines and remove starting blank lines
 	echo "$msgText" | sed 's/ *$//' | sed '/./,$! d' > "$msgbak"
 	# subject
 	subject=$(head -n 1 "$msgbak")
-	# echo $subject
 	if [[ "$subject" == "Merge branch"* ]] \
 		|| [[ "$subject" == "Merge remote-tracking branch"* ]]; then
 		echo "  keeping merge commit subject as is"
@@ -88,8 +86,6 @@ fileCompareRelaxed() {
 	text2=$(cat "$2")
 	text1=$(validText "$text1")
 	text2=$(validText "$text2")
-	#~ echo "text1 $text1"
-	#~ echo "text2 $text2"
 	if [[ "$text1" == "$text2" ]]; then
 		# true
 		return 0
@@ -135,6 +131,7 @@ applyCommitMessageConvention() {
 			fi
 			echo "  changing message"
 		else
+			# remove $2 arg
 			set --
 		fi
 		$editor "$msg"
