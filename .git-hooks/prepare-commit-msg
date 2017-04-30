@@ -1,13 +1,27 @@
 #!/bin/sh
 
+# prepare-commit-msg hook does:
+#  - Massage merge commit message
+#    - Remove "remote-tracking" from merge commit subject
+#    - Uncomment Conflicts section in merge commit body
+#  - Explicitly call commit-msg hook for merge commits
+
 echo "hooks/prepare-commit-msg"
 
-# Remove "remote-tracking" from merge commit subject
-removeWordsFromMergeCommit() {
+# Massage merge commit message
+massageMergeCommitMessage() {
 	case "$2" in
 		merge)
+			# Remove "remote-tracking" from merge commit subject
 			echo " -remove \"remote-tracking\" from merge commit subject"
-			sed -i -e '1 s/^Merge remote-tracking branch /Merge branch /' "$1"
+			sed -i '1 s/^Merge remote-tracking branch /Merge branch /' "$1"
+			# Uncomment Conflicts section in merge commit body
+			echo " -uncomment \"Conflicts:\" section in merge commit body"
+			sed -i \
+				-e '/^# Conflicts:/,/^#$/ s/..\?/  /' \
+				-e 's/^ *Conflicts:/Conflicts:/' \
+				-e 's/^ *$//' \
+				"$1"
 			;;
 		*) ;;
 	esac
@@ -24,5 +38,5 @@ applyCommitHook() {
 	esac
 }
 
-removeWordsFromMergeCommit "$@"
+massageMergeCommitMessage "$@"
 applyCommitHook "$@"
