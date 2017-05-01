@@ -9,6 +9,7 @@ applyCommitMessageConventionInternal() {
 	# if msg is empty (blank lines and comments) then exit
 	if [[ $(validTextCount "$msgText") -eq 0 ]]; then
 		# exit and let git handle abort or continue (--allow-empty-message)
+		cleanUp "$msg"
 		exit
 	fi
 	# clean msg to trim lines and remove starting blank lines
@@ -127,7 +128,7 @@ applyCommitMessageConvention() {
 				# no change after applying convention, return
 				echo "  no change after applying convention"
 				echo "  done"
-				return;
+				break;
 			fi
 			echo "  changing message"
 		else
@@ -157,31 +158,42 @@ applyCommitMessageConvention() {
 					if fileCompare "$msg" "$msgbak"; then
 						echo "  no manual change after undo"
 						echo "  done"
-						return;
+						break;
 					fi
 					;;
 				[aA] )
 					# abort commit by exit
 					echo 1>&2 "  aborting commit";
+					cleanUp "$msg"
 					exit 1;;
 				[fF] )
 					# force message
 					echo "  forcing message";
 					$editor "$msg"
-					return;;
+					break;;
 				[oO] )
 					# original message
 					echo "  original message";
 					cp "$msgoriginal" "$msg"
 					$editor "$msg"
-					return;;
+					break;;
 				* )
 					# all ok, so commit
 					echo "  done";
-					return;;
+					break;;
 			esac
 		fi
 	done
+	cleanUp "$msg"
 }
+
+# clean up
+cleanUp() {
+	msg="$1"
+	rm -f "$msg".bak
+	rm -f "$msg".convention
+	rm -f "$msg".original
+}
+
 
 applyCommitMessageConvention "$1" "$2"
