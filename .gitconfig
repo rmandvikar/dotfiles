@@ -5,7 +5,7 @@
 	path = alias-work.gitconfig
 
 [core]
-	autocrlf = false
+	autocrlf = true
 [rerere]
 	enabled = true
 
