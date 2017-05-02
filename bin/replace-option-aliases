@@ -1,7 +1,0 @@
-#!/bin/sh
-
-echo "$@" \
-	| sed 's/\s/\n/g' \
-	| sed 's/^--ns$/--name-status/' \
-	| sed 's/^--no$/--name-only/' \
-	| xargs; \
