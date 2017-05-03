@@ -18,11 +18,7 @@ massageMergeCommitMessage() {
 				echo " -remove \"remote-tracking\" from merge commit subject"
 			fi
 			# Uncomment Conflicts section in merge commit body
-			sed -i \
-				-e '/^# Conflicts:/,/^#$/ s/..\?/  /w .git/hook.change' \
-				-e 's/^ *Conflicts:/Conflicts:/' \
-				-e 's/^ *$//' \
-				"$1"
+			sed -i -e '/^# Conflicts:/,/^#$/ s/# \?//w .git/hook.change' -e 's/\t/  /' "$1"
 			if [ -s .git/hook.change ]; then
 				echo " -uncomment \"Conflicts:\" section in merge commit body"
 			fi
