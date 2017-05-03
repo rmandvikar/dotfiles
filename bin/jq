@@ -9,8 +9,8 @@ if [ $# -eq 1 ] && [[ $(git cat-file -t "$1" 2>/dev/null) == "commit" ]]; then
 	# commit
 	#	parse ticket from commit message and pass
 	commit="$1"
-	ticket=$(git log -1 "$commit" --pretty=%s | cut -d' ' -f1 | cut -d'-' -f2)
-	if [[ $ticket =~ [^[:digit:]] ]]; then
+	ticket=$(git log -1 "$commit" --pretty=%s | grep -o -P '[A-Za-z]+[:-][\d]+')
+	if [ -z $ticket ]; then
 		# ticket not present
 		echo 1>&2 "fatal: no ticket found"
 		exit 1
