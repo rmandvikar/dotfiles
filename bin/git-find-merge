@@ -49,7 +49,7 @@ fi
 # then return branch as it's either a ff merge or commit is only on branch
 # and there is not a good way to figure out the right commit
 if [ $(git rev-list --first-parent $branch | grep $commit | wc -l) -eq 1 ]; then
-	if [ $(git show --summary --format="%P" $commit | wc -w) -gt 1 ]; then
+	if [ $(git show -s --format="%p" $commit | wc -w) -gt 1 ]; then
 		# if commit is a merge commit
 		git log -1 $commit
 	else

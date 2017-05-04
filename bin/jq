@@ -9,7 +9,7 @@ if [ $# -eq 1 ] && [[ $(git cat-file -t "$1" 2>/dev/null) == "commit" ]]; then
 	# commit
 	#	parse ticket(s) from commit message and pass
 	commit="$1"
-	if [ $(git show --summary --format="%P" $commit | wc -w) -gt 1 ]; then
+	if [ $(git show -s --format="%p" $commit | wc -w) -gt 1 ]; then
 		echo "commit is a merge commit, looking at 2nd parent"
 		# merge commit
 		#	see 2nd parent
