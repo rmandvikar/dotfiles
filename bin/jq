@@ -7,15 +7,25 @@ fi
 
 if [ $# -eq 1 ] && [[ $(git cat-file -t "$1" 2>/dev/null) == "commit" ]]; then
 	# commit
-	#	parse ticket from commit message and pass
+	#	parse ticket(s) from commit message and pass
 	commit="$1"
-	ticket=$(git log -1 "$commit" --pretty=%s | cut -d' ' -f1 | cut -d'-' -f2)
-	if [[ $ticket =~ [^[:digit:]] ]]; then
-		# ticket not present
+	if [ $(git show --summary --format="%P" $commit | wc -w) -gt 1 ]; then
+		echo "commit is a merge commit, looking at 2nd parent"
+		# merge commit
+		#	see 2nd parent
+		commit="$commit^2"
+	fi
+	tickets=$(git log -1 "$commit" --pretty=%s | grep -o -P '[A-Za-z]+[:-][\d]+')
+	if [ -z "$tickets" ]; then
+		# ticket(s) not present
 		echo 1>&2 "fatal: no ticket found"
 		exit 1
 	fi
-	start chrome --new-window "$JiraUrl$ticket"
+	# concatenate urls
+	for ticket in $tickets; do
+		query="$query$JiraUrl$ticket "
+	done
+	start chrome --new-window $query
 else
 	# query
 	#	pass all args
