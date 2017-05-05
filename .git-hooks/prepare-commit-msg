@@ -1,12 +1,26 @@
 #!/bin/sh
 
 # prepare-commit-msg hook does:
+#  - Add instructions to commit message
+#    - Add semver instructions
 #  - Massage merge commit message
 #    - Remove "remote-tracking" from merge commit subject
 #    - Uncomment Conflicts section in merge commit body
 #  - Explicitly call commit-msg hook for merge commits
 
 echo "hooks/prepare-commit-msg"
+
+# Add instructions to commit message
+addInstructions() {
+	# Add semver instructions
+	if [ -f .git/hooks/check-semver ]; then
+		# use '# Please enter' string as a marker to insert the instructions
+		sed -i '/^# Please enter/i '`
+			`'# Please add semver line in the commit message.\n'`
+			`'#+#MAJOR\n#+#MINOR\n#+#PATCH\n' \
+			"$msg"
+	fi
+}
 
 # Massage merge commit message
 massageMergeCommitMessage() {
@@ -47,5 +61,6 @@ cleanUp() {
 
 
 msg="$1"
+addInstructions "$@"
 massageMergeCommitMessage "$@"
 applyCommitHook "$@"
