@@ -4,4 +4,4 @@
 # Copy their version over ours
 cp -f $3 $2
 # exit 0 will cause the merge to succeed
-exit
+exit 1
