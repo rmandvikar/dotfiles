@@ -261,10 +261,16 @@
 	log 			= true
 	ff 				= false
 	#conflictStyle 	= diff3
+
 [merge "ours"]
 	driver = ~/git-merge-keep-ours.sh %O %A %B
+[merge "ours-fail"]
+	driver = ~/git-merge-keep-ours-fail.sh %O %A %B
 [merge "theirs"]
 	driver = ~/git-merge-keep-theirs.sh %O %A %B
+[merge "theirs-fail"]
+	driver = ~/git-merge-keep-theirs-fail.sh %O %A %B
+
 [branch "master"]
 	mergeOptions = --no-ff
 
