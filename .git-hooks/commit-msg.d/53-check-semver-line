@@ -1,0 +1,16 @@
+#!/bin/sh
+
+# Check if semver line is included
+checkSemver() {
+	if [ -f .git/hooks/check-semver ]; then
+		echo " -check if semver line is included"
+		# '#' cannot be the 1st char
+		if ! egrep -q "^[^#].*#(MAJOR|MINOR|PATCH)" "$msg"; then
+			echo -e "  ${Yellow}WARNING:${None} #MAJOR | #MINOR | #PATCH line is NOT included"
+		fi
+	fi
+}
+
+
+msg="$1"
+checkSemver

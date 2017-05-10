@@ -195,5 +195,17 @@ cleanUp() {
 	rm -f "$msg".original
 }
 
+# apply wrapper
+applyCommitMessageConventionWrapper() {
+	if [ -f .git/hooks/skip-cmc ]; then
+		echo -e " -${Yellow}SKIPPING${None} commit-msg-convention: .git/hooks/skip-cmc file present"
+	else
+		# apply convention when not in rebase
+		if [ ! -d .git/rebase-merge ] && [ ! -d .git/rebase-apply ]; then
+			applyCommitMessageConvention "$@"
+		fi
+	fi
+}
 
-applyCommitMessageConvention "$1" "$2"
+
+applyCommitMessageConventionWrapper "$@"
