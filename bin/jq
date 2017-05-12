@@ -7,18 +7,29 @@ fi
 
 if [ $# -eq 1 ] && [[ $(git cat-file -t "$1" 2>/dev/null) == "commit" ]]; then
 	# commit
-	#	parse ticket(s) from commit message and pass
-	commit="$1"
-	if [ $(git show -s --format="%p" $commit | wc -w) -gt 1 ]; then
-		echo "commit is a merge commit, looking at 2nd parent"
-		# merge commit
-		#	see 2nd parent
-		commit="$commit^2"
+	#	parse ticket(s) from commit(s) message(s) and pass
+	commit=$(git rev-parse --short "$1")
+	commits=($commit)
+	# merge commit
+	#	add parent commits also
+	parents=$(git show -s --format="%p" $commit)
+	if [ $(echo $parents | wc -w) -gt 1 ]; then
+		echo "commit $commit is a merge commit, looking also at parents:"
+		echo "$parents"
+		for parent in $parents; do
+			commits+=($parent)
+		done
 	fi
-	tickets=$(git log -1 "$commit" --pretty=%s | grep -o -P '[A-Za-z]+[:-][\d]+')
+	# parse ticket(s) from commit(s)
+	for commit in ${commits[@]}; do
+		tickets+=$(git log -1 "$commit" --pretty=%s | grep -o -P '[A-Za-z]+[:-][\d]+')
+		tickets+=" "
+	done
+	# remove trailing (and leading) whitespace
+	tickets=$(echo $tickets | xargs)
 	if [ -z "$tickets" ]; then
 		# ticket(s) not present
-		echo 1>&2 "fatal: no ticket found"
+		echo 1>&2 "fatal: no tickets found"
 		exit 1
 	fi
 	# concatenate urls
