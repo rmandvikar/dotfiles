@@ -144,6 +144,12 @@ $ git find-merge <commit> [<branch>]
 ```
 
 ```bash
+# To find the tag when a given commit was merged into a branch
+$ git find-tag <commit>
+$ git find-tag <commit> [<branch>]
+```
+
+```bash
 # To purge merged branches except certain ones
 $ git purge-branches [-n]
 ```
