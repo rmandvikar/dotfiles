@@ -1,66 +1,11 @@
 #!/bin/sh
 
 # prepare-commit-msg hook does:
-#  - Add instructions to commit message
-#    - Add semver instructions
-#  - Massage merge commit message
-#    - Remove "remote-tracking" from merge commit subject
-#    - Uncomment Conflicts section in merge commit body
-#  - Explicitly call commit-msg hook for merge commits
-
-echo "hooks/prepare-commit-msg"
-
-# Add instructions to commit message
-addInstructions() {
-	# Add semver instructions
-	if [ -f .git/hooks/check-semver ]; then
-		# use '# Please enter' string as a marker to insert the instructions
-		sed -i '/^# Please enter/i '`
-			`'# Please add semver line in the commit message.\n'`
-			`'#+#MAJOR\n#+#MINOR\n#+#PATCH\n' \
-			"$msg"
-	fi
-}
-
-# Massage merge commit message
-massageMergeCommitMessage() {
-	case "$2" in
-		merge)
-			# Remove "remote-tracking" from merge commit subject
-			sed -i '1 s/^Merge remote-tracking branch /Merge branch /w .git/hook.change' "$msg"
-			if [ -s .git/hook.change ]; then
-				echo " -remove \"remote-tracking\" from merge commit subject"
-			fi
-			# Uncomment Conflicts section in merge commit body
-			sed -i -e '/^# Conflicts:/,/^#\?$/ s/# \?//w .git/hook.change' -e 's/\t/  /' "$msg"
-			if [ -s .git/hook.change ]; then
-				echo " -uncomment \"Conflicts:\" section in merge commit body"
-			fi
-			# clean up
-			cleanUp
-			;;
-		*) ;;
-	esac
-}
-
-# Explicitly call commit-msg hook for merge commits
-applyCommitHook() {
-	case "$2" in
-		merge)
-			echo " -apply 'commit-msg' hook for merge commit"
-			~/.git-hooks/commit-msg "$msg" "prepare-commit-msg"
-			;;
-		*) ;;
-	esac
-}
-
-# clean up
-cleanUp() {
-	rm -f .git/hook.change
-}
-
-
-msg="$1"
-addInstructions "$@"
-massageMergeCommitMessage "$@"
-applyCommitHook "$@"
+#	- Add instructions to commit message
+#		- Add semver instructions
+#	- Massage merge commit message
+#		- Remove "remote-tracking" from merge commit subject
+#		- Uncomment Conflicts section in merge commit body
+#	- Explicitly call commit-msg hook for merge commits
+export hookname=$(basename "$0")
+~/.git-hooks/hook-main-wrapper "$@"

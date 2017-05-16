@@ -1,0 +1,11 @@
+#!/bin/sh
+
+# Add gerrit changeid
+changeid() {
+	if [ -f .git/hooks/changeid ]; then
+		~/.git-hooks/commit-msg.d/commit-msg-changeid.dump "$@"
+	fi
+}
+
+
+changeid "$@"

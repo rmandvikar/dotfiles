@@ -1,0 +1,4 @@
+#!/bin/sh
+
+export hookname=$(basename "$0")
+~/.git-hooks/hook-main-wrapper "$@"

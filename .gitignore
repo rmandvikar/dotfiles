@@ -29,6 +29,7 @@ work.bashrc
 !*.properties
 !/bin/
 !/.git-hooks/
+/.git-hooks/*.d/*.*
 !/.git-templates/
 /.git-templates/hooks/changeid
 /.git-templates/hooks/skip-cmc
