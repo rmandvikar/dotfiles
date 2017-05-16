@@ -245,6 +245,8 @@
 	decorate 	= short
 	mailmap 	= true
 	follow 		= true
+	# exclude blue and bold blue due to visibility
+	graphColors = red, green, yellow, magenta, cyan, bold red, bold green, bold yellow, bold magenta, bold cyan
 
 [push]
 	default = current
