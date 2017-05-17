@@ -5,7 +5,7 @@
 	path = alias-work.gitconfig
 
 [core]
-	autocrlf = false
+	autocrlf = true
 [rerere]
 	enabled = true
 
@@ -73,12 +73,9 @@
 	lrcount = rev-list --left-right --count
 	lcount 	= rev-list --left-only --count
 	rcount 	= rev-list --right-only --count
-	note 	= !"f() { git rev-parse --short ${1-HEAD}; }; f"
+	note 	= !"f() { git log -1 --pretty=\"format:%H\" ${1-HEAD}; }; f"
 	lsf 	= ls-files
 	lst 	= ls-tree
-	#note: 'git symbolic-ref --short HEAD' throws when in 'detached HEAD' state
-	b- 		= !"git rev-parse --abbrev-ref HEAD"
-	rb- 	= !"git rev-parse --abbrev-ref HEAD@{u}"
 	
 	## write ##
 	a 		= add
@@ -116,7 +113,8 @@
 	#usage: git branch-reset master next dev
 	breset 	= 	!"f() { \
 					: get current branch; \
-					currBranch=$(git b-); \
+					: note: 'git symbolic-ref --short HEAD' throws when in 'detached HEAD' state; \
+					currBranch=$(git rev-parse --abbrev-ref HEAD); \
 					: if no arg, breset current branch; \
 					if [ -z "$1" ]; then \
 						set -- "$currBranch"; \
@@ -151,14 +149,14 @@
 					branches=($(git b | grep -v "^\\*" | grep "$1" | cut -c3-)); \
 					: die if no branches matched; \
 					if [ ${#branches[@]} -eq 0 ]; then \
-						echo "fatal: no branch matched"; \
+						echo 1>&2 "fatal: no branch matched"; \
 						return; \
 					fi; \
 					: die if 2+ branches matched; \
 					if [ ${#branches[@]} -ge 2 ]; then \
-						echo "fatal: multiple branches matched"; \
+						echo 1>&2 "fatal: multiple branches matched"; \
 						for branch in ${branches[@]}; do \
-							echo -e '  '$branch; \
+							echo 1>&2 -e '  '$branch; \
 						done; \
 						return; \
 					fi; \
@@ -174,10 +172,18 @@
 					min="314159265"; \
 					for ((branch=1;branch<=$#;branch++)); do \
 						: pick branch with least right-only count; \
-						count=($(git rev-list --right-only --count $commit...${!branch})); \
+						count=$(git rev-list --right-only --count $commit...${!branch}); \
+						: echo "${!branch} - $count"; \
 						if [ $count -lt $min ]; then \
 							min=$count; \
 							target="${!branch}"; \
+						elif [ $count -eq $min ]; then \
+							: pick branch if it contains the target branch; \
+							bcount=$(git rev-list --right-only --count "${target}".."${!branch}"); \
+							: echo "    bcount: ${bcount}"; \
+							if [ $bcount -gt 0 ]; then \
+								target="${!branch}"; \
+							fi \
 						fi; \
 					done; \
 					echo "$target"; \
@@ -255,15 +261,25 @@
 	log 			= true
 	ff 				= false
 	#conflictStyle 	= diff3
+
 [merge "ours"]
 	driver = ~/git-merge-keep-ours.sh %O %A %B
+[merge "ours-fail"]
+	driver = ~/git-merge-keep-ours-fail.sh %O %A %B
 [merge "theirs"]
 	driver = ~/git-merge-keep-theirs.sh %O %A %B
+[merge "theirs-fail"]
+	driver = ~/git-merge-keep-theirs-fail.sh %O %A %B
+
 [branch "master"]
 	mergeOptions = --no-ff
 
 [pull]
 	rebase 	= true
+
+[branch]
+	autoSetupMerge 		= false
+	autoSetupRebase 	= always
 
 # templates
 [init]

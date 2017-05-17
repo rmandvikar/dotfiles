@@ -9,14 +9,13 @@ applyCommitMessageConventionInternal() {
 	# if msg is empty (blank lines and comments) then exit
 	if [[ $(validTextCount "$msgText") -eq 0 ]]; then
 		# exit and let git handle abort or continue (--allow-empty-message)
+		cleanUp "$msg"
 		exit
 	fi
-	# cp "$msg" "$msgbak"
 	# clean msg to trim lines and remove starting blank lines
 	echo "$msgText" | sed 's/ *$//' | sed '/./,$! d' > "$msgbak"
 	# subject
 	subject=$(head -n 1 "$msgbak")
-	# echo $subject
 	if [[ "$subject" == "Merge branch"* ]] \
 		|| [[ "$subject" == "Merge remote-tracking branch"* ]]; then
 		echo "  keeping merge commit subject as is"
@@ -88,8 +87,6 @@ fileCompareRelaxed() {
 	text2=$(cat "$2")
 	text1=$(validText "$text1")
 	text2=$(validText "$text2")
-	#~ echo "text1 $text1"
-	#~ echo "text2 $text2"
 	if [[ "$text1" == "$text2" ]]; then
 		# true
 		return 0
@@ -131,10 +128,11 @@ applyCommitMessageConvention() {
 				# no change after applying convention, return
 				echo "  no change after applying convention"
 				echo "  done"
-				return;
+				break;
 			fi
 			echo "  changing message"
 		else
+			# remove $2 arg
 			set --
 		fi
 		$editor "$msg"
@@ -160,31 +158,42 @@ applyCommitMessageConvention() {
 					if fileCompare "$msg" "$msgbak"; then
 						echo "  no manual change after undo"
 						echo "  done"
-						return;
+						break;
 					fi
 					;;
 				[aA] )
 					# abort commit by exit
-					echo "  aborting commit";
+					echo 1>&2 "  aborting commit";
+					cleanUp "$msg"
 					exit 1;;
 				[fF] )
 					# force message
 					echo "  forcing message";
 					$editor "$msg"
-					return;;
+					break;;
 				[oO] )
 					# original message
 					echo "  original message";
 					cp "$msgoriginal" "$msg"
 					$editor "$msg"
-					return;;
+					break;;
 				* )
 					# all ok, so commit
 					echo "  done";
-					return;;
+					break;;
 			esac
 		fi
 	done
+	cleanUp "$msg"
 }
+
+# clean up
+cleanUp() {
+	msg="$1"
+	rm -f "$msg".bak
+	rm -f "$msg".convention
+	rm -f "$msg".original
+}
+
 
 applyCommitMessageConvention "$1" "$2"

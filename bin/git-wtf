@@ -1,9 +1,0 @@
-#!/bin/sh
-
-echo ""
-echo "There, there, it's OK."
-echo ""
-file='/c/git/git-tech-talk/intro.gtt'
-if [ -f "$file" ]; then
-    cat "$file" | head -20
-fi

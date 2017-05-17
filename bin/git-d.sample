@@ -1,7 +1,0 @@
-#!/bin/sh
-
-#echo "git-d"
-args=$@
-args=$(replace-option-aliases "$@")
-#echo $args
-git diff $args

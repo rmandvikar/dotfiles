@@ -1,7 +1,0 @@
-#!/bin/sh
-
-#echo "git-l"
-args=$@
-#args=$(replace-option-aliases "$@")
-#echo $args
-git lg2 $args
