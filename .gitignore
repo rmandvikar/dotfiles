@@ -18,6 +18,9 @@ bak/
 .viminfo
 NTUSER*
 work.bashrc
+work
+workspace
+~
 
 !.gitignore
 !*.gitconfig
