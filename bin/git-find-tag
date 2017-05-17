@@ -1,0 +1,66 @@
+#!/bin/sh
+
+#usage: git find-tag <commit> [<branch>] [<tag-pattern>]
+#
+# See http://stackoverflow.com/questions/43991602/list-tags-in-git-repo-sorted-by-how-they-appear-in-graph
+#
+# Find the tag when a given commit was merged into current or
+# given branch.
+#
+# "Using merge commits to represent the last deployed version of
+# production code - That’s an antipattern. Use tags." VonC
+#
+# See http://endoflineblog.com/gitflow-considered-harmful
+# See http://stackoverflow.com/questions/6905557/git-workflow-clarification-and-avoiding-antipatterns
+#
+# $ git find-tag 2d4ec14 dev "v.\..$"
+# 5f58726 (dev, tag: v1.0)
+#
+# $ git find-tag 2d4ec14 dev "v.+beta"
+# 436d6da (tag: v1.0-beta)
+#
+#
+# *   5f58726 (8 days ago) (dev, tag: v1.0)
+# |\    Merge branch 'hooks' into dev
+# | * 436d6da (10 days ago) (tag: v1.0-beta)
+# | |   semver: Add instructions to commit message
+# | * 2d4ec14 (9 days ago)
+# |/    prepare-commit-msg: Use variable for $1 arg
+# *   845ff28 (10 days ago)
+# |\    Merge branch 'merge-drivers' into dev
+#
+
+commit=$1
+if [ -z $commit ]; then
+	echo 1>&2 "fatal: commit is required"
+	exit 1
+fi
+commit=$(git rev-parse $commit)
+branch=${2-@}
+pattern=${3-.}
+
+# tags between branch and commit sorted as in graph following a pattern
+tags=$(
+	git log --decorate --simplify-by-decoration --ancestry-path \
+		--pretty="format:%D" $commit..$branch \
+	| sed 's/, /\n/' \
+	| grep '^tag: ' \
+	| sed 's/tag: //' \
+	| egrep "$pattern"
+)
+if [ ! -z "$tags" ]; then
+	echo "tags:"
+	for tag in $tags; do
+		echo "  $tag"
+	done
+	echo ""
+fi
+
+tag=$(echo "$tags" | tail -1)
+if [ -z "$tag" ]; then
+	# tag not found
+	echo 1>&2 "fatal: no tag found"
+	exit 1
+fi
+
+git show -s "$tag"
