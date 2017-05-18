@@ -39,6 +39,11 @@ commit=$(git rev-parse $commit)
 branch=${2-@}
 pattern=${3-.}
 
+# if branch points to commit (both are same), then look at commit parent
+if [ $commit == $(git rev-parse $branch) ]; then
+	commit="$commit~"
+fi
+
 # tags between branch and commit sorted as in graph following a pattern
 tags=$(
 	git log --decorate --simplify-by-decoration --ancestry-path \
