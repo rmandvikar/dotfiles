@@ -40,4 +40,6 @@ workspace
 !readme.txt
 
 user.gitconfig
+work-user.gitconfig
+
 overrides.gitconfig
