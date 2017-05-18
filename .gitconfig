@@ -322,7 +322,7 @@
 	#meta 		= normal
 	commit 		= "#7eb6ff" # ~blue
 	whitespace 	= normal red
-	frag		= bold cyan
+	frag 		= bold cyan
 	old 		= "#fc9f9f" # ~red
 	new 		= "#c9ffc9" # ~green
 
@@ -344,7 +344,7 @@
 	#branch 		= normal
 	#remoteBranch 	= normal
 	#tag 			= normal
-	#stash			= normal
+	#stash 			= normal
 	#HEAD 			= bold cyan
 
 [color "interactive"]
