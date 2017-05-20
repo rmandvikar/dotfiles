@@ -5,6 +5,7 @@
 #		- Replace default text with placeholder
 #		- Add line after branch
 #	- Add semver instructions to commit message
+#	- Remind to update README.md if not
 #	- Massage merge commit message
 #		- Remove "remote-tracking" from merge commit subject
 #		- Uncomment Conflicts section in merge commit body
