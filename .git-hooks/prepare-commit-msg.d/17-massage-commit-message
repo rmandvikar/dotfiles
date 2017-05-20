@@ -1,0 +1,19 @@
+#!/bin/sh
+
+# Massage commit message
+massageCommitMessage() {
+	# replace default text with placeholder
+	sed -i \
+		-e "s/^# Please enter the commit message for your changes. Lines starting/#######/" \
+		-e "s/^# with '#' will be ignored, and an empty message aborts the commit.//" \
+		"$msg"
+	# add line after branch
+	sed -i \
+		-e '/^# On branch /a #' \
+		-e '/^# HEAD detached at /a #' \
+		"$msg"
+}
+
+
+msg="$1"
+massageCommitMessage

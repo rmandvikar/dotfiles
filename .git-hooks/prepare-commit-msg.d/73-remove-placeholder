@@ -1,0 +1,10 @@
+#!/bin/sh
+
+# Remove placeholder
+removePlaceholder() {
+	sed -i '/^#######/,/^$/ d' "$msg"
+}
+
+
+msg="$1"
+removePlaceholder
