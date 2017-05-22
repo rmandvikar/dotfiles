@@ -31,6 +31,10 @@ export -f cleanUp
 
 # Call sub-hooks in <hook>.d dir.
 callSubhooks() {
+	# skip hooks
+	if [ "$SKIP_HOOKS" == "true" ]; then
+		return
+	fi
 	# hookname is passed as env variable
 	hookdir="$hookname.d"
 	if [ -d ~/.git-hooks/"$hookdir" ]; then
