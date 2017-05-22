@@ -90,7 +90,7 @@ $ git coe aste
 ##### winmerge script
 
 ```bash
-# winmerge.sh shows diff for added/removed files using a winmerge.empty file stub
+# winmerge.sh shows diff for added/removed files using a winmerge.empty dummy file
 $ git dt head~ head added-file.txt
 $ git dt head~ head deleted-file.txt
 ```
@@ -156,7 +156,13 @@ $ git purge-branches [-n]
 
 ##### git hooks
 
-###### commit-msg hook
+Each hook is comprised of sub-hooks that are placed in the `<hook>.d` dir at `~/.git-hooks/` path. This allows to
+- arbitrarily call any function in a desired order.
+- call proprietary or work hooks without committing.
+
+The sub-hooks in `<hook>.d` dir are called in the sorted order of 'ls' command after ignoring files with extensions (`ls -I '*.*' -1 "<hook>.d"`). Sub-hooks with `(gitignore)` in their names are git-ignored.
+
+###### apply-commit-message-convention sub-hook
 
 ```
 # help with 50/72 commit message convention
@@ -198,14 +204,23 @@ hooks/commit-msg
 ```
 
 ```
-# add gerrit Change-Id
+# add gerrit Change-Id sub-hook
 ```
 
-###### skip/apply functions of commit-msg hook
+###### skip/apply functions of hook
+
+As the hooks are run globally from `~/.git-hooks/` dir, files placed in repo's local dir `.git/hooks/` are used as flags to skip/apply sub-hooks.
 
 ```
-# use .git/hooks/skip-cmc file stub to skip commit message convention (cmc)
-# use .git/hooks/changeid file stub to apply gerrit Change-Id
+# use .git/hooks/skip-cmc flag file to skip commit message convention (cmc)
+# use .git/hooks/changeid flag file to apply gerrit Change-Id
+```
+
+###### skip hooks
+
+```
+# use `SKIP_HOOKS` environment variable to skip hooks
+$ SKIP_HOOKS=true git commit
 ```
 
 ##### git prompt script
