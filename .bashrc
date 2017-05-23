@@ -30,3 +30,5 @@ alias msbuild="'/c/Program Files (x86)/MSBuild/14.0/Bin/MSBuild.exe'"
 alias jira=jq
 
 tabs 4
+
+export GIT_MERGE_AUTOEDIT=no
