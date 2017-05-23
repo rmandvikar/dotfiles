@@ -120,8 +120,12 @@
 						set -- "$currBranch"; \
 					fi; \
 					for ((i=1;i<=$#;i++)); do \
-						branch=${!i}; \
-						remoteBranch=$(git rev-parse --abbrev-ref $branch@{u}); \
+						branch=$(git rev-parse --abbrev-ref ${!i}); \
+						remoteBranch=$(git rev-parse --abbrev-ref $branch@{u} 2>/dev/null); \
+						if [ -z $remoteBranch ]; then \
+							echo 1>&2 "fatal: no remote branch for branch $branch"; \
+							continue; \
+						fi; \
 						if [ "$branch" = "$currBranch" ]; then \
 							: if current branch, then reset --hard; \
 							command=$(echo "git reset --hard $remoteBranch"); \
