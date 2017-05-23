@@ -1,4 +1,5 @@
 #!/bin/sh
+
 function @b() {
 	git rev-parse --abbrev-ref HEAD;
 }
@@ -17,10 +18,6 @@ gc() {
 }
 c() {
 	git config --lo -e &
-}
-diff-gc() {
-	difftool="WinMergeU"
-	"$difftool" -e -u "$HOME/.gitconfig" "$HOME/.gitconfig.gist" &
 }
 
 alias g=git
