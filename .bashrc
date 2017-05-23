@@ -20,6 +20,8 @@ c() {
 	git config --lo -e &
 }
 
+alias s=o
+
 alias g=git
 alias gti=git
 alias gt=git
