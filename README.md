@@ -114,16 +114,16 @@ $ s file.txt
 
 ```bash
 # To wrap paths having spaces with double quotes for piping to text editor
-$ git ls-files "*config" | wrap | xargs o
+$ git ls-files "*config" | wrap | o
 # To open grepped files
-$ git grep "config" | cut -d':' -f1 | wrap | xargs o
+$ git grep "config" | cut -d':' -f1 | wrap | o
 ```
 
 ```bash
 # To open grepped files with custom cut alias, cutg
-$ git grep "config" | cutg | wrap | xargs o
+$ git grep "config" | cutg | wrap | o
 # To cut status with custom cut alias, cuts
-$ git diff --name-status | cuts | wrap | xargs o
+$ git diff --name-status | cuts | wrap | o
 ```
 
 ```bash
