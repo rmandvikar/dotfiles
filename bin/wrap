@@ -4,5 +4,12 @@
 start=${1-'"'}
 end=${2-"$start"}
 while read data; do
-	echo "$start""$data""$end"
+	s="$data"
+	if ! echo "$data" | grep -q "^$start"; then
+		s="$start$s"
+	fi
+	if ! echo "$data" | grep -q "$end$"; then
+		s="$s$end"
+	fi
+	echo "$s"
 done
