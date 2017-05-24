@@ -49,20 +49,28 @@ applyCommitMessageConventionInternal() {
 		# body
 		body=$(echo "$rest" | tail -n +"$bodylineStart")
 		# fmt does not handle '#' properly so filter out
-		echo "$body" | sed '/^#/ d' | fmt -s -w $bodyLen >> "$msgconvention"
+		echo "$body" | sed '/^# --* >8 --*$/,$ d' | sed '/^#/ d' \
+			| fmt -s -w $bodyLen >> "$msgconvention"
 	else
 		echo "" >> "$msgconvention"
 	fi
-	# put back '#' lines by appending
-	echo "$rest" | sed -n '/^#/ p' >> "$msgconvention"
+	# put back unified diff and comments by appending
+	udiff=$(echo "$rest" | sed -n '/^# --* >8 --*$/,$ p')
+	echo "$rest" | sed '/^# --* >8 --*$/,$ d' \
+		| sed -n '/^#/ p' >> "$msgconvention"
+	echo "$udiff" >> "$msgconvention"
 	# copy .convention to msg
 	cp "$msgconvention" "$msg"
 }
 
-# text count after removing comments
+# text count after removing insignificant content
+#	blank lines, starting empty lines, unified diff, comments
 validText() {
 	text="$1"
-	echo "$text" | sed '/^#/ d'
+	# remove blank lines, starting empty lines, unified diff, comments
+	echo "$text" \
+		| sed 's/ *$//' | sed '/./,$! d' \
+		| sed '/^# --* >8 --*$/,$ d' | sed '/^#/ d'
 }
 # text count after removing spaces (even between words), newlines
 validTextCount() {
