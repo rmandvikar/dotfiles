@@ -139,6 +139,7 @@ applyCommitMessageConvention() {
 		if fileCompare "$msg" "$msgconvention"; then
 			echo "  no manual change"
 			# read -p "now what? (*/undo/abort/force/original) " ans
+			question=""
 			question+="  now what? ("
 			question+="${Prompt}*${None}/"
 			question+="${Prompt}u${None}ndo/"
