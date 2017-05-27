@@ -1,14 +1,29 @@
 #!/bin/sh
 
-if [ $# -eq 0 ]; then
-	# default to head if no args
-	set -- "HEAD"
-fi
+#usage:
+#	gq [<commit>]
+#	gq [<query>]
 
-if [ $# -eq 1 ] && [[ $(git cat-file -t "$1" 2>/dev/null) == "commit" ]]; then
+GerritUrlQuery="$GerritUrl/#/q/"
+
+# if not in git repo
+if [[ $(git rev-parse --is-inside-work-tree 2>/dev/null) != "true" ]]; then
+	if [ $# -eq 0 ]; then
+		start chrome --new-window "$GerritUrl"
+	else
+		start chrome --new-window "$GerritUrlQuery$*"
+	fi
+	exit
+fi
+# if in git repo
+if [ $# -eq 0 ] && [[ $(git cat-file -t HEAD 2>/dev/null) == "commit" ]]; then
+	commit="HEAD"
+elif [ $# -eq 1 ] && [[ $(git cat-file -t "$1" 2>/dev/null) == "commit" ]]; then
+	commit="$1"
+fi
+if [ ! -z "$commit" ]; then
 	# commit
 	#	parse changeid from commit message and pass
-	commit="$1"
 	last=$(git log -1 $commit | tail -1 | sed 's/ *//')
 	if [[ "$last" != Change-Id* ]]; then
 		# changeid not present
@@ -16,9 +31,9 @@ if [ $# -eq 1 ] && [[ $(git cat-file -t "$1" 2>/dev/null) == "commit" ]]; then
 		exit 1
 	fi
 	id=$(echo $last | sed 's/Change-Id: //')
-	start chrome --new-window "$GerritUrl$id"
+	start chrome --new-window "$GerritUrlQuery$id"
 else
 	# query
 	#	pass all args
-	start chrome --new-window "$GerritUrl$*"
+	start chrome --new-window "$GerritUrlQuery$*"
 fi
