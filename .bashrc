@@ -23,7 +23,7 @@ c() {
 remote() {
 	git config --get-regex remote\..*\.url \
 		| cut -d' ' -f2 \
-		| sed 's/\.git$//g' | sed 's/^git@//' \
+		| sed 's/\.git$//' | sed 's/^git@//' \
 		| sed 's/^https\?:\/\///' | sed 's/:/\//' \
 		| xargs start chrome --new-window
 }
