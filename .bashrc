@@ -1,18 +1,5 @@
 #!/bin/sh
 
-function @b() {
-	git rev-parse --abbrev-ref HEAD;
-}
-function @u() {
-	git rev-parse --abbrev-ref HEAD@{u};
-}
-function @() {
-	echo $1@{u};
-}
-function up() {
-	@ $*;
-}
-
 gc() {
 	git config --gl -e &
 }
