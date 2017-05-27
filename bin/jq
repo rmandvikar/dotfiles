@@ -1,14 +1,30 @@
 #!/bin/sh
 
-if [ $# -eq 0 ]; then
-	# default to head if no args
-	set -- "HEAD"
-fi
+#usage:
+#	jq [<commit>]
+#	jq [<query>]
 
-if [ $# -eq 1 ] && [[ $(git cat-file -t "$1" 2>/dev/null) == "commit" ]]; then
+JiraUrlQuery="$JiraUrl/secure/QuickSearch.jspa?searchString="
+
+# if not in git repo
+if [[ $(git rev-parse --is-inside-work-tree 2>/dev/null) != "true" ]]; then
+	if [ $# -eq 0 ]; then
+		start chrome --new-window "$JiraUrl"
+	else
+		start chrome --new-window "$JiraUrlQuery$*"
+	fi
+	exit
+fi
+# if in git repo
+if [ $# -eq 0 ] && [[ $(git cat-file -t HEAD 2>/dev/null) == "commit" ]]; then
+	commit="HEAD"
+elif [ $# -eq 1 ] && [[ $(git cat-file -t "$1" 2>/dev/null) == "commit" ]]; then
+	commit="$1"
+fi
+if [ ! -z "$commit" ]; then
 	# commit
-	#	parse ticket(s) from commit(s) message(s) and pass
-	commit=$(git rev-parse --short "$1")
+	commit=$(git rev-parse --short "$commit")
+	#	parse ticket(s) from commit message(s) and pass
 	commits=($commit)
 	# merge commit
 	#	add parent commits also
@@ -34,11 +50,11 @@ if [ $# -eq 1 ] && [[ $(git cat-file -t "$1" 2>/dev/null) == "commit" ]]; then
 	fi
 	# concatenate urls
 	for ticket in $tickets; do
-		query="$query$JiraUrl$ticket "
+		query="$query$JiraUrlQuery$ticket "
 	done
 	start chrome --new-window $query
 else
 	# query
 	#	pass all args
-	start chrome --new-window "$JiraUrl$*"
+	start chrome --new-window "$JiraUrlQuery$*"
 fi
