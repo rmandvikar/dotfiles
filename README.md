@@ -151,7 +151,7 @@ $ git find-tag <commit> [<branch>]
 
 ```bash
 # To purge merged branches except certain ones
-$ git purge-branches [-n]
+$ git purge-branches [-n | --dry-run]
 ```
 
 ##### git hooks

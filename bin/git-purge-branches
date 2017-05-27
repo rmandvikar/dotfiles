@@ -1,12 +1,22 @@
-#!/bin/bash
+#!/bin/sh
 
 # delete merged branches except certain ones
-#usage: git purge-branches [-n]
+#usage: git purge-branches [-n | --dry-run]
 
-if [ ! -z "$1" ] && [ "$1" != "-n" ] && [ "$1" != "--dry-run" ]; then
-	echo 1>&2 "fatal: unknown arg "$1""
-	exit 1
-fi
+dryRun=false
+while true; do
+	case "$1" in
+		-n | --dry-run )
+			dryRun=true; shift ;;
+		-- ) shift; break ;;
+		* )
+			if [ ! -z "$1" ]; then
+				echo 1>&2 "fatal: unknown option $1"
+				exit 1
+			fi
+			break ;;
+	esac
+done
 
 branches=$(
 	git branch --merged \
@@ -17,14 +27,9 @@ branches=$(
 	| egrep -v "^(bak/|cr/)" \
 )
 for branch in ${branches[@]}; do
-	if [ ! -z $branch ]; then
-		if [ -z "$1" ]; then
-			git branch -d $branch
-		elif [ "$1" == "-n" ] || [ "$1" == "--dry-run" ]; then
-			echo "Would delete "$branch
-		else
-			echo 1>&2 "fatal: unknown arg "$1""
-			exit 1
-		fi
+	if [ $dryRun == true ]; then
+		echo "Would delete "$branch
+	else
+		git branch -d $branch
 	fi
 done
