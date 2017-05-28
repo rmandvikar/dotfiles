@@ -45,13 +45,12 @@
 [alias]
 	# note: shell commands (with !) will be executed from the top-level directory of a repository,
 	# which may not necessarily be the current directory. so add 'cd ${GIT_PREFIX:-.} &&' before.
-	alias 	= !"f() { git conf alias.$1; }; f"
-	conf 	= 	!"f() { \
-					arg=$1; \
-					if [ $# -eq 2 ]; then \
-						arg+=".$2"; \
+	alias 	= 	!"f() { \
+					if [[ "$1" == 'conf' ]]; then \
+						cat '~/bin/git-conf'; \
+					else \
+						git conf alias."$1"; \
 					fi; \
-					git config --get-regex $arg | sed 's/^alias\\.//' | sed -r 's/\t{4}/\\n/g'; \
 				}; f"
 	
 	## readonly ##
