@@ -2,7 +2,7 @@
 
 # Add semver instructions to commit message
 addSemverInstructions() {
-	if [ -f .git/hooks/check-semver ]; then
+	if [[ $(getConfig "hook.check-semver") == "true" ]]; then
 		# use '#######' string as a placeholder to insert the instructions
 		sed -i '/^#######/i '`
 			`'# Please add semver line in the commit message.\n'`

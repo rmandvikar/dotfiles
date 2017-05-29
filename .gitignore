@@ -35,8 +35,6 @@ workspace
 /.git-hooks/*.d/*.*
 /.git-hooks/*.d/*(gitignore)*
 !/.git-templates/
-/.git-templates/hooks/changeid
-/.git-templates/hooks/skip-cmc
 !winmerge.empty
 !readme.txt
 
