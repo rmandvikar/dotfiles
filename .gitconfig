@@ -72,7 +72,8 @@
 	lrcount = rev-list --left-right --count
 	lcount 	= rev-list --left-only --count
 	rcount 	= rev-list --right-only --count
-	note 	= !"f() { git log -1 --pretty=\"format:%H\" ${1-HEAD}; }; f"
+	note 	= log --pretty=note -1
+	cs 		= log --pretty=cs --date=short -1
 	lsf 	= ls-files
 	lst 	= ls-tree
 	
@@ -98,7 +99,6 @@
 	undo 	= !"git reset --hard && git clean -f"
 	cp 		= cherry-pick
 	
-	summarize 	= log --pretty=summary --date=short -1
 	undomerge 	= reset --merge orig_head
 	undorebase 	= !"f() { \
 					git reset --hard orig_head; \
@@ -229,7 +229,8 @@
 	lgoc 	= "format:%C(auto)%h%C(reset)%C(auto)%d%C(reset) %C(#ffff99)%s%C(reset) - %C(#ffb799)%aN%C(reset)"
 	one 	= "format:%C(auto)%h%C(reset) %C(#ffaaff)(%ar)%C(reset) %C(#ffff99)%s%C(reset) - %C(#ffb799)%aN%C(reset)%C(auto)%d%C(reset)"
 	two 	= "format:%C(auto)%h%C(reset) - %C(#ffeeff)%aD%C(reset) %C(#ffaaff)(%ar)%C(reset)%C(auto)%d%C(reset)%n  %C(#ffff99)%s%C(reset) - %C(#ffb799)%aN%C(reset)"
-	summary = "format:%H (\"%s\", %ad)"
+	note 	= "format:%H"
+	cs 		= "format:%H (\"%s\", %ad)"
 [alias]
 	#hint: add --all to see whole repo
 	l 		= log --graph --date=relative --decorate --abbrev-commit --pretty=two
