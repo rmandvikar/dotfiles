@@ -29,6 +29,12 @@ cleanUp() {
 }
 export -f cleanUp
 
+# config get
+getConfig() {
+	git config --get "$1"
+}
+export -f getConfig
+
 # Call sub-hooks in <hook>.d dir.
 callSubhooks() {
 	# skip hooks

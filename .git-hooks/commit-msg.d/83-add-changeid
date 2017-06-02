@@ -2,7 +2,7 @@
 
 # Add gerrit changeid
 changeid() {
-	if [ -f .git/hooks/changeid ]; then
+	if [[ $(getConfig "hook.changeid") == "true" ]]; then
 		~/.git-hooks/commit-msg.d/commit-msg-changeid.dump "$@"
 	fi
 }
