@@ -47,7 +47,7 @@
 	# which may not necessarily be the current directory. so add 'cd ${GIT_PREFIX:-.} &&' before.
 	alias 	= 	!"f() { \
 					if [[ "$1" == 'conf' ]]; then \
-						cat '~/bin/git-conf'; \
+						cat ~/bin/git-conf; \
 					else \
 						git conf alias."$1"; \
 					fi; \
