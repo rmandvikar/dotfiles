@@ -1,0 +1,18 @@
+#!/bin/sh
+
+# Remind to update README.md if not
+remindToUpdateReadme() {
+	# remind only if file is already present
+	test -f README.md \
+		&& git diff --name-only --diff-filter=M --staged --quiet -- README.md
+	if [ $? -eq 0 ]; then
+		# use '#######' string as a placeholder to insert the instructions
+		sed -i '/^#######/i '`
+			`'# Please update README.md if necessary.\n' \
+			"$msg"
+	fi
+}
+
+
+msg="$1"
+remindToUpdateReadme

@@ -120,8 +120,12 @@
 						set -- "$currBranch"; \
 					fi; \
 					for ((i=1;i<=$#;i++)); do \
-						branch=${!i}; \
-						remoteBranch=$(git rev-parse --abbrev-ref $branch@{u}); \
+						branch=$(git rev-parse --abbrev-ref ${!i}); \
+						remoteBranch=$(git rev-parse --abbrev-ref $branch@{u} 2>/dev/null); \
+						if [ -z $remoteBranch ]; then \
+							echo 1>&2 "fatal: no remote branch for branch $branch"; \
+							continue; \
+						fi; \
 						if [ "$branch" = "$currBranch" ]; then \
 							: if current branch, then reset --hard; \
 							command=$(echo "git reset --hard $remoteBranch"); \
@@ -226,7 +230,7 @@
 	lgoc 	= "format:%C(auto)%h%C(reset)%C(auto)%d%C(reset) %C(#ffff99)%s%C(reset) - %C(#ffb799)%aN%C(reset)"
 	one 	= "format:%C(auto)%h%C(reset) %C(#ffaaff)(%ar)%C(reset) %C(#ffff99)%s%C(reset) - %C(#ffb799)%aN%C(reset)%C(auto)%d%C(reset)"
 	two 	= "format:%C(auto)%h%C(reset) - %C(#ffeeff)%aD%C(reset) %C(#ffaaff)(%ar)%C(reset)%C(auto)%d%C(reset)%n  %C(#ffff99)%s%C(reset) - %C(#ffb799)%aN%C(reset)"
-	summary = "format:%h (\"%s\", %ad)"
+	summary = "format:%H (\"%s\", %ad)"
 [alias]
 	#hint: add --all to see whole repo
 	l 		= log --graph --date=relative --decorate --abbrev-commit --pretty=two
@@ -245,6 +249,8 @@
 	decorate 	= short
 	mailmap 	= true
 	follow 		= true
+	# exclude blue and bold blue due to visibility
+	graphColors = red, green, yellow, magenta, cyan, bold red, bold green, bold yellow, bold magenta, bold cyan
 
 [push]
 	default = current
@@ -320,7 +326,7 @@
 	#meta 		= normal
 	commit 		= "#7eb6ff" # ~blue
 	whitespace 	= normal red
-	frag		= bold cyan
+	frag 		= bold cyan
 	old 		= "#fc9f9f" # ~red
 	new 		= "#c9ffc9" # ~green
 
@@ -342,7 +348,7 @@
 	#branch 		= normal
 	#remoteBranch 	= normal
 	#tag 			= normal
-	#stash			= normal
+	#stash 			= normal
 	#HEAD 			= bold cyan
 
 [color "interactive"]

@@ -1,0 +1,1 @@
+See comments in 'hook-main-wrapper' script.

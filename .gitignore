@@ -18,6 +18,9 @@ bak/
 .viminfo
 NTUSER*
 work.bashrc
+work
+workspace
+~
 
 !.gitignore
 !*.gitconfig
@@ -29,6 +32,8 @@ work.bashrc
 !*.properties
 !/bin/
 !/.git-hooks/
+/.git-hooks/*.d/*.*
+/.git-hooks/*.d/*(gitignore)*
 !/.git-templates/
 /.git-templates/hooks/changeid
 /.git-templates/hooks/skip-cmc
@@ -36,4 +41,6 @@ work.bashrc
 !readme.txt
 
 user.gitconfig
+work-user.gitconfig
+
 overrides.gitconfig

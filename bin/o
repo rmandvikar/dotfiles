@@ -1,4 +1,11 @@
 #!/bin/sh
 
-#scite="d:/setups/wscite/scite.exe"
-scite "$@" &
+if [ $# -gt 0 ]; then
+	scite "$@" &
+else
+	args=""
+	while read data; do
+		args=$args$data" "
+	done
+	echo $args | xargs scite &
+fi

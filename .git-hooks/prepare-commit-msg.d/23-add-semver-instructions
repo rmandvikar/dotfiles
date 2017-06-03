@@ -1,0 +1,16 @@
+#!/bin/sh
+
+# Add semver instructions to commit message
+addSemverInstructions() {
+	if [ -f .git/hooks/check-semver ]; then
+		# use '#######' string as a placeholder to insert the instructions
+		sed -i '/^#######/i '`
+			`'# Please add semver line in the commit message.\n'`
+			`'#+#MAJOR\n#+#MINOR\n#+#PATCH\n' \
+			"$msg"
+	fi
+}
+
+
+msg="$1"
+addSemverInstructions

@@ -1,0 +1,21 @@
+#!/bin/sh
+
+# Massage merge commit message
+massageMergeCommitMessage() {
+	case "$2" in
+		merge)
+			# Remove "remote-tracking" from merge commit subject
+			sed -i '1 s/^Merge remote-tracking branch /Merge branch /' "$msg"
+			# Uncomment Conflicts section in merge commit body
+			sed -i -e '/^# Conflicts:/,/^#\?$/ s/# \?//' -e 's/\t/  /' "$msg"
+			# Delete default text in merge commit body (5 lines)
+			sed -i "/^# Please enter a commit message to explain why this merge is necessary,/"`
+				`",/^$/ d" "$msg"
+			;;
+		*) ;;
+	esac
+}
+
+
+msg="$1"
+massageMergeCommitMessage "$@"

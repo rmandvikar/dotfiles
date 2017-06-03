@@ -1,0 +1,59 @@
+#!/bin/sh
+
+# Loop through the sub-hooks in the <hook>.d dir and call them in a
+# sorted order after ignoring files with extensions.
+#
+# To create a new hook, simply follow the 'commit-msg' hook pattern.
+#
+# The 'commit-msg' hook calls the 'hook-main-wrapper' script which
+# calls the sub-hooks in the 'commit-msg.d' dir after ignoring files
+# with extensions and sorting in the default sort order of 'ls'
+# command.
+#
+# Steps:
+#
+#  - Create the main hook script ('commit-msg') and copy the content.
+#  - Create a <hook>.d dir ('commit-msg.d').
+#  - Put sub-hooks in dir. Number sub-hooks in order of how they are to
+#    to called. To ignore a sub-hook, add any extension to it.
+
+# Colors
+export    Yellow='\033[1;33m'
+export       Red='\033[0;31m'
+export    Prompt='\033[38;2;255;136;255m'
+export      None='\033[0m' 		# No Color
+
+# clean up
+cleanUp() {
+	rm -f .git/hook.change
+}
+export -f cleanUp
+
+# Call sub-hooks in <hook>.d dir.
+callSubhooks() {
+	# skip hooks
+	if [ "$SKIP_HOOKS" == "true" ]; then
+		return
+	fi
+	# hookname is passed as env variable
+	hookdir="$hookname.d"
+	if [ -d ~/.git-hooks/"$hookdir" ]; then
+		# ignore files with extensions
+		subhooks=$( ls -I '*.*' -1 ~/.git-hooks/"$hookdir" )
+		if [ ! -z "$subhooks" ]; then
+			# echo hook name only if there are subhooks
+			echo "hooks/$hookname"
+			for subhook in $subhooks; do
+				~/.git-hooks/"$hookdir"/"$subhook" "$@"
+				# check exit code and exit if needed
+				exitcode=$?
+				if [ $exitcode -ne 0 ]; then
+					exit $exitcode
+				fi
+			done
+		fi
+	fi
+}
+
+
+callSubhooks "$@"
