@@ -10,7 +10,7 @@
 	enabled = true
 
 [core]
-	editor 			= scite # '/d/setups/wscite/SciTE.exe'
+	editor 			= scite
 	preloadindex 	= true
 	fscache 		= true
 	pager 			= less -x4
