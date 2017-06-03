@@ -26,4 +26,7 @@ alias jira=jq
 
 tabs 4
 
+# scite is on path
+export EDITOR=scite # '/d/setups/wscite/SciTE.exe'
+
 export GIT_MERGE_AUTOEDIT=no

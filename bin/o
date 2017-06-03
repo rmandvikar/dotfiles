@@ -1,11 +1,11 @@
 #!/bin/sh
 
 if [ $# -gt 0 ]; then
-	scite "$@" &
+	"$EDITOR" "$@" &
 else
 	args=""
 	while read data; do
 		args=$args$data" "
 	done
-	echo $args | xargs scite &
+	echo $args | xargs "$EDITOR" &
 fi
