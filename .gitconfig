@@ -103,7 +103,7 @@
 	undorebase 	= !"f() { \
 					git reset --hard orig_head; \
 					: abort only if rebase is in progress; \
-					test -d ".git/rebase-merge" -o -d ".git/rebase-apply" \
+					(test -d ".git/rebase-merge" || test -d ".git/rebase-apply") \
 						&& git rebase --abort; \
 				}; f"
 	
