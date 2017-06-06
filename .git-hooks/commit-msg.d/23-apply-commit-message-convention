@@ -16,8 +16,13 @@ applyCommitMessageConventionInternal() {
 	echo "$msgText" | sed 's/ *$//' | sed '/./,$! d' > "$msgbak"
 	# subject
 	subject=$(head -n 1 "$msgbak")
-	if [[ "$subject" == "Merge branch"* ]] \
-		|| [[ "$subject" == "Merge remote-tracking branch"* ]]; then
+	if \
+		[[ "$subject" == "Merge branch "* ]] || \
+		[[ "$subject" == "Merge remote-tracking branch "* ]] || \
+		[[ "$subject" == "Merge commit "* ]] || \
+		[[ "$subject" == "Merge tag "* ]] || \
+		[[ "$subject" == "Revert "* ]]
+	then
 		echo "  keeping merge commit subject as is"
 		echo "$subject" > "$msgconvention"
 	else
