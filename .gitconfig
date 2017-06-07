@@ -165,33 +165,7 @@
 					fi; \
 					git checkout ${branches[0]}; \
 				}; f"
-	
-	# rough guess of which branch in the given branches current branch is branched from
-	#usage: git branched-from branch1 branch2
-	bfrom = 	!"f() { \
-					: head or current branch; \
-					commit="@"; \
-					: some large number; \
-					min="314159265"; \
-					for ((branch=1;branch<=$#;branch++)); do \
-						: pick branch with least right-only count; \
-						count=$(git rev-list --right-only --count $commit...${!branch}); \
-						: echo "${!branch} - $count"; \
-						if [ $count -lt $min ]; then \
-							min=$count; \
-							target="${!branch}"; \
-						elif [ $count -eq $min ]; then \
-							: pick branch if it contains the target branch; \
-							bcount=$(git rev-list --right-only --count "${target}".."${!branch}"); \
-							: echo "    bcount: ${bcount}"; \
-							if [ $bcount -gt 0 ]; then \
-								target="${!branch}"; \
-							fi \
-						fi; \
-					done; \
-					echo "$target"; \
-				}; f"
-	branched-from 	= !"f() { git bfrom "$@"; }; f"
+	bfrom 	= branched-from
 
 [pretty]
 	lgoc 	= "format:%C(auto)%h%C(reset)%C(auto)%d%C(reset) %C(#ffff99)%s%C(reset) - %C(#ffb799)%aN%C(reset)"
