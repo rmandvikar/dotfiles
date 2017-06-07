@@ -1,0 +1,27 @@
+#!/bin/sh
+
+#usage: git coe branch
+#
+# Fuzzy checkout using a partial branch name.
+
+# short-circuit to checkout
+if [ $# -gt 1 ] || [ "$1" == "." ] || [ "$1" == "-" ] || [[ "$1" == *":"* ]]; then
+	git checkout "$@"
+	exit
+fi
+# grep for local branches except current
+branches=($(git b | grep -v "^\\*" | grep "$1" | cut -c3-))
+# die if no branches matched
+if [ ${#branches[@]} -eq 0 ]; then
+	echo 1>&2 "fatal: no branch matched"
+	exit 1
+fi
+# die if 2+ branches matched
+if [ ${#branches[@]} -gt 1 ]; then
+	echo 1>&2 "fatal: multiple branches matched"
+	for branch in ${branches[@]}; do
+		echo 1>&2 -e '  '$branch
+	done
+	exit 1
+fi
+git checkout ${branches[0]}
