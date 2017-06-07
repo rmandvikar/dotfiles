@@ -4,6 +4,11 @@
 #
 # Create and/or push current branch to gerrit.
 
+# exit if no 'refs/for/' configured
+if [ $(git config --get-regex remote\..*\.push | grep 'refs/for/' | wc -l) -eq 0 ]; then
+	echo 1>&2 "fatal: cannot use pushg as no 'refs/for/' to push to"
+	exit 1
+fi
 # default remote to that of master
 remoteDefault=$(git config --get branch.master.remote)
 remote="${2-"$remoteDefault"}"
