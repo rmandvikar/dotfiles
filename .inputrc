@@ -1,0 +1,15 @@
+$include /etc/inputrc
+
+# ctrl-right
+"\e[1;5C": forward-word
+# ctrl-right
+"\e[1;5D": backward-word
+
+# delete
+"\e[3~": delete-char
+# ctrl-delete
+"\e[3;5~": kill-word
+# alt-delete
+"\e[3;3~": kill-word
+# ctrl-backspace (check Backarrow sends ^H)
+"\C-?": backward-kill-word
