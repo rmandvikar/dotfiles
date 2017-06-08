@@ -1,0 +1,18 @@
+#!/bin/sh
+
+#usage: git alias <alias>
+#
+# To pretty print git alias (uses 'git config --get-regex' internally).
+
+git config --get-regex "^alias\.$1" | \
+	sed 's/^alias\.//' | \
+	sed -r 's/\t+/\'$'\n&/g' | sed -r 's/^\t{4}//'
+ls ~/bin/ | \
+	egrep "^git-$1" | \
+	while read line;
+	do
+		# print script path
+		echo "~/bin/$line"
+		# cat script with 1 tab indent
+		echo ~/bin/"$line" | xargs cat | sed 's/^/\t/'
+	done

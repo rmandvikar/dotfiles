@@ -45,13 +45,6 @@
 [alias]
 	# note: shell commands (with !) will be executed from the top-level directory of a repository,
 	# which may not necessarily be the current directory. so add 'cd ${GIT_PREFIX:-.} &&' before.
-	alias 	= 	!"f() { \
-					if [[ "$1" == 'conf' ]]; then \
-						cat ~/bin/git-conf; \
-					else \
-						git conf alias."$1"; \
-					fi; \
-				}; f"
 	
 	## readonly ##
 	s 		= status -s
@@ -108,90 +101,8 @@
 				}; f"
 	
 	## advanced ##
-	# force branches to point to their remote branches
-	#usage: git branch-reset master next dev
-	breset 	= 	!"f() { \
-					: get current branch; \
-					: note: 'git symbolic-ref --short HEAD' throws when in 'detached HEAD' state; \
-					currBranch=$(git rev-parse --abbrev-ref HEAD); \
-					: if no arg, breset current branch; \
-					if [ -z "$1" ]; then \
-						set -- "$currBranch"; \
-					fi; \
-					for ((i=1;i<=$#;i++)); do \
-						branch=$(git rev-parse --abbrev-ref ${!i}); \
-						remoteBranch=$(git rev-parse --abbrev-ref $branch@{u} 2>/dev/null); \
-						if [ -z $remoteBranch ]; then \
-							echo 1>&2 "fatal: no remote branch for branch $branch"; \
-							continue; \
-						fi; \
-						if [ "$branch" = "$currBranch" ]; then \
-							: if current branch, then reset --hard; \
-							command=$(echo "git reset --hard $remoteBranch"); \
-							echo "$command"; \
-							$command; \
-						else \
-							: else force branch; \
-							command=$(echo "git branch -f $branch $remoteBranch"); \
-							echo "$command"; \
-							$command; \
-						fi; \
-					done; \
-				}; f"
-	branch-reset 	= !"f() { git breset "$@"; }; f"
-	
-	# fuzzy checkout using a partial branch name
-	#usage: git coe branch
-	coe 	= 	!"f() { \
-					: short-circuit to checkout; \
-					if [ $# -gt 1 ] || [ "$1" == "." ] || [ "$1" == "-" ] || [[ "$1" == *":"* ]]; then \
-						git checkout "$@"; \
-						return; \
-					fi; \
-					: grep for local branches except current; \
-					branches=($(git b | grep -v "^\\*" | grep "$1" | cut -c3-)); \
-					: die if no branches matched; \
-					if [ ${#branches[@]} -eq 0 ]; then \
-						echo 1>&2 "fatal: no branch matched"; \
-						return; \
-					fi; \
-					: die if 2+ branches matched; \
-					if [ ${#branches[@]} -ge 2 ]; then \
-						echo 1>&2 "fatal: multiple branches matched"; \
-						for branch in ${branches[@]}; do \
-							echo 1>&2 -e '  '$branch; \
-						done; \
-						return; \
-					fi; \
-					git checkout ${branches[0]}; \
-				}; f"
-	
-	# rough guess of which branch in the given branches current branch is branched from
-	#usage: git branched-from branch1 branch2
-	bfrom = 	!"f() { \
-					: head or current branch; \
-					commit="@"; \
-					: some large number; \
-					min="314159265"; \
-					for ((branch=1;branch<=$#;branch++)); do \
-						: pick branch with least right-only count; \
-						count=$(git rev-list --right-only --count $commit...${!branch}); \
-						: echo "${!branch} - $count"; \
-						if [ $count -lt $min ]; then \
-							min=$count; \
-							target="${!branch}"; \
-						elif [ $count -eq $min ]; then \
-							: pick branch if it contains the target branch; \
-							bcount=$(git rev-list --right-only --count "${target}".."${!branch}"); \
-							: echo "    bcount: ${bcount}"; \
-							if [ $bcount -gt 0 ]; then \
-								target="${!branch}"; \
-							fi \
-						fi; \
-					done; \
-					echo "$target"; \
-				}; f"
-	branched-from 	= !"f() { git bfrom "$@"; }; f"
+	breset 	= branch-reset
+	bfrom 	= branched-from
 
 [pretty]
 	lgoc 	= "format:%C(auto)%h%C(reset)%C(auto)%d%C(reset) %C(#ffff99)%s%C(reset) - %C(#ffb799)%aN%C(reset)"
