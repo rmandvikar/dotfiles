@@ -45,13 +45,6 @@
 [alias]
 	# note: shell commands (with !) will be executed from the top-level directory of a repository,
 	# which may not necessarily be the current directory. so add 'cd ${GIT_PREFIX:-.} &&' before.
-	alias 	= 	!"f() { \
-					if [[ "$1" == 'conf' ]]; then \
-						cat ~/bin/git-conf; \
-					else \
-						git conf alias."$1"; \
-					fi; \
-				}; f"
 	
 	## readonly ##
 	s 		= status -s
