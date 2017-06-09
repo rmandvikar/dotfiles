@@ -107,21 +107,21 @@
 [pretty]
 	lgoc 	= "format:%C(auto)%h%C(reset)%C(auto)%d%C(reset) %C(#ffff99)%s%C(reset) - %C(#ffb799)%aN%C(reset)"
 	one 	= "format:%C(auto)%h%C(reset) %C(#ffaaff)(%ar)%C(reset) %C(#ffff99)%s%C(reset) - %C(#ffb799)%aN%C(reset)%C(auto)%d%C(reset)"
-	two 	= "format:%C(auto)%h%C(reset) - %C(#ffeeff)%aD%C(reset) %C(#ffaaff)(%ar)%C(reset)%C(auto)%d%C(reset)%n  %C(#ffff99)%s%C(reset) - %C(#ffb799)%aN%C(reset)"
+	two 	= "format:%C(auto)%h%C(reset) - %C(#ffeeff)%ad%C(reset) %C(#ffaaff)(%ar)%C(reset)%C(auto)%d%C(reset)%n  %C(#ffff99)%s%C(reset) - %C(#ffb799)%aN%C(reset)"
 	note 	= "format:%H"
 	cs 		= "format:%H (\"%s\", %ad)"
 [alias]
 	#hint: add --all to see whole repo
-	l 		= log --graph --date=relative --decorate --abbrev-commit --pretty=two
-	last 	= log --graph --date=relative --decorate --abbrev-commit --pretty=two -1
+	l 		= log --graph --date=format:'%a %d-%b-%Y %H:%M' --decorate --abbrev-commit --pretty=two
+	last 	= log --graph --date=format:'%a %d-%b-%Y %H:%M' --decorate --abbrev-commit --pretty=two -1
 	lo 		= log --oneline --decorate --abbrev-commit
 	lg  	= log --graph --decorate --abbrev-commit
 	lgo 	= log --graph --oneline --decorate --abbrev-commit
-	lgoc 	= log --graph --date=relative --decorate --abbrev-commit --pretty=lgoc
-	lg1 	= log --graph --date=relative --decorate --abbrev-commit --pretty=one
-	lg2 	= log --graph --date=relative --decorate --abbrev-commit --pretty=two
-	l1 		= log --date=relative --decorate --abbrev-commit --pretty=one
-	l2 		= log --date=relative --decorate --abbrev-commit --pretty=two
+	lgoc 	= log --graph --date=format:'%a %d-%b-%Y %H:%M' --decorate --abbrev-commit --pretty=lgoc
+	lg1 	= log --graph --date=format:'%a %d-%b-%Y %H:%M' --decorate --abbrev-commit --pretty=one
+	lg2 	= log --graph --date=format:'%a %d-%b-%Y %H:%M' --decorate --abbrev-commit --pretty=two
+	l1 		= log --date=format:'%a %d-%b-%Y %H:%M' --decorate --abbrev-commit --pretty=one
+	l2 		= log --date=format:'%a %d-%b-%Y %H:%M' --decorate --abbrev-commit --pretty=two
 
 # default options for commands
 [log]
