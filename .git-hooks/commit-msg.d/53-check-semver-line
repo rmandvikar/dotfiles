@@ -2,7 +2,7 @@
 
 # Check if semver line is included
 checkSemver() {
-	if [ -f .git/hooks/check-semver ]; then
+	if [[ $(getConfig "hook.check-semver") == "true" ]]; then
 		echo " -check if semver line is included"
 		# '#' cannot be the 1st char
 		if ! egrep -q "^[^#].*#(MAJOR|MINOR|PATCH)" "$msg"; then

@@ -4,8 +4,12 @@
 applyCommitHook() {
 	case "$2" in
 		merge)
-			echo " -apply 'commit-msg' hook for merge commit"
-			~/.git-hooks/commit-msg "$msg" "prepare-commit-msg"
+			# to avoid calling commit-msg twice when in conflicts, call
+			# only if no conflicts
+			if ! grep -q "^# Conflicts:$" ".git/MERGE_MSG"; then
+				echo " -apply 'commit-msg' hook for merge commit"
+				~/.git-hooks/commit-msg "$msg" "prepare-commit-msg"
+			fi
 			;;
 		*) ;;
 	esac

@@ -10,7 +10,7 @@
 	enabled = true
 
 [core]
-	editor 			= scite # '/d/setups/wscite/SciTE.exe'
+	editor 			= scite
 	preloadindex 	= true
 	fscache 		= true
 	pager 			= less -x4
@@ -45,13 +45,12 @@
 [alias]
 	# note: shell commands (with !) will be executed from the top-level directory of a repository,
 	# which may not necessarily be the current directory. so add 'cd ${GIT_PREFIX:-.} &&' before.
-	alias 	= !"f() { git conf alias.$1; }; f"
-	conf 	= 	!"f() { \
-					arg=$1; \
-					if [ $# -eq 2 ]; then \
-						arg+=".$2"; \
+	alias 	= 	!"f() { \
+					if [[ "$1" == 'conf' ]]; then \
+						cat ~/bin/git-conf; \
+					else \
+						git conf alias."$1"; \
 					fi; \
-					git config --get-regex $arg | sed 's/^alias\\.//' | sed -r 's/\t{4}/\\n/g'; \
 				}; f"
 	
 	## readonly ##
@@ -73,7 +72,8 @@
 	lrcount = rev-list --left-right --count
 	lcount 	= rev-list --left-only --count
 	rcount 	= rev-list --right-only --count
-	note 	= !"f() { git log -1 --pretty=\"format:%H\" ${1-HEAD}; }; f"
+	note 	= log --pretty=note -1
+	cs 		= log --pretty=cs --date=short -1
 	lsf 	= ls-files
 	lst 	= ls-tree
 	
@@ -99,12 +99,11 @@
 	undo 	= !"git reset --hard && git clean -f"
 	cp 		= cherry-pick
 	
-	summarize 	= log --pretty=summary --date=short -1
 	undomerge 	= reset --merge orig_head
 	undorebase 	= !"f() { \
 					git reset --hard orig_head; \
 					: abort only if rebase is in progress; \
-					test -d ".git/rebase-merge" -o -d ".git/rebase-apply" \
+					(test -d ".git/rebase-merge" || test -d ".git/rebase-apply") \
 						&& git rebase --abort; \
 				}; f"
 	
@@ -230,7 +229,8 @@
 	lgoc 	= "format:%C(auto)%h%C(reset)%C(auto)%d%C(reset) %C(#ffff99)%s%C(reset) - %C(#ffb799)%aN%C(reset)"
 	one 	= "format:%C(auto)%h%C(reset) %C(#ffaaff)(%ar)%C(reset) %C(#ffff99)%s%C(reset) - %C(#ffb799)%aN%C(reset)%C(auto)%d%C(reset)"
 	two 	= "format:%C(auto)%h%C(reset) - %C(#ffeeff)%aD%C(reset) %C(#ffaaff)(%ar)%C(reset)%C(auto)%d%C(reset)%n  %C(#ffff99)%s%C(reset) - %C(#ffb799)%aN%C(reset)"
-	summary = "format:%H (\"%s\", %ad)"
+	note 	= "format:%H"
+	cs 		= "format:%H (\"%s\", %ad)"
 [alias]
 	#hint: add --all to see whole repo
 	l 		= log --graph --date=relative --decorate --abbrev-commit --pretty=two

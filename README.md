@@ -151,16 +151,16 @@ $ git find-tag <commit> [<branch>]
 
 ```bash
 # To purge merged branches except certain ones
-$ git purge-branches [-n]
+$ git purge-branches [-n | --dry-run]
 ```
 
 ##### git hooks
 
-Each hook is comprised of sub-hooks that are placed in the `<hook>.d` dir at `~/.git-hooks/` path. This allows to
+Each hook is comprised of sub-hooks that are placed in the '\<hook>.d' dir at ~/.git-hooks/ path. This allows to
 - arbitrarily call any function in a desired order.
 - call proprietary or work hooks without committing.
 
-The sub-hooks in `<hook>.d` dir are called in the sorted order of 'ls' command after ignoring files with extensions (`ls -I '*.*' -1 "<hook>.d"`). Sub-hooks with `(gitignore)` in their names are git-ignored.
+The sub-hooks in '\<hook>.d' dir are called in the sorted order of 'ls' command after ignoring files with extensions (ls -I '*.*' -1 "\<hook>.d"). Sub-hooks with '(gitignore)' in their names are git-ignored.
 
 ###### apply-commit-message-convention sub-hook
 
@@ -209,17 +209,19 @@ hooks/commit-msg
 
 ###### skip/apply functions of hook
 
-As the hooks are run globally from `~/.git-hooks/` dir, files placed in repo's local dir `.git/hooks/` are used as flags to skip/apply sub-hooks.
+As the hooks are run globally from ~/.git-hooks/ dir, configuration variables are used as flags to skip/apply functions (sub-hooks).
 
 ```
-# use .git/hooks/skip-cmc flag file to skip commit message convention (cmc)
-# use .git/hooks/changeid flag file to apply gerrit Change-Id
+# use 'hook.skip-cmc' configuration variable to skip commit message convention (cmc)
+$ git config hook.skip-cmc true
+# use 'hook.changeid' configuration variable to apply gerrit Change-Id
+$ git config hook.changeid true
 ```
 
 ###### skip hooks
 
 ```
-# use `SKIP_HOOKS` environment variable to skip hooks
+# use 'SKIP_HOOKS' environment variable to skip hooks
 $ SKIP_HOOKS=true git commit
 ```
 

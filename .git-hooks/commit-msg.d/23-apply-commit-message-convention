@@ -16,8 +16,13 @@ applyCommitMessageConventionInternal() {
 	echo "$msgText" | sed 's/ *$//' | sed '/./,$! d' > "$msgbak"
 	# subject
 	subject=$(head -n 1 "$msgbak")
-	if [[ "$subject" == "Merge branch"* ]] \
-		|| [[ "$subject" == "Merge remote-tracking branch"* ]]; then
+	if \
+		[[ "$subject" == "Merge branch "* ]] || \
+		[[ "$subject" == "Merge remote-tracking branch "* ]] || \
+		[[ "$subject" == "Merge commit "* ]] || \
+		[[ "$subject" == "Merge tag "* ]] || \
+		[[ "$subject" == "Revert "* ]]
+	then
 		echo "  keeping merge commit subject as is"
 		echo "$subject" > "$msgconvention"
 	else
@@ -49,20 +54,28 @@ applyCommitMessageConventionInternal() {
 		# body
 		body=$(echo "$rest" | tail -n +"$bodylineStart")
 		# fmt does not handle '#' properly so filter out
-		echo "$body" | sed '/^#/ d' | fmt -s -w $bodyLen >> "$msgconvention"
+		echo "$body" | sed '/^# --* >8 --*$/,$ d' | sed '/^#/ d' \
+			| fmt -s -w $bodyLen >> "$msgconvention"
 	else
 		echo "" >> "$msgconvention"
 	fi
-	# put back '#' lines by appending
-	echo "$rest" | sed -n '/^#/ p' >> "$msgconvention"
+	# put back unified diff and comments by appending
+	udiff=$(echo "$rest" | sed -n '/^# --* >8 --*$/,$ p')
+	echo "$rest" | sed '/^# --* >8 --*$/,$ d' \
+		| sed -n '/^#/ p' >> "$msgconvention"
+	echo "$udiff" >> "$msgconvention"
 	# copy .convention to msg
 	cp "$msgconvention" "$msg"
 }
 
-# text count after removing comments
+# text count after removing insignificant content
+#	blank lines, starting empty lines, unified diff, comments
 validText() {
 	text="$1"
-	echo "$text" | sed '/^#/ d'
+	# remove blank lines, starting empty lines, unified diff, comments
+	echo "$text" \
+		| sed 's/ *$//' | sed '/./,$! d' \
+		| sed '/^# --* >8 --*$/,$ d' | sed '/^#/ d'
 }
 # text count after removing spaces (even between words), newlines
 validTextCount() {
@@ -139,6 +152,7 @@ applyCommitMessageConvention() {
 		if fileCompare "$msg" "$msgconvention"; then
 			echo "  no manual change"
 			# read -p "now what? (*/undo/abort/force/original) " ans
+			question=""
 			question+="  now what? ("
 			question+="${Prompt}*${None}/"
 			question+="${Prompt}u${None}ndo/"
@@ -197,8 +211,8 @@ cleanUp() {
 
 # apply wrapper
 applyCommitMessageConventionWrapper() {
-	if [ -f .git/hooks/skip-cmc ]; then
-		echo -e " -${Yellow}SKIPPING${None} commit-msg-convention: .git/hooks/skip-cmc file present"
+	if [[ $(getConfig "hook.skip-cmc") == "true" ]]; then
+		echo -e " -${Yellow}SKIPPING${None} commit-msg-convention: hook.skip-cmc is true"
 	else
 		# apply convention when not in rebase
 		if [ ! -d .git/rebase-merge ] && [ ! -d .git/rebase-apply ]; then
