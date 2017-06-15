@@ -66,7 +66,6 @@
 	lcount 	= rev-list --left-only --count
 	rcount 	= rev-list --right-only --count
 	note 	= log --pretty=note -1
-	cs 		= log --pretty=cs --date=short -1
 	lsf 	= ls-files
 	lst 	= ls-tree
 	
@@ -109,7 +108,6 @@
 	one 	= "format:%C(auto)%h%C(reset) %C(#ffaaff)(%ar)%C(reset) %C(#ffff99)%s%C(reset) - %C(#ffb799)%aN%C(reset)%C(auto)%d%C(reset)"
 	two 	= "format:%C(auto)%h%C(reset) - %C(#ffeeff)%ad%C(reset) %C(#ffaaff)(%ar)%C(reset)%C(auto)%d%C(reset)%n  %C(#ffff99)%s%C(reset) - %C(#ffb799)%aN%C(reset)"
 	note 	= "format:%H"
-	cs 		= "format:%H (\"%s\", %ad)"
 [alias]
 	#hint: add --all to see whole repo
 	l 		= log --graph --date=format:'%a %d-%b-%Y %H:%M' --decorate --abbrev-commit --pretty=two
