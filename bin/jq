@@ -3,6 +3,13 @@
 #usage:
 #	jq [<commit>]
 #	jq [<query>]
+#
+# Jira query.
+
+if [[ -z "$JiraUrl" ]]; then
+	echo 1>&2 "fatal: JiraUrl not configured in work.bashrc"
+	exit 1
+fi
 
 JiraUrlQuery="$JiraUrl/secure/QuickSearch.jspa?searchString="
 

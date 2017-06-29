@@ -3,6 +3,13 @@
 #usage:
 #	gq [<commit>]
 #	gq [<query>]
+#
+# Gerrit query.
+
+if [[ -z "$GerritUrl" ]]; then
+	echo 1>&2 "fatal: GerritUrl not configured in work.bashrc"
+	exit 1
+fi
 
 GerritUrlQuery="$GerritUrl/#/q/"
 
