@@ -1,0 +1,45 @@
+#!/bin/sh
+
+#usage: git cs [-s | --short] [-l | --long] [commit]
+#
+# Print commit summary.
+
+while true; do
+	case "$1" in
+		-h )
+			echo "git cs [-s | --short] [-l | --long]"; exit ;;
+		-s | --short)
+			hashOption="short"; shift ;;
+		-l | --long )
+			hashOption="long"; shift ;;
+		-- ) shift; break ;;
+		-* )
+			if [ ! -z "$1" ]; then
+				echo 1>&2 "fatal: unknown option $1"
+				exit 1
+			fi
+			break ;;
+		* )
+			if [ -z "$1" ]; then
+				break
+			fi
+			commit="$1"
+			shift ;;
+	esac
+done
+
+hashConfig=$(git config --get cs.hash)
+if [[ "$hashConfig" == "long" ]]; then
+	hash="%H"
+fi
+if [[ "$hashConfig" == "short" ]]; then
+	hash="%h"
+fi
+if [[ "$hashOption" == "long" ]]; then
+	hash="%H"
+fi
+if [[ "$hashOption" == "short" ]]; then
+	hash="%h"
+fi
+
+git log --pretty="format:${hash-%h} (\"%s\", %ad)" --date=short -1 $commit
