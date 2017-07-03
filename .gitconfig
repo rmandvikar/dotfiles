@@ -87,12 +87,12 @@
 	unhide 	= update-index --no-assume-unchanged
 	hidden 	= !"git ls-files -v | grep '^h' | cut -c3- | wrap"
 	unstage = reset
-	#usage: git undo -dx
-	undo 	= !"git reset --hard && git clean -f"
 	cp 		= cherry-pick
 	
-	undomerge 	= reset --merge orig_head
-	undorebase 	= !"f() { \
+	#usage: git undo -dx
+	undo 		= !"git reset --hard && git clean -f"
+	undo-merge 	= reset --merge orig_head
+	undo-rebase = !"f() { \
 					git reset --hard orig_head; \
 					: abort only if rebase is in progress; \
 					(test -d ".git/rebase-merge" || test -d ".git/rebase-apply") \
