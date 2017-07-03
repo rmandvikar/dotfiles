@@ -68,6 +68,8 @@
 	note 	= log --pretty=note -1
 	lsf 	= ls-files
 	lst 	= ls-tree
+	has 	= branch -r --contains
+	no-has 	= branch -r --no-contains
 	
 	## write ##
 	a 		= add
