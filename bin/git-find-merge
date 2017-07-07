@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#usage: git find-merge <commit> [<branch>]
+#usage: git find-merge [-s | --short] [-l | --long] <commit> [<branch>]
 #
 # See http://stackoverflow.com/questions/8475448/find-merge-commit-which-include-a-specific-commit
 #
@@ -29,6 +29,32 @@
 # |\ \ \ \    Merge branch 'hooks' into dev
 # 
 
+while true; do
+	case "$1" in
+		-h )
+			echo "git find-merge [-s | --short] [-l | --long] <commit> [<branch>]"; exit ;;
+		-s | --short)
+			formatOption="short"; shift ;;
+		-l | --long )
+			formatOption="long"; shift ;;
+		-* )
+			if [ ! -z "$1" ]; then
+				echo 1>&2 "fatal: unknown option $1"
+				exit 1
+			fi
+			break ;;
+		* )
+			break ;;
+	esac
+done
+
+if [[ "$formatOption" == "short" ]]; then
+	format="--pretty=format:%h"
+fi
+if [[ "$formatOption" == "long" ]]; then
+	format="--pretty=format:%H"
+fi
+
 commit=$1
 if [ -z $commit ]; then
 	echo 1>&2 "fatal: commit is required"
@@ -39,7 +65,7 @@ branch=${2-@}
 
 # if branch points to commit (both are same), then return commit
 if [ $commit == $(git rev-parse $branch) ]; then
-	git log -1 $commit
+	git log -1 $format $commit
 	exit
 fi
 
@@ -51,13 +77,13 @@ fi
 if [ $(git rev-list --first-parent $branch | grep $commit | wc -l) -eq 1 ]; then
 	if [ $(git show -s --format="%p" $commit | wc -w) -gt 1 ]; then
 		# if commit is a merge commit
-		git log -1 $commit
+		git log -1 $format $commit
 	else
 		# if commit is a NON-merge commit
 		echo 1>&2 ""
 		echo 1>&2 "error: returning the branch commit (ff merge or commit only on branch)"
 		echo 1>&2 ""
-		git log -1 $branch
+		git log -1 $format $branch
 	fi
 	exit
 fi
@@ -68,7 +94,7 @@ merge=$(grep -f \
 	<(git rev-list --ancestry-path $commit..$branch) \
 		| tail -1)
 if [ ! -z $merge ]; then
-	git log -1 $merge
+	git log -1 $format $merge
 	exit
 fi
 

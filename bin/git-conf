@@ -2,21 +2,10 @@
 
 #usage: git conf <alias>
 #
-# To pretty print git alias (uses 'git config --get-regex' internally).
-# 
-# Note:
-# 	'conf' is not a git alias itself to avoid issues with
-# 	'git alias conf' which uses itself and does not pretty print
-# 	properly.
+# To pretty print git config (uses 'git config --get-regex' internally).
 
 arg="$1"
-if [ $# -eq 1 ] && [[ "$arg" == 'conf' ]]; then
-	cat "$0"
-	exit
-fi
 if [ $# -eq 2 ]; then
 	arg+=".$2"
 fi
-git config --get-regex "$arg" \
-	| sed 's/^alias\.//' \
-	| sed -r 's/\t+/\'$'\n&/g' | sed -r 's/^\t{4}//'
+git config --get-regex "$arg" | sed '/^alias\./ d'

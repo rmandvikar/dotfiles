@@ -1,0 +1,49 @@
+#!/bin/sh
+
+#usage: git pushg [<branchFrom>] [<remote>]
+#
+# Create and/or push current branch to gerrit.
+
+# exit if no 'refs/for/' configured
+if [ $(git config --get-regex remote\..*\.push | grep 'refs/for/' | wc -l) -eq 0 ]; then
+	echo 1>&2 "fatal: cannot use pushg as no 'refs/for/' to push to"
+	exit 1
+fi
+# default remote to that of master
+remoteDefault=$(git config --get branch.master.remote)
+remote="${2-"$remoteDefault"}"
+# current branch name may not match remote branch
+remotePath=$(git rev-parse --abbrev-ref @{u} 2>/dev/null)
+if [ -z $remotePath ]; then
+	branch=$(git rev-parse --abbrev-ref @)
+	# remote branch name is same as local branch
+	remoteBranch="$branch"
+	# check if remote branch already exists on remote
+	if [ $(git ls-remote --heads "$remote" "$remoteBranch" | \
+		cut -d$'\t' -f2 | \
+		sed 's/refs\/heads\///' | \
+		grep ^"$remoteBranch"$ | wc -l) -eq 0 ] ; then
+		# branch from master as default
+		branchFrom=${1-master}
+		command=$(echo git push "$remote" "$branchFrom":"$remoteBranch")
+		echo "$command"
+		$command
+	elif ! git rev-parse -q --verify "$remote"/"$branch" 1>/dev/null; then
+		# fetch the remote branch
+		command=$(echo git fetch "$remote" "$remoteBranch" 2>/dev/null)
+		echo "$command"
+		$command
+	fi
+	# track remote branch
+	command=$(echo git branch -u "$remote"/"$remoteBranch")
+	echo "$command"
+	$command
+else
+	branch=$(git rev-parse --abbrev-ref @)
+	# get remote name for branch
+	remote=$(git config --get branch."$branch".remote)
+	remoteBranch=${remotePath#"$remote"/}
+fi
+command=$(echo git push "$remote" HEAD:refs/for/"$remoteBranch")
+echo "$command"
+$command
