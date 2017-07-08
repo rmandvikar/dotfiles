@@ -1,10 +1,19 @@
 #!/bin/sh
 
-# convert / to \
-args=$(echo "$@" | sed 's/\//\\/g')
-# convert /c to c:
-if [[ "$args" = \\* ]]; then
-	args=$(echo "$args" | sed -e 's/../:&/2' | sed -e 's/^\\//')
+explore() {
+	# convert / to \
+	args=$(echo "$@" | sed 's/\//\\/g')
+	# convert /c to c:
+	if [[ "$args" = \\* ]]; then
+		args=$(echo "$args" | sed -e 's/../:&/2' | sed -e 's/^\\//')
+	fi
+	start "$args"
+}
+
+if [ $# -gt 0 ]; then
+	explore "$@" &
+else
+	while read data; do
+		explore "$data" &
+	done
 fi
-#echo "$args"
-start "$args"
