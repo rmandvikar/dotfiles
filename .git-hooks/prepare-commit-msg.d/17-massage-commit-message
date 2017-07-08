@@ -2,10 +2,10 @@
 
 # Massage commit message
 massageCommitMessage() {
-	# replace default text with placeholder
+	# delete default text
 	sed -i \
-		-e "s/^# Please enter the commit message for your changes. Lines starting/#######/" \
-		-e "s/^# with '#' will be ignored, and an empty message aborts the commit.//" \
+		-e "/^# Please enter the commit message for your changes. Lines starting/ d" \
+		-e "/^# with '#' will be ignored, and an empty message aborts the commit./ d" \
 		"$msg"
 	# add line after branch
 	sed -i \

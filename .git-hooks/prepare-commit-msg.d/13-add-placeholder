@@ -1,0 +1,13 @@
+#!/bin/sh
+
+# Add placeholder '#######'
+addPlaceholder() {
+	# commit: add placeholder
+	sed -i '/^# Please enter the commit message for your changes. Lines starting/i '`
+		`'#######\n' \
+		"$msg"
+}
+
+
+msg="$1"
+addPlaceholder
