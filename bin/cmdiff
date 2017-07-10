@@ -1,0 +1,19 @@
+#!/bin/bash
+
+#usage: cmdiff <commit1> <commit2>
+#
+# Diff log messages of two commits.
+
+commit1="$1"
+commit2="$2"
+if [[ -z "$commit1" ]]; then
+	echo 1>&2 "fatal: commit 1 is required"
+	exit 1
+fi
+if [[ -z "$commit2" ]]; then
+	commit2="HEAD"
+fi
+
+diff \
+	<(git log -1 "$commit1") \
+	<(git log -1 "$commit2")
