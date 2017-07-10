@@ -1,0 +1,10 @@
+#!/bin/sh
+
+# Remove comments
+removeComments() {
+	sed -i "/^#/ d" "$msg"
+}
+
+
+msg="$1"
+removeComments
