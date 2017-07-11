@@ -1,11 +1,5 @@
 #!/bin/sh
 
-gc() {
-	git config --gl -e &
-}
-c() {
-	git config --lo -e &
-}
 
 remote() {
 	git config --get-regex remote\..*\.url \

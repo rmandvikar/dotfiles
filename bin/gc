@@ -1,0 +1,7 @@
+#!/bin/sh
+
+#usage: gc
+#
+# Open gitconfig in background.
+
+git config --gl -e &
