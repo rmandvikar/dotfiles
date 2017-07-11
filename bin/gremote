@@ -1,0 +1,13 @@
+#!/bin/sh
+
+#usage: gremote
+#
+# Browse to gerrit remote's url.
+
+GerritUrlQuery="$GerritUrl/#/q/"
+git config --get-regex remote\..*\.url \
+	| cut -d' ' -f2 \
+	| sed 's,^ssh://,,' \
+	| xargs basename \
+	| sed 's,^,'"$GerritUrlQuery"'project:,' \
+	| xargs start chrome --new-window

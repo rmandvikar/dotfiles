@@ -1,19 +1,5 @@
 #!/bin/sh
 
-gc() {
-	git config --gl -e &
-}
-c() {
-	git config --lo -e &
-}
-
-remote() {
-	git config --get-regex remote\..*\.url \
-		| cut -d' ' -f2 \
-		| sed 's/\.git$//' | sed 's/^git@//' \
-		| sed 's/^https\?:\/\///' | sed 's/:/\//' \
-		| xargs start chrome --new-window
-}
 
 alias s=o
 
