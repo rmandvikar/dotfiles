@@ -18,9 +18,13 @@ applyCommitMessageConventionInternal() {
 	subject=$(head -n 1 "$msgbak")
 	if \
 		[[ "$subject" == "Merge branch "* ]] || \
+		[[ "$subject" == "Merge branches "* ]] || \
 		[[ "$subject" == "Merge remote-tracking branch "* ]] || \
+		[[ "$subject" == "Merge remote-tracking branches "* ]] || \
 		[[ "$subject" == "Merge commit "* ]] || \
+		[[ "$subject" == "Merge commits "* ]] || \
 		[[ "$subject" == "Merge tag "* ]] || \
+		[[ "$subject" == "Merge tags "* ]] || \
 		[[ "$subject" == "Revert "* ]]
 	then
 		echo "  keeping merge commit subject as is"
