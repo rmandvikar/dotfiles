@@ -70,6 +70,7 @@
 	lst 	= ls-tree
 	has 	= branch -r --contains
 	no-has 	= branch -r --no-contains
+	g 		= grep --heading
 	
 	## write ##
 	a 		= add
@@ -170,6 +171,10 @@
 	autoSetupMerge 		= false
 	autoSetupRebase 	= always
 
+[grep]
+	lineNumber 		= true
+	patternType 	= extended
+
 # templates
 [init]
 	templateDir = ~/.git-templates
@@ -239,6 +244,11 @@
 	#header = normal
 	#help 	= normal
 	#error 	= normal
+
+[color "grep"]
+	match 		= bold red
+	filename 	= "#ffaaff"
+	linenumber 	= bold green
 
 [include]
 	# user
