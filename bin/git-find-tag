@@ -48,7 +48,7 @@ fi
 tags=$(
 	git log --decorate --simplify-by-decoration --ancestry-path \
 		--pretty="format:%D" $commit..$branch \
-	| sed 's/, /\n/' \
+	| sed 's/, /\n/g' \
 	| grep '^tag: ' \
 	| sed 's/tag: //' \
 	| egrep "$pattern"
