@@ -1,10 +1,18 @@
 #!/bin/sh
 
-# Remove comments
+# Remove comments for merges only
+# Note: Removing comments does not work for 'git commit -v'
 removeComments() {
-	sed -i "/^#/ d" "$msg"
+	case "$2" in
+		merge)
+			if [[ "$GIT_MERGE_AUTOEDIT" == "no" ]]; then
+				sed -i "/^#/ d" "$msg"
+			fi
+			;;
+		*) ;;
+	esac
 }
 
 
 msg="$1"
-removeComments
+removeComments "$@"

@@ -8,7 +8,7 @@ applyCommitHook() {
 			# only if no conflicts
 			if ! grep -q "^# Conflicts:$" ".git/MERGE_MSG"; then
 				echo " -apply 'commit-msg' hook for merge commit"
-				~/.git-hooks/commit-msg "$msg" "prepare-commit-msg"
+				~/.git-hooks/commit-msg "$msg" "$2" "prepare-commit-msg"
 			fi
 			;;
 		*) ;;
