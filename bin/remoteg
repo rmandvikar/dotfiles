@@ -1,6 +1,6 @@
 #!/bin/sh
 
-#usage: gremote
+#usage: remoteg
 #
 # Browse to gerrit remote's url.
 
