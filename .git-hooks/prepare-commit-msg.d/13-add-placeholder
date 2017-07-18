@@ -2,22 +2,33 @@
 
 # Add placeholder '#######'
 addPlaceholder() {
-	# commit: add placeholder
-	sed -i '/^# Please enter the commit message for your changes. Lines starting/i '`
-		`'#######\n' \
-		"$msg"
-	# merge commit: with
-	#   GIT_MERGE_AUTOEDIT=no
-	# Git does not put default text message or any message for a clean
-	# merge which can be used as a hook to insert placeholder so
-	# just append it at end.
-	# avoid inserting placeholder twice
-	if ! grep -q '^#######$' "$msg"; then
-		# append at eof
-		sed -i '$a#######' "$msg"
-	fi
+	case "$2" in
+		merge)
+			# merge commit:
+			# with
+			#   GIT_MERGE_AUTOEDIT=no
+			# Git does not put default text message or any message for
+			# a clean merge which can be used as a hook to insert
+			# placeholder so just append it at end.
+			if [[ "$GIT_MERGE_AUTOEDIT" == "no" ]]; then
+				# append placeholder at eof
+				sed -i '$a#######' "$msg"
+			else
+				# add placeholder
+				sed -i '/^# Please enter a commit message to explain why this merge is necessary,$/i '`
+					`'#######\n' \
+					"$msg"
+				fi
+			;;
+		*)
+			# commit, *: add placeholder
+			sed -i '/^# Please enter the commit message for your changes. Lines starting$/i '`
+				`'#######\n' \
+				"$msg"
+			;;
+	esac
 }
 
 
 msg="$1"
-addPlaceholder
+addPlaceholder "$@"

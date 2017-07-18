@@ -139,7 +139,7 @@ applyCommitMessageConvention() {
 		# proposed commit message is created and not before as is for
 		# commit. this results in "no change after applying convention"
 		# which is not desired. so skip 1st apply convention call.
-		if [ -z "$2" ]; then
+		if [ -z "$3" ]; then
 			applyCommitMessageConventionInternal "$msg"
 			if fileCompareRelaxed "$msgconvention" "$msgbak"; then
 				# no change after applying convention, return
@@ -149,7 +149,7 @@ applyCommitMessageConvention() {
 			fi
 			echo "  changing message"
 		else
-			# remove $2 arg
+			# remove $3 arg
 			set --
 		fi
 		$editor "$msg"

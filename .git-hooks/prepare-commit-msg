@@ -3,7 +3,7 @@
 # prepare-commit-msg hook does:
 #	- Add placeholder
 #		- Insert placeholder at default text in commit body
-#		- Append placeholder at eof if not present
+#		- Append placeholder for merges (eof, or default merge message)
 #	- Massage commit message
 #		- Delete default text in commit body
 #		- Add line after branch
