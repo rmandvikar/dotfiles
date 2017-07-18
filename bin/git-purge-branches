@@ -1,11 +1,13 @@
 #!/bin/sh
 
-# delete merged branches except certain ones
 #usage: git purge-branches [-n | --dry-run]
+#
+# Delete merged branches except certain ones.
 
 dryRun=false
 while true; do
 	case "$1" in
+		-h ) print-file-comments "$0"; exit ;;
 		-n | --dry-run )
 			dryRun=true; shift ;;
 		-- ) shift; break ;;

@@ -6,6 +6,8 @@
 #
 # Jira query.
 
+if [[ "$1" == "-h" ]]; then print-file-comments "$0"; exit; fi
+
 if [[ -z "$JiraUrl" ]]; then
 	echo 1>&2 "fatal: JiraUrl not configured in work.bashrc"
 	exit 1

@@ -4,6 +4,8 @@
 #
 # Create and/or push current branch to gerrit.
 
+if [[ "$1" == "-h" ]]; then print-file-comments "$0"; exit; fi
+
 # exit if no 'refs/for/' configured
 if [ $(git config --get-regex remote\..*\.push | grep 'refs/for/' | wc -l) -eq 0 ]; then
 	echo 1>&2 "fatal: cannot use pushg as no 'refs/for/' to push to"

@@ -6,6 +6,8 @@
 # branch is branched from.
 # Assumption: The given branches lie on the same line.
 
+if [[ "$1" == "-h" ]]; then print-file-comments "$0"; exit; fi
+
 # exit if no branches given
 if [ $# -eq 0 ]; then
 	echo 1>&2 "fatal: branches are required"
