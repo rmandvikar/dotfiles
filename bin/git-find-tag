@@ -2,10 +2,10 @@
 
 #usage: git find-tag <commit> [<branch>] [<tag-pattern>]
 #
-# See http://stackoverflow.com/questions/43991602/list-tags-in-git-repo-sorted-by-how-they-appear-in-graph
-#
 # Find the tag when a given commit was merged into current or
 # given branch.
+
+# See http://stackoverflow.com/questions/43991602/list-tags-in-git-repo-sorted-by-how-they-appear-in-graph
 #
 # "Using merge commits to represent the last deployed version of
 # production code - That’s an antipattern. Use tags." VonC
@@ -29,6 +29,8 @@
 # *   845ff28 (10 days ago)
 # |\    Merge branch 'merge-drivers' into dev
 #
+
+if [[ "$1" == "-h" ]]; then print-file-comments "$0"; exit; fi
 
 commit=$1
 if [ -z $commit ]; then

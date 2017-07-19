@@ -1,8 +1,10 @@
 #!/bin/sh
 
-#usage: git branch-reset master next dev
+#usage: git branch-reset [branch1] [branch2] [branch3] ...
 #
 # Force branches to point to their remote branches.
+
+if [[ "$1" == "-h" ]]; then print-file-comments "$0"; exit; fi
 
 # get current branch
 # note: 'git symbolic-ref --short HEAD' throws when in 'detached HEAD' state

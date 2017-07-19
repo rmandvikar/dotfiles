@@ -1,11 +1,15 @@
 #!/bin/bash
 
-#usage: git find-merge [-s | --short] [-l | --long] <commit> [<branch>]
+#usage: git find-merge [-s | --short] [-l | --long]
+#           <commit> [<branch>]
 #
-# See http://stackoverflow.com/questions/8475448/find-merge-commit-which-include-a-specific-commit
-#
+# Find the merge commit (or commit) when a given commit was merged
+# into current or given branch.
+
 # Find the 1st common commit from bottom within first-parent commits
 # and ancestry-path commits.
+#
+# See http://stackoverflow.com/questions/8475448/find-merge-commit-which-include-a-specific-commit
 #
 # First-parent commits are the merge commits made on given branch
 # since the given commit is forked.
@@ -31,8 +35,7 @@
 
 while true; do
 	case "$1" in
-		-h )
-			echo "git find-merge [-s | --short] [-l | --long] <commit> [<branch>]"; exit ;;
+		-h ) print-file-comments "$0"; exit ;;
 		-s | --short)
 			formatOption="short"; shift ;;
 		-l | --long )

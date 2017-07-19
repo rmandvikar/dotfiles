@@ -4,6 +4,8 @@
 #
 # Browse to remote's url.
 
+if [[ "$1" == "-h" ]]; then print-file-comments "$0"; exit; fi
+
 git config --get-regex remote\..*\.url \
 	| cut -d' ' -f2 \
 	| sed 's/\.git$//' | sed 's/^git@//' \

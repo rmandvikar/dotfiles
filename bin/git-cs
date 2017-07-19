@@ -6,8 +6,7 @@
 
 while true; do
 	case "$1" in
-		-h )
-			echo "git cs [-s | --short] [-l | --long] [-<number>] [commit]"; exit ;;
+		-h ) print-file-comments "$0"; exit ;;
 		-s | --short)
 			hashOption="short"; shift ;;
 		-l | --long )
