@@ -216,11 +216,11 @@
 	whitespace 	= normal red
 	frag 		= bold cyan
 	old 		= "#fc9f9f" # ~red
-	new 		= "#c9ffc9" # ~green
+	new 		= "#9bff9b" # ~green
 
 [color "status"]
 	#header 	= white
-	added 		= "#c9ffc9" # ~green
+	added 		= "#9bff9b" # ~green
 	changed 	= "#fc9f9f" # ~red
 	untracked 	= "#fc9f9f" # ~red
 	branch 		= cyan
