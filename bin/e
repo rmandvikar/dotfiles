@@ -1,19 +1,37 @@
 #!/bin/sh
 
-explore() {
-	# convert / to \
-	args=$(echo "$@" | sed 's/\//\\/g')
-	# convert /c to c:
-	if [[ "$args" = \\* ]]; then
-		args=$(echo "$args" | sed -e 's/../:&/2' | sed -e 's/^\\//')
-	fi
-	start "$args"
+#usage:
+#   e <path>
+#   ... | e
+#
+# Open POSIX paths in explorer.
+
+convertPosixPathToWindows() {
+	# convert /c/ to /c:/ to c:/ to c:\
+	#   drive letter can be multiple chars
+	# convert some/dir/ to some\dir\
+	#
+	# see Patterns, http://www.grymoire.com/Unix/Sed.html#uh-27
+	# example: sed '\,^#, s/[0-9][0-9]*//'
+	#
+	# explanation:
+	# \,^/, s,/,:/,2: if starting with /, replace the 2nd / with :/
+	# s,^/,,: remove leading /
+	# s,/,\\,g: replace all / with \
+	# \,^/[^/]+$, s,$,/,: ensure 2nd / is present at end
+	#   for special case "/c"
+	sed -r '
+		\,^/[^/]+$, s,$,/,
+		\,^/, s,/,:/,2
+		s,^/,,
+		s,/,\\,g
+		' <<< "$@"
 }
 
 if [ $# -gt 0 ]; then
-	explore "$@" &
+	start $(convertPosixPathToWindows "$@") &
 else
 	while read data; do
-		explore "$data" &
+		start $(convertPosixPathToWindows "$data") &
 	done
 fi
