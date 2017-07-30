@@ -1,0 +1,124 @@
+#!/bin/sh
+
+#usage: find-self-submit
+#
+# Find self-+2ed only and self-submitted commits on gerrit.
+
+# see gerrit query:
+#   https://review.openstack.org/Documentation/cmd-query.html
+#   https://review.openstack.org/Documentation/json.html
+# see search:
+#   https://review.openstack.org/Documentation/user-search.html
+
+if [[ "$1" == "-h" ]]; then print-file-comments "$0"; exit; fi
+
+# gerrit query options:
+#	project:<project> \
+#	\(author:$(whoami) OR committer:$(whoami)\) \
+#	after:"2017-01-01" \
+ssh -p 29418 gerrit gerrit query --format JSON \
+	status:merged \
+	--current-patch-set \
+	--comments \
+	\(author:$(whoami) OR committer:$(whoami)\) \
+	limit:500 \
+	--start 0 \
+	| jq-win64.exe -r \
+	'.
+	# remove stats object
+	| select(has("id"))
+	# exclude merges
+	| select(.currentPatchSet.parents | length <= 1)
+	| select(
+		# last patch
+		.currentPatchSet
+		# compare uploader (not owner) as uploader (committer)
+		#   could be different than owner (author)
+		| .uploader.username as $committer
+		|
+			(.approvals
+				|
+				# +2ed only by uploader
+				(
+					map(select(
+						.by.username != $committer and
+						.type == "Code-Review" and
+						.value == "2"
+					))
+					| length == 0
+				)
+				and
+				# submitted by uploader or automated build
+				(
+					map(select(
+						(.by.username == $committer or
+							.by.username == "automatedbuild") and
+						.type == "SUBM" and
+						.value == "1"
+					))
+					| length == 1
+				)
+			)
+		)
+	| select(
+		.currentPatchSet.uploader.username as $committer
+		| .currentPatchSet.number as $patchNumber
+		| .comments as $comments
+		| $comments
+		|
+		# no explanation IN +2 by uploader
+		#   (note: this condition matters only if commit is +2ed by
+		#   uploader (i.e .approvals needs to have a Code-Review +2 record
+		#   by uploader). if uploader +2s, -2s, and +2s again then do not
+		#   treat the -2 comment as explanation so look at the last +2
+		#   comment to avoid false negative.)
+		# get last code-review comment, using regex
+		#   "Patch Set <N>:.*Code-Review"
+		map(select(
+			.reviewer.username == $committer and
+			(.message | test("Patch Set " + $patchNumber + ":.*Code-Review"))
+		))
+		| .[-1]
+		| select(.message == ("Patch Set " + $patchNumber + ": Code-Review+2"))
+		| . as $plus2WithNoExplanation
+		| $plus2WithNoExplanation != null
+		| $plus2WithNoExplanation.timestamp as $plus2Timestamp
+		| $comments
+		|
+		# no explanation AFTER +2 by uploader (uploader forgot to put
+		#   explanation while +2ing and did not even put an explanation
+		#   separately later)
+		map(select(
+			.timestamp > $plus2Timestamp and
+			.reviewer.username == $committer and
+			(.message | startswith("Patch Set " + $patchNumber + ":"))
+		))
+		| length == 0
+		)
+	' \
+	| jq-win64.exe -r \
+	'.
+	# print only few attributes
+	|
+		{
+		id: .id,
+		url: .url,
+		committer: .currentPatchSet.uploader.username,
+		project: .project,
+		}
+	' \
+	| jq-win64.exe -r -s \
+	'.
+	# group by committer
+	| group_by(.committer)
+	# flatten to csv
+	| .[][]
+	|
+		(
+		.id + ", " +
+		.url + ", " +
+		.committer + ", " +
+		.project + ", " +
+		""
+		)
+	'
