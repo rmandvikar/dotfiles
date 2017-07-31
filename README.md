@@ -127,6 +127,12 @@ $ git diff --name-status | cuts | wrap | o
 ```
 
 ```bash
+# To get dirname or basename
+$ echo "a/b/c" | dn
+$ echo "a/b/c" | bn
+```
+
+```bash
 # To open a dir in explorer
 $ e bin/
 $ e .git/hooks

@@ -1,0 +1,15 @@
+#!/bin/sh
+
+#usage:
+#   dn <path>
+#   ... | dn
+#
+# dirname
+
+# see http://sed.sourceforge.net/local/docs/emulating_unix.txt
+
+if [ $# -gt 0 ]; then
+	sed 's,[^/]*$,,' <<< "$1"
+else
+	exec sed 's,[^/]*$,,'
+fi
