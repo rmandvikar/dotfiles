@@ -8,10 +8,19 @@
 
 # see http://sed.sourceforge.net/local/docs/emulating_unix.txt
 
+# verify using:
+# 	$ diff <(git ls-files | dq | dn) <(git ls-files | dq | xargs -I_ dirname _)
+
 command='
+		# main command
 		s,[^/]*$,,
+		# remove last /
+		s,/$,,
+		# remove " from beginning and end
 		s,"$,,
 		s,^",,
+		# put . for empty string
+		s,^$,.,
 		'
 if [ $# -gt 0 ]; then
 	sed "$command" <<< "$1"
