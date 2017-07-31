@@ -1,8 +1,16 @@
 #!/bin/sh
 
-# wrap text with arg or double quotes
-start=${1-'"'}
+#usage:
+#   ... | wrap \"
+#   ... | wrap \'
+#   ... | wrap \(
+#   ... | wrap \( \)
+#
+# Wrap text with args.
+
+start=${1}
 end=${2-"$start"}
 while read data; do
+	# exec echo does not work
 	echo "$start""$data""$end"
 done

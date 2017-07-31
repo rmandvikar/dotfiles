@@ -8,8 +8,13 @@
 
 # see http://sed.sourceforge.net/local/docs/emulating_unix.txt
 
+command='
+		s,[^/]*$,,
+		s,"$,,
+		s,^",,
+		'
 if [ $# -gt 0 ]; then
-	sed 's,[^/]*$,,' <<< "$1"
+	sed "$command" <<< "$1"
 else
-	exec sed 's,[^/]*$,,'
+	sed "$command"
 fi
