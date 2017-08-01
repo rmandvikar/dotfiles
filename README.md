@@ -114,16 +114,22 @@ $ s file.txt
 
 ```bash
 # To wrap paths having spaces with double quotes for piping to text editor
-$ git ls-files "*config" | wrap | o
+$ git ls-files "*config" | dq | o
 # To open grepped files
-$ git grep "config" | cut -d':' -f1 | wrap | o
+$ git grep "config" | cut -d':' -f1 | dq | o
 ```
 
 ```bash
 # To open grepped files with custom cut alias, cutg
-$ git grep "config" | cutg | wrap | o
+$ git grep "config" | cutg | dq | o
 # To cut status with custom cut alias, cuts
-$ git diff --name-status | cuts | wrap | o
+$ git diff --name-status | cuts | dq | o
+```
+
+```bash
+# To get dirname or basename
+$ echo "a/b/c" | dn
+$ echo "a/b/c" | bn
 ```
 
 ```bash
