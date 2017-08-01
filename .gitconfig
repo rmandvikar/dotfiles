@@ -91,6 +91,7 @@
 	hidden 	= !"git ls-files -v | grep '^h' | cut -c3- | wrap"
 	unstage = reset
 	cp 		= cherry-pick
+	pushf 	= push --force-with-lease
 	
 	#usage: git undo -dx
 	undo 		= !"git reset --hard && git clean -f"
