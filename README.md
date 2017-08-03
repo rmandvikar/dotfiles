@@ -130,6 +130,7 @@ $ git diff --name-status | cuts | wrap | o
 # To open a dir in explorer
 $ e bin/
 $ e .git/hooks
+$ e "new folder"
 ```
 
 ```bash
