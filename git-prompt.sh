@@ -5,6 +5,11 @@ else
 	TITLEPREFIX=$MSYSTEM
 fi
 
+# print <sha1hash>
+function prompt_hash() {
+	[[ -d ".git" ]] && echo " $(git log -1 --pretty="format:%h")"
+}
+
 PS1='\[\033]0;$TITLEPREFIX:${PWD//[^[:ascii:]]/?}\007\]' # set window title
 PS1="$PS1"'\n'                 # new line
 PS1="$PS1"'\e[38;5;94m'        # change to ~Brown
@@ -25,6 +30,7 @@ then
 		. "$COMPLETION_PATH/git-prompt.sh"
 		PS1="$PS1"'\[\033[36m\]'  # change color to cyan
 		PS1="$PS1"'`__git_ps1`'   # bash function
+		PS1="$PS1"'`prompt_hash`' # bash function
 	fi
 fi
 PS1="$PS1"'\[\033[32m\]'       # change to green

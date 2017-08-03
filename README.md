@@ -235,9 +235,9 @@ $ SKIP_HOOKS=true git commit
 
 ```
 # prompt format
-<hh:mm:ss> <path> (<branch>) <user>@<host> MINGW64
+<hh:mm:ss> <path> (<branch>) <hash> <user>@<host> MINGW64
 # example
-03:14:15 ~ (master) me@Machine MINGW64
+03:14:15 ~ (master) 8a338cc me@Machine MINGW64
 ```
 
 ##### git template dir, git hooks dir
