@@ -136,6 +136,7 @@ $ echo "a/b/c" | bn
 # To open a dir in explorer
 $ e bin/
 $ e .git/hooks
+$ e "new folder"
 ```
 
 ```bash
