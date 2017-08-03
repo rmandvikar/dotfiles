@@ -1,11 +1,14 @@
 #!/bin/sh
 
-#usage: git find-tag <commit> [<branch>] [<tag-pattern>]
-#
-# See http://stackoverflow.com/questions/43991602/list-tags-in-git-repo-sorted-by-how-they-appear-in-graph
+#usage: git find-tag [-s | --short] [-l | --long]
+#           <commit>
+#           [[(-b | --branch)] <branch>]
+#           [(-p | --pattern) <tag-pattern>]
 #
 # Find the tag when a given commit was merged into current or
 # given branch.
+
+# See http://stackoverflow.com/questions/43991602/list-tags-in-git-repo-sorted-by-how-they-appear-in-graph
 #
 # "Using merge commits to represent the last deployed version of
 # production code - That’s an antipattern. Use tags." VonC
@@ -30,42 +33,90 @@
 # |\    Merge branch 'merge-drivers' into dev
 #
 
-commit=$1
-if [ -z $commit ]; then
+pattern="."
+while true; do
+	case "$1" in
+		-h ) print-file-comments "$0"; exit ;;
+		-p | --pattern )
+			pattern="$2"; shift 2 ;;
+		-b | --branch )
+			branch="$2"; shift 2 ;;
+		-s | --short)
+			formatOption="short"; shift ;;
+		-l | --long )
+			formatOption="long"; shift ;;
+		-- ) shift; break ;;
+		-* )
+			if [ ! -z "$1" ]; then
+				echo 1>&2 "fatal: unknown option $1"
+				exit 1
+			fi
+			break ;;
+		* )
+			if [[ -z "$commit" ]]; then
+				if [[ -z "$1" ]]; then
+					break
+				fi
+				commit="$1"; shift; continue
+			fi
+			if [[ -z "$branch" ]]; then
+				if [[ -z "$1" ]]; then
+					break
+				fi
+				branch="$1"; shift; continue
+			fi
+			if [[ ! -z "$1" ]]; then
+				echo 1>&2 "fatal: unknown option $1"
+				exit 1
+			fi
+			break ;;
+	esac
+done
+
+if [[ -z "$commit" ]]; then
 	echo 1>&2 "fatal: commit is required"
 	exit 1
 fi
 commit=$(git rev-parse $commit)
-branch=${2-@}
-pattern=${3-.}
 
 # if branch points to commit (both are same), then look at commit parent
-if [ $commit == $(git rev-parse $branch) ]; then
+if [[ $commit == $(git rev-parse $branch) ]]; then
 	commit="$commit~"
+fi
+
+if [[ "$formatOption" == "short" ]]; then
+	format="--pretty=format:%h"
+fi
+if [[ "$formatOption" == "long" ]]; then
+	format="--pretty=format:%H"
 fi
 
 # tags between branch and commit sorted as in graph following a pattern
 tags=$(
 	git log --decorate --simplify-by-decoration --ancestry-path \
 		--pretty="format:%D" $commit..$branch \
-	| sed 's/, /\n/' \
+	| sed 's/, /\n/g' \
 	| grep '^tag: ' \
 	| sed 's/tag: //' \
 	| egrep "$pattern"
 )
-if [ ! -z "$tags" ]; then
-	echo "tags:"
-	for tag in $tags; do
-		echo "  $tag"
-	done
-	echo ""
+
+if [[ -z "$formatOption" ]]; then
+	if [[ ! -z "$tags" ]]; then
+		echo "tags:"
+		for tag in $tags; do
+			echo "  $tag"
+		done
+		echo ""
+	fi
 fi
 
 tag=$(echo "$tags" | tail -1)
-if [ -z "$tag" ]; then
-	# tag not found
-	echo 1>&2 "fatal: no tag found"
-	exit 1
+if [[ ! -z "$tag" ]]; then
+	git log -1 $format "$tag"
+	exit
 fi
 
-git show -s "$tag"
+# tag not found
+echo 1>&2 "fatal: no tag found"
+exit 1

@@ -18,9 +18,13 @@ applyCommitMessageConventionInternal() {
 	subject=$(head -n 1 "$msgbak")
 	if \
 		[[ "$subject" == "Merge branch "* ]] || \
+		[[ "$subject" == "Merge branches "* ]] || \
 		[[ "$subject" == "Merge remote-tracking branch "* ]] || \
+		[[ "$subject" == "Merge remote-tracking branches "* ]] || \
 		[[ "$subject" == "Merge commit "* ]] || \
+		[[ "$subject" == "Merge commits "* ]] || \
 		[[ "$subject" == "Merge tag "* ]] || \
+		[[ "$subject" == "Merge tags "* ]] || \
 		[[ "$subject" == "Revert "* ]]
 	then
 		echo "  keeping merge commit subject as is"
@@ -135,7 +139,7 @@ applyCommitMessageConvention() {
 		# proposed commit message is created and not before as is for
 		# commit. this results in "no change after applying convention"
 		# which is not desired. so skip 1st apply convention call.
-		if [ -z "$2" ]; then
+		if [ -z "$3" ]; then
 			applyCommitMessageConventionInternal "$msg"
 			if fileCompareRelaxed "$msgconvention" "$msgbak"; then
 				# no change after applying convention, return
@@ -145,7 +149,7 @@ applyCommitMessageConvention() {
 			fi
 			echo "  changing message"
 		else
-			# remove $2 arg
+			# remove $3 arg
 			set --
 		fi
 		$editor "$msg"

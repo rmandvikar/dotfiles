@@ -4,6 +4,8 @@
 #
 # Create and/or push current branch to gerrit.
 
+if [[ "$1" == "-h" ]]; then print-file-comments "$0"; exit; fi
+
 # exit if no 'refs/for/' configured
 if [ $(git config --get-regex remote\..*\.push | grep 'refs/for/' | wc -l) -eq 0 ]; then
 	echo 1>&2 "fatal: cannot use pushg as no 'refs/for/' to push to"
@@ -26,17 +28,17 @@ if [ -z $remotePath ]; then
 		# branch from master as default
 		branchFrom=${1-master}
 		command=$(echo git push "$remote" "$branchFrom":"$remoteBranch")
-		echo "$command"
+		echo -e "${White}$command${None}"
 		$command
 	elif ! git rev-parse -q --verify "$remote"/"$branch" 1>/dev/null; then
 		# fetch the remote branch
 		command=$(echo git fetch "$remote" "$remoteBranch" 2>/dev/null)
-		echo "$command"
+		echo -e "${White}$command${None}"
 		$command
 	fi
 	# track remote branch
 	command=$(echo git branch -u "$remote"/"$remoteBranch")
-	echo "$command"
+	echo -e "${White}$command${None}"
 	$command
 else
 	branch=$(git rev-parse --abbrev-ref @)
@@ -45,5 +47,5 @@ else
 	remoteBranch=${remotePath#"$remote"/}
 fi
 command=$(echo git push "$remote" HEAD:refs/for/"$remoteBranch")
-echo "$command"
+echo -e "${White}$command${None}"
 $command

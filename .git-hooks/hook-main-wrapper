@@ -17,12 +17,6 @@
 #  - Put sub-hooks in dir. Number sub-hooks in order of how they are to
 #    to called. To ignore a sub-hook, add any extension to it.
 
-# Colors
-export    Yellow='\033[1;33m'
-export       Red='\033[0;31m'
-export    Prompt='\033[38;2;255;136;255m'
-export      None='\033[0m' 		# No Color
-
 # clean up
 cleanUp() {
 	rm -f .git/hook.change

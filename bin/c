@@ -1,0 +1,7 @@
+#!/bin/sh
+
+#usage: c
+#
+# Open config in background.
+
+git config --lo -e &

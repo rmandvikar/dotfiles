@@ -66,9 +66,11 @@
 	lcount 	= rev-list --left-only --count
 	rcount 	= rev-list --right-only --count
 	note 	= log --pretty=note -1
-	cs 		= log --pretty=cs --date=short -1
 	lsf 	= ls-files
 	lst 	= ls-tree
+	has 	= branch -r --contains
+	no-has 	= branch -r --no-contains
+	g 		= grep --heading
 	
 	## write ##
 	a 		= add
@@ -88,12 +90,12 @@
 	unhide 	= update-index --no-assume-unchanged
 	hidden 	= !"git ls-files -v | grep '^h' | cut -c3- | wrap"
 	unstage = reset
-	#usage: git undo -dx
-	undo 	= !"git reset --hard && git clean -f"
 	cp 		= cherry-pick
 	
-	undomerge 	= reset --merge orig_head
-	undorebase 	= !"f() { \
+	#usage: git undo -dx
+	undo 		= !"git reset --hard && git clean -f"
+	undo-merge 	= reset --merge orig_head
+	undo-rebase = !"f() { \
 					git reset --hard orig_head; \
 					: abort only if rebase is in progress; \
 					(test -d ".git/rebase-merge" || test -d ".git/rebase-apply") \
@@ -108,8 +110,8 @@
 	lgoc 	= "format:%C(auto)%h%C(reset)%C(auto)%d%C(reset) %C(#ffff99)%s%C(reset) - %C(#ffb799)%aN%C(reset)"
 	one 	= "format:%C(auto)%h%C(reset) %C(#ffaaff)(%ar)%C(reset) %C(#ffff99)%s%C(reset) - %C(#ffb799)%aN%C(reset)%C(auto)%d%C(reset)"
 	two 	= "format:%C(auto)%h%C(reset) - %C(#ffeeff)%ad%C(reset) %C(#ffaaff)(%ar)%C(reset)%C(auto)%d%C(reset)%n  %C(#ffff99)%s%C(reset) - %C(#ffb799)%aN%C(reset)"
+	four 	= "format:%C(auto)%h%C(reset)%C(auto)%d%C(reset)%n  %C(#ffff99)%s%C(reset)%n  %C(#ffeeff)%ad%C(reset) %C(#ffaaff)(%ar)%C(reset) - %C(#ffb799)%aN%C(reset)%n  %C(#ffeeff)%cd%C(reset) %C(#ffaaff)(%cr)%C(reset) - %C(#ffb799)%cN%C(reset)"
 	note 	= "format:%H"
-	cs 		= "format:%H (\"%s\", %ad)"
 [alias]
 	#hint: add --all to see whole repo
 	l 		= log --graph --date=format:'%a %d-%b-%Y %H:%M' --decorate --abbrev-commit --pretty=two
@@ -120,14 +122,17 @@
 	lgoc 	= log --graph --date=format:'%a %d-%b-%Y %H:%M' --decorate --abbrev-commit --pretty=lgoc
 	lg1 	= log --graph --date=format:'%a %d-%b-%Y %H:%M' --decorate --abbrev-commit --pretty=one
 	lg2 	= log --graph --date=format:'%a %d-%b-%Y %H:%M' --decorate --abbrev-commit --pretty=two
+	lg4 	= log --graph --date=format:'%a %d-%b-%Y %H:%M' --decorate --abbrev-commit --pretty=four
 	l1 		= log --date=format:'%a %d-%b-%Y %H:%M' --decorate --abbrev-commit --pretty=one
 	l2 		= log --date=format:'%a %d-%b-%Y %H:%M' --decorate --abbrev-commit --pretty=two
+	l4 		= log --date=format:'%a %d-%b-%Y %H:%M' --decorate --abbrev-commit --pretty=four
 
 # default options for commands
 [log]
 	decorate 	= short
 	mailmap 	= true
 	follow 		= true
+	date 		= format:%a %d-%b-%Y %H:%M
 	# exclude blue and bold blue due to visibility
 	graphColors = red, green, yellow, magenta, cyan, bold red, bold green, bold yellow, bold magenta, bold cyan
 
@@ -165,6 +170,10 @@
 [branch]
 	autoSetupMerge 		= false
 	autoSetupRebase 	= always
+
+[grep]
+	lineNumber 		= true
+	patternType 	= extended
 
 # templates
 [init]
@@ -207,11 +216,11 @@
 	whitespace 	= normal red
 	frag 		= bold cyan
 	old 		= "#fc9f9f" # ~red
-	new 		= "#c9ffc9" # ~green
+	new 		= "#9bff9b" # ~green
 
 [color "status"]
 	#header 	= white
-	added 		= "#c9ffc9" # ~green
+	added 		= "#9bff9b" # ~green
 	changed 	= "#fc9f9f" # ~red
 	untracked 	= "#fc9f9f" # ~red
 	branch 		= cyan
@@ -235,6 +244,11 @@
 	#header = normal
 	#help 	= normal
 	#error 	= normal
+
+[color "grep"]
+	match 		= bold red
+	filename 	= "#ffaaff"
+	linenumber 	= bold green
 
 [include]
 	# user

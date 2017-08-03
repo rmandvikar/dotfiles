@@ -3,6 +3,15 @@
 #usage:
 #	gq [<commit>]
 #	gq [<query>]
+#
+# Gerrit query.
+
+if [[ "$1" == "-h" ]]; then print-file-comments "$0"; exit; fi
+
+if [[ -z "$GerritUrl" ]]; then
+	echo 1>&2 "fatal: GerritUrl not configured in work.bashrc"
+	exit 1
+fi
 
 GerritUrlQuery="$GerritUrl/#/q/"
 
