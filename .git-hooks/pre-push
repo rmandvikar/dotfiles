@@ -1,0 +1,6 @@
+#!/bin/sh
+
+# pre-push hook does:
+#	- Abort push if foxtrot merge detected
+export hookname=$(basename "$0")
+~/.git-hooks/hook-main-wrapper "$@"
