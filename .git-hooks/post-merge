@@ -1,0 +1,6 @@
+#!/bin/sh
+
+# post-merge hook does:
+#	- Warn if foxtrot merge detected
+export hookname=$(basename "$0")
+~/.git-hooks/hook-main-wrapper "$@"
