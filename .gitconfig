@@ -220,12 +220,14 @@
 	new 		= "#9bff9b" # ~green
 
 [color "status"]
-	#header 	= white
-	added 		= "#9bff9b" # ~green
-	changed 	= "#fc9f9f" # ~red
-	untracked 	= "#fc9f9f" # ~red
-	branch 		= cyan
-	nobranch 	= bold red
+	#header 		= white
+	added 			= "#9bff9b" # ~green
+	changed 		= "#fc9f9f" # ~red
+	untracked 		= "#fc9f9f" # ~red
+	branch 			= cyan
+	nobranch 		= bold red
+	localBranch 	= cyan
+	remoteBranch 	= bold red
 
 [color "branch"]
 	current 	= cyan
