@@ -5,15 +5,44 @@ else
 	TITLEPREFIX=$MSYSTEM
 fi
 
-# print <sha1hash>
-function prompt_hash() {
-	[[ -d ".git" ]] && echo " $(git log -1 --pretty="format:%h")"
+ Default='\033[0;36m'
+   Ahead='\033[38;5;048m'
+  Behind='\033[0;93m'
+Diverged='\033[38;5;208m'
+   Reset='\033[0m'
+
+# print custom prompt
+function custom_ps1() {
+	if [[ ! -d ".git" ]]; then return; fi
+	hash=$(git log -1 --pretty="format:%h")
+	branch=$(git symbolic-ref --short HEAD 2>/dev/null)
+	if [[ -z "$branch" ]]; then
+		echo -e " ${Default}(($hash...))${Reset}"
+		return
+	fi
+	lrcounts=$(git rev-list --left-right --count @...@{u} 2>/dev/null)
+	lcount=$(echo $lrcounts | cut -d' ' -f1)
+	rcount=$(echo $lrcounts | cut -d' ' -f2)
+	if [[ "$lcount" == 0 && "$rcount" == 0 ]]; then
+		branchStatus="≡"
+	elif [[ "$lcount" > 0 && "$rcount" == 0 ]]; then
+		branchStatus="${Ahead}+"
+	elif [[ "$lcount" == 0 && "$rcount" > 0 ]]; then
+		branchStatus="${Behind}—"
+	elif [[ "$lcount" > 0 && "$rcount" > 0 ]]; then
+		branchStatus="${Diverged}±"
+	fi
+	if [[ -z "$branchStatus" ]]; then
+		echo -e " ${Default}($branch $hash)${Reset}"
+	else
+		echo -e " ${Default}($branch $branchStatus${Default} $hash)${Reset}"
+	fi
 }
 
 PS1='\[\033]0;$TITLEPREFIX:${PWD//[^[:ascii:]]/?}\007\]' # set window title
 PS1="$PS1"'\n'                 # new line
-PS1="$PS1"'\e[38;5;94m'        # change to ~Brown
-PS1="$PS1"'\[\033[0m\]'        # change to ~Grey
+#PS1="$PS1"'\e[38;5;94m'       # change to ~Brown
+#PS1="$PS1"'\[\033[0m\]'       # change to ~Grey
 PS1="$PS1"'\e[38;5;220m'       # change to ~GoldYellow
 PS1="$PS1"'\t '                # time
 PS1="$PS1"'\[\033[33m\]'       # change to brownish yellow
@@ -28,15 +57,15 @@ then
 	then
 		. "$COMPLETION_PATH/git-completion.bash"
 		. "$COMPLETION_PATH/git-prompt.sh"
-		PS1="$PS1"'\[\033[36m\]'  # change color to cyan
-		PS1="$PS1"'`__git_ps1`'   # bash function
-		PS1="$PS1"'`prompt_hash`' # bash function
+		#PS1="$PS1"'\[\033[36m\]'  # change color to cyan
+		#PS1="$PS1"'`__git_ps1`'   # bash function
+		PS1="$PS1"'`custom_ps1`'   # bash function
 	fi
 fi
-PS1="$PS1"'\[\033[32m\]'       # change to green
+#PS1="$PS1"'\[\033[32m\]'      # change to green
 PS1="$PS1"'\e[38;5;28m'        # change to ~DarkGreen
 PS1="$PS1"' \u@\h '            # user@host<space>
-PS1="$PS1"'\[\033[35m\]'       # change to purple (more like pink)
+#PS1="$PS1"'\[\033[35m\]'      # change to purple (more like pink)
 PS1="$PS1"'\e[94m'             # change to ~Purple
 PS1="$PS1"'$MSYSTEM'           # show MSYSTEM
 PS1="$PS1"'\[\033[0m\]'        # change color
