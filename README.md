@@ -131,6 +131,9 @@ $ git diff --name-status | cuts | wrap | o
 $ e bin/
 $ e .git/hooks
 $ e "new folder"
+# To open a file's dir with file focused in explorer
+$ e .git/hooks/readme.txt
+$ e "new folder/readme.txt"
 ```
 
 ```bash
