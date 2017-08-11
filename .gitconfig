@@ -88,7 +88,7 @@
 	ren 	= mv
 	hide 	= update-index --assume-unchanged
 	unhide 	= update-index --no-assume-unchanged
-	hidden 	= !"git ls-files -v | grep '^h' | cut -c3- | wrap"
+	hidden 	= !"git ls-files -v | grep '^h' | cut -c3- | dq"
 	unstage = reset
 	cp 		= cherry-pick
 	pushf 	= push --force-with-lease
@@ -220,12 +220,14 @@
 	new 		= "#9bff9b" # ~green
 
 [color "status"]
-	#header 	= white
-	added 		= "#9bff9b" # ~green
-	changed 	= "#fc9f9f" # ~red
-	untracked 	= "#fc9f9f" # ~red
-	branch 		= cyan
-	nobranch 	= bold red
+	#header 		= white
+	added 			= "#9bff9b" # ~green
+	changed 		= "#fc9f9f" # ~red
+	untracked 		= "#fc9f9f" # ~red
+	branch 			= cyan
+	nobranch 		= bold red
+	localBranch 	= cyan
+	remoteBranch 	= bold red
 
 [color "branch"]
 	current 	= cyan
@@ -241,14 +243,14 @@
 	#HEAD 			= bold cyan
 
 [color "interactive"]
-	prompt 	= "#ff88ff"
+	prompt 	= "#ff88ff" # ~pink
 	#header = normal
 	#help 	= normal
 	#error 	= normal
 
 [color "grep"]
 	match 		= bold red
-	filename 	= "#ffaaff"
+	filename 	= "#ffaaff" # ~pink
 	linenumber 	= bold green
 
 [include]
