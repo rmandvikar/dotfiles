@@ -239,14 +239,11 @@ $ SKIP_HOOKS=true git commit
 
 ```
 # prompt format
-<hh:mm:ss> <path> (<branch> [<branchStatus>] <hash>) <user>@<host> MINGW64
+<hh:mm:ss> <path> (<branch>) [<branchStatus>] <hash> <user>@<host> MINGW64
 # example with remote branch status
-03:14:15 ~ (master ≡ 8a338cc) me@Machine MINGW64
-03:14:15 ~ (master + 8a338cc) me@Machine MINGW64
-03:14:15 ~ (master — 8a338cc) me@Machine MINGW64
-03:14:15 ~ (master ± 8a338cc) me@Machine MINGW64
+03:14:15 ~ (master) -0,+0 8a338cc me@Machine MINGW64
 # example with no remote branch status
-03:14:15 ~ (prompt 8a338cc) me@Machine MINGW64
+03:14:15 ~ (prompt)  8a338cc me@Machine MINGW64
 ```
 
 ##### git template dir, git hooks dir
