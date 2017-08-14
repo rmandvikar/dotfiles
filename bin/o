@@ -7,5 +7,5 @@ else
 	while read data; do
 		args=$args$data" "
 	done
-	echo $args | xargs "$EDITOR" &
+	echo $args | xargs -r "$EDITOR" &
 fi
