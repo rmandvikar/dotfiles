@@ -10,6 +10,6 @@ GerritUrlQuery="$GerritUrl/#/q/"
 git config --get-regex remote\..*\.url \
 	| cut -d' ' -f2 \
 	| sed 's,^ssh://,,' \
-	| xargs basename \
+	| bn \
 	| sed 's,^,'"$GerritUrlQuery"'project:,' \
 	| xargs start chrome --new-window
