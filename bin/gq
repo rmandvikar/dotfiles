@@ -18,9 +18,9 @@ GerritUrlQuery="$GerritUrl/#/q/"
 # if not in git repo
 if [[ $(git rev-parse --is-inside-work-tree 2>/dev/null) != "true" ]]; then
 	if [ $# -eq 0 ]; then
-		start chrome --new-window "$GerritUrl"
+		browse "$GerritUrl"
 	else
-		start chrome --new-window "$GerritUrlQuery$*"
+		browse "$GerritUrlQuery$*"
 	fi
 	exit
 fi
@@ -40,9 +40,9 @@ if [ ! -z "$commit" ]; then
 		exit 1
 	fi
 	id=$(echo $last | sed 's/Change-Id: //')
-	start chrome --new-window "$GerritUrlQuery$id"
+	browse "$GerritUrlQuery$id"
 else
 	# query
 	#	pass all args
-	start chrome --new-window "$GerritUrlQuery$*"
+	browse "$GerritUrlQuery$*"
 fi

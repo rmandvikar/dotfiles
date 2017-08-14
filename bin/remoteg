@@ -12,4 +12,4 @@ git config --get-regex remote\..*\.url \
 	| sed 's,^ssh://,,' \
 	| bn \
 	| sed 's,^,'"$GerritUrlQuery"'project:,' \
-	| xargs start chrome --new-window
+	| browse
