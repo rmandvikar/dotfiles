@@ -1,0 +1,15 @@
+#!/bin/sh
+
+#usage:
+#   browse <query1> <query2> ...
+#   ... | browse
+#
+# Open query or queries in browser.
+
+if [[ "$1" == "-h" ]]; then print-file-comments "$0"; exit; fi
+
+if [ $# -gt 0 ]; then
+	start chrome --new-window "$@"
+else
+	xargs -r start chrome --new-window
+fi
