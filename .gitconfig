@@ -74,6 +74,7 @@
 	
 	## write ##
 	a 		= add
+	an 		= add --intent-to-add --ignore-removal
 	c 		= commit
 	cm 		= commit -m
 	ac 		= !"git add --all && git c"
