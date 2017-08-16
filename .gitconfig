@@ -167,7 +167,9 @@
 	mergeOptions = --no-ff
 
 [pull]
-	rebase 	= true
+	ff 		= only
+	# do 'git rebase -p'
+	rebase 	= preserve
 
 [branch]
 	autoSetupMerge 		= false
