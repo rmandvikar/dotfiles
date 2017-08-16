@@ -1,0 +1,29 @@
+#!/bin/sh
+
+    remote="$1"
+       url="$2"
+ local_ref="$3"
+ local_sha="$4"
+remote_ref="$5"
+remote_sha="$6"
+
+z40=0000000000000000000000000000000000000000
+if [ "$local_sha" = $z40 ]; then
+	# handle delete, do nothing
+	:
+elif [ "$remote_sha" = $z40 ]; then
+	# handle new branch, look at commits not in master
+	commits=$(~/.git-hooks/helpers/merge-as-normal-commit-detector "master..$local_sha")
+else
+	# handle existing branch, look at commits not in remote branch
+	commits=$(~/.git-hooks/helpers/merge-as-normal-commit-detector "$remote_sha..$local_sha")
+fi
+
+if [ ! -z "$commits" ]; then
+	echo 1>&2 "fatal: merge recorded as normal commit detected"
+	echo 1>&2 "fatal: commit(s):"
+	for commit in ${commits[@]}; do
+		echo 1>&2 -e "  $commit"
+	done
+	exit 1
+fi
