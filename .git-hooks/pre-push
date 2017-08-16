@@ -2,6 +2,7 @@
 
 # pre-push hook does:
 #	- Abort push if foxtrot merge detected
+#	- Abort push if merge recorded as normal commit detected
 export hookname=$(bn "$0")
 remote="$1"
    url="$2"
