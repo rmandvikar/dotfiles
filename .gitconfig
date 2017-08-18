@@ -53,9 +53,12 @@
 	bs 		= branch --sort=committerdate
 	co 		= checkout
 	d 		= diff
+	dc 		= diff --staged
 	dt 		= difftool
+	dtc 	= difftool --staged
 	mt 		= mergetool
 	dw 		= diff --color-words=.
+	dwc 	= diff --color-words=. --staged
 	de 		= diff --ignore-space-at-eol
 	ds 		= diff --ignore-all-space
 	sb 		= show-branch
