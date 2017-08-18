@@ -116,25 +116,26 @@
 	note 	= "format:%H"
 [alias]
 	#hint: add --all to see whole repo
-	l 		= log --graph --date=format:'%a %d-%b-%Y %H:%M' --decorate --abbrev-commit --pretty=two
-	last 	= log --graph --date=format:'%a %d-%b-%Y %H:%M' --decorate --abbrev-commit --pretty=two -1
-	lo 		= log --oneline --decorate --abbrev-commit
-	lg  	= log --graph --decorate --abbrev-commit
-	lgo 	= log --graph --oneline --decorate --abbrev-commit
-	lgoc 	= log --graph --date=format:'%a %d-%b-%Y %H:%M' --decorate --abbrev-commit --pretty=lgoc
-	lg1 	= log --graph --date=format:'%a %d-%b-%Y %H:%M' --decorate --abbrev-commit --pretty=one
-	lg2 	= log --graph --date=format:'%a %d-%b-%Y %H:%M' --decorate --abbrev-commit --pretty=two
-	lg4 	= log --graph --date=format:'%a %d-%b-%Y %H:%M' --decorate --abbrev-commit --pretty=four
-	l1 		= log --date=format:'%a %d-%b-%Y %H:%M' --decorate --abbrev-commit --pretty=one
-	l2 		= log --date=format:'%a %d-%b-%Y %H:%M' --decorate --abbrev-commit --pretty=two
-	l4 		= log --date=format:'%a %d-%b-%Y %H:%M' --decorate --abbrev-commit --pretty=four
+	l 		= log --graph --pretty=two
+	last 	= log --graph --pretty=two -1
+	lo 		= log --oneline
+	lg 		= log --graph
+	lgo 	= log --graph --oneline
+	lgoc 	= log --graph --pretty=lgoc
+	lg1 	= log --graph --pretty=one
+	lg2 	= log --graph --pretty=two
+	lg4 	= log --graph --pretty=four
+	l1 		= log --pretty=one
+	l2 		= log --pretty=two
+	l4 		= log --pretty=four
 
 # default options for commands
 [log]
-	decorate 	= short
-	mailmap 	= true
-	follow 		= true
-	date 		= format:%a %d-%b-%Y %H:%M
+	decorate 		= short
+	mailmap 		= true
+	follow 			= true
+	date 			= format:%a %d-%b-%Y %H:%M
+	abbrevCommit 	= true
 	# exclude blue and bold blue due to visibility
 	graphColors = red, green, yellow, magenta, cyan, bold red, bold green, bold yellow, bold magenta, bold cyan
 
