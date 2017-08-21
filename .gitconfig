@@ -175,6 +175,10 @@
 	# do 'git rebase -p'
 	rebase 	= preserve
 
+[rebase]
+	autoStash 	= true
+	autoSquash 	= true
+
 [branch]
 	autoSetupMerge 		= false
 	autoSetupRebase 	= always
