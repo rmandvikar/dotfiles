@@ -108,7 +108,7 @@
 				}; f"
 	
 	## advanced ##
-	breset 	= branch-reset
+	bsync 	= branch-sync
 	bfrom 	= branched-from
 
 [pretty]
