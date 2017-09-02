@@ -1,21 +1,13 @@
 #!/bin/sh
 
-# Loop through the sub-hooks in the <hook>.d dir and call them in a
-# sorted order after ignoring files with extensions.
+# Loop through the sub-hooks in the '~/.git-hooks/<hook>.d' dir and
+# '.git/hooks/<hook>.d' dir taken together and call them in a sorted
+# order of filenames (sort -n) after ignoring files with extensions.
 #
-# To create a new hook, simply follow the 'commit-msg' hook pattern.
-#
-# The 'commit-msg' hook calls the 'hook-main-wrapper' script which
-# calls the sub-hooks in the 'commit-msg.d' dir after ignoring files
-# with extensions and sorting in the default sort order of 'ls'
-# command.
-#
-# Steps:
-#
-#  - Create the main hook script ('commit-msg') and copy the content.
-#  - Create a <hook>.d dir ('commit-msg.d').
-#  - Put sub-hooks in dir. Number sub-hooks in order of how they are to
-#    to called. To ignore a sub-hook, add any extension to it.
+# Example:
+# The 'commit-msg' hook calls the '_hook-main-wrapper' script which
+# calls the sub-hooks in the '~/.git-hooks/commit-msg.d' dir and
+# '.git/hooks/commit-msg.d' dir.
 
 # clean up
 cleanUp() {
@@ -32,22 +24,26 @@ export -f getConfig
 # Call sub-hooks in <hook>.d dir.
 callSubhooks() {
 	# skip hooks
-	if [ "$SKIP_HOOKS" == "true" ]; then
+	if [[ "$SKIP_HOOKS" == "true" ]]; then
 		return
 	fi
 	# hookname is passed as env variable
 	hookdir="$hookname.d"
-	if [ -d ~/.git-hooks/"$hookdir" ]; then
+	if [[ -d ~/.git-hooks/"$hookdir" || -d .git/hooks/"$hookdir" ]]; then
 		# ignore files with extensions
-		subhooks=$( ls -I '*.*' -1 ~/.git-hooks/"$hookdir" )
-		if [ ! -z "$subhooks" ]; then
+		subhooks=$(
+			find ~/.git-hooks/"$hookdir" .git/hooks/"$hookdir" \
+				! -name '*.*' -type f -maxdepth 1 2>/dev/null \
+			| awk -F "/" '{print $NF"|"$0}' | sort -ns | cut -f2- -d'|' \
+			)
+		if [[ ! -z "$subhooks" ]]; then
 			# echo hook name only if there are subhooks
 			echo "hooks/$hookname"
 			for subhook in $subhooks; do
-				~/.git-hooks/"$hookdir"/"$subhook" "$@"
+				"$subhook" "$@"
 				# check exit code and exit if needed
 				exitcode=$?
-				if [ $exitcode -ne 0 ]; then
+				if [[ $exitcode -ne 0 ]]; then
 					exit $exitcode
 				fi
 			done
