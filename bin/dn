@@ -1,0 +1,31 @@
+#!/bin/sh
+
+#usage:
+#   dn <path>
+#   ... | dn
+#
+# dirname
+
+# see http://sed.sourceforge.net/local/docs/emulating_unix.txt
+
+# verify using:
+# 	$ diff <(git ls-files | dq | dn) <(git ls-files | dq | xargs -I_ dirname _)
+
+command='
+		# remove " from beginning and end
+		s,^",,
+		s,"$,,
+		# remove last /
+		s,/$,,
+		# main command
+		s,[^/]*$,,
+		# remove last /
+		s,/$,,
+		# put . for empty string
+		s,^$,.,
+		'
+if [ $# -gt 0 ]; then
+	sed "$command" <<< "$1"
+else
+	sed "$command"
+fi

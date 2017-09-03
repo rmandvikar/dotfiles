@@ -53,9 +53,12 @@
 	bs 		= branch --sort=committerdate
 	co 		= checkout
 	d 		= diff
+	dc 		= diff --staged
 	dt 		= difftool
+	dtc 	= difftool --staged
 	mt 		= mergetool
 	dw 		= diff --color-words=.
+	dwc 	= diff --color-words=. --staged
 	de 		= diff --ignore-space-at-eol
 	ds 		= diff --ignore-all-space
 	sb 		= show-branch
@@ -74,6 +77,7 @@
 	
 	## write ##
 	a 		= add
+	an 		= add --intent-to-add --ignore-removal
 	c 		= commit
 	cm 		= commit -m
 	ac 		= !"git add --all && git c"
@@ -88,9 +92,10 @@
 	ren 	= mv
 	hide 	= update-index --assume-unchanged
 	unhide 	= update-index --no-assume-unchanged
-	hidden 	= !"git ls-files -v | grep '^h' | cut -c3- | wrap"
+	hidden 	= !"git ls-files -v | grep '^h' | cut -c3- | dq"
 	unstage = reset
 	cp 		= cherry-pick
+	pushf 	= push --force-with-lease
 	
 	#usage: git undo -dx
 	undo 		= !"git reset --hard && git clean -f"
@@ -103,7 +108,7 @@
 				}; f"
 	
 	## advanced ##
-	breset 	= branch-reset
+	bsync 	= branch-sync
 	bfrom 	= branched-from
 
 [pretty]
@@ -114,25 +119,26 @@
 	note 	= "format:%H"
 [alias]
 	#hint: add --all to see whole repo
-	l 		= log --graph --date=format:'%a %d-%b-%Y %H:%M' --decorate --abbrev-commit --pretty=two
-	last 	= log --graph --date=format:'%a %d-%b-%Y %H:%M' --decorate --abbrev-commit --pretty=two -1
-	lo 		= log --oneline --decorate --abbrev-commit
-	lg  	= log --graph --decorate --abbrev-commit
-	lgo 	= log --graph --oneline --decorate --abbrev-commit
-	lgoc 	= log --graph --date=format:'%a %d-%b-%Y %H:%M' --decorate --abbrev-commit --pretty=lgoc
-	lg1 	= log --graph --date=format:'%a %d-%b-%Y %H:%M' --decorate --abbrev-commit --pretty=one
-	lg2 	= log --graph --date=format:'%a %d-%b-%Y %H:%M' --decorate --abbrev-commit --pretty=two
-	lg4 	= log --graph --date=format:'%a %d-%b-%Y %H:%M' --decorate --abbrev-commit --pretty=four
-	l1 		= log --date=format:'%a %d-%b-%Y %H:%M' --decorate --abbrev-commit --pretty=one
-	l2 		= log --date=format:'%a %d-%b-%Y %H:%M' --decorate --abbrev-commit --pretty=two
-	l4 		= log --date=format:'%a %d-%b-%Y %H:%M' --decorate --abbrev-commit --pretty=four
+	l 		= log --graph --pretty=two
+	last 	= log --graph --pretty=two -1
+	lo 		= log --oneline
+	lg 		= log --graph
+	lgo 	= log --graph --oneline
+	lgoc 	= log --graph --pretty=lgoc
+	lg1 	= log --graph --pretty=one
+	lg2 	= log --graph --pretty=two
+	lg4 	= log --graph --pretty=four
+	l1 		= log --pretty=one
+	l2 		= log --pretty=two
+	l4 		= log --pretty=four
 
 # default options for commands
 [log]
-	decorate 	= short
-	mailmap 	= true
-	follow 		= true
-	date 		= format:%a %d-%b-%Y %H:%M
+	decorate 		= short
+	mailmap 		= true
+	follow 			= true
+	date 			= format:%a %d-%b-%Y %H:%M
+	abbrevCommit 	= true
 	# exclude blue and bold blue due to visibility
 	graphColors = red, green, yellow, magenta, cyan, bold red, bold green, bold yellow, bold magenta, bold cyan
 
@@ -165,7 +171,13 @@
 	mergeOptions = --no-ff
 
 [pull]
-	rebase 	= true
+	ff 		= only
+	# do 'git rebase -p'
+	rebase 	= preserve
+
+[rebase]
+	autoStash 	= true
+	autoSquash 	= true
 
 [branch]
 	autoSetupMerge 		= false
@@ -219,12 +231,14 @@
 	new 		= "#9bff9b" # ~green
 
 [color "status"]
-	#header 	= white
-	added 		= "#9bff9b" # ~green
-	changed 	= "#fc9f9f" # ~red
-	untracked 	= "#fc9f9f" # ~red
-	branch 		= cyan
-	nobranch 	= bold red
+	#header 		= white
+	added 			= "#9bff9b" # ~green
+	changed 		= "#fc9f9f" # ~red
+	untracked 		= "#fc9f9f" # ~red
+	branch 			= cyan
+	nobranch 		= bold red
+	localBranch 	= cyan
+	remoteBranch 	= bold red
 
 [color "branch"]
 	current 	= cyan
@@ -240,14 +254,14 @@
 	#HEAD 			= bold cyan
 
 [color "interactive"]
-	prompt 	= "#ff88ff"
+	prompt 	= "#ff88ff" # ~pink
 	#header = normal
 	#help 	= normal
 	#error 	= normal
 
 [color "grep"]
 	match 		= bold red
-	filename 	= "#ffaaff"
+	filename 	= "#ffaaff" # ~pink
 	linenumber 	= bold green
 
 [include]

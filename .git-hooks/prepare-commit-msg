@@ -15,5 +15,5 @@
 #		- Delete default text in merge commit body
 #	- Remove placeholder
 #	- Explicitly call commit-msg hook for merge commits
-export hookname=$(basename "$0")
+export hookname=$(bn "$0")
 ~/.git-hooks/hook-main-wrapper "$@"

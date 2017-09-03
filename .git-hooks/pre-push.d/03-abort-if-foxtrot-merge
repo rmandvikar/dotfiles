@@ -1,0 +1,25 @@
+#!/bin/sh
+
+    remote="$1"
+       url="$2"
+ local_ref="$3"
+ local_sha="$4"
+remote_ref="$5"
+remote_sha="$6"
+
+z40=0000000000000000000000000000000000000000
+if [ "$local_sha" = $z40 ]; then
+	# handle delete, do nothing
+	:
+else
+	# ex $local_ref as "refs/heads/dev"
+	branch=$(git rev-parse --abbrev-ref "$local_ref")
+	~/.git-hooks/helpers/foxtrot-merge-detector "$branch"
+	# check exit code and exit if needed
+	exitcode=$?
+	if [ $exitcode -ne 0 ]; then
+		echo 1>&2 "fatal: foxtrot merge detected, aborting push"
+		echo 1>&2 "fatal: branch '$branch'"
+		exit $exitcode
+	fi
+fi

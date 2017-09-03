@@ -18,9 +18,9 @@ JiraUrlQuery="$JiraUrl/secure/QuickSearch.jspa?searchString="
 # if not in git repo
 if [[ $(git rev-parse --is-inside-work-tree 2>/dev/null) != "true" ]]; then
 	if [ $# -eq 0 ]; then
-		start chrome --new-window "$JiraUrl"
+		browse "$JiraUrl"
 	else
-		start chrome --new-window "$JiraUrlQuery$*"
+		browse "$JiraUrlQuery$*"
 	fi
 	exit
 fi
@@ -61,9 +61,9 @@ if [ ! -z "$commit" ]; then
 	for ticket in $tickets; do
 		query="$query$JiraUrlQuery$ticket "
 	done
-	start chrome --new-window $query
+	browse $query
 else
 	# query
 	#	pass all args
-	start chrome --new-window "$JiraUrlQuery$*"
+	browse "$JiraUrlQuery$*"
 fi

@@ -1,19 +1,50 @@
 #!/bin/sh
 
-explore() {
-	# convert / to \
-	args=$(echo "$@" | sed 's/\//\\/g')
-	# convert /c to c:
-	if [[ "$args" = \\* ]]; then
-		args=$(echo "$args" | sed -e 's/../:&/2' | sed -e 's/^\\//')
-	fi
-	start "$args"
+#usage:
+#   e <path>
+#   ... | e
+#
+# Open POSIX paths in explorer.
+
+convertPosixPathToWindows() {
+	# convert /c/ to /c:/ to c:/ to c:\
+	#   drive letter can be multiple chars
+	# convert some/dir/ to some\dir\
+	#
+	# see Patterns, http://www.grymoire.com/Unix/Sed.html#uh-27
+	# example: sed '\,^#, s/[0-9][0-9]*//'
+	sed -r '
+		# remove leading "
+		s,^",,
+		# remove trailing "
+		s,"$,,
+		# ensure 2nd / is present at end for special case "/c"
+		\,^/[^/]+$, s,$,/,
+		# if starting with /, replace the 2nd / with :/
+		\,^/, s,/,:/,2
+		# remove leading /
+		s,^/,,
+		# replace all / with \
+		s,/,\\,g
+		' <<< "$@"
 }
 
-if [ $# -gt 0 ]; then
-	explore "$@" &
+if [[ $# -gt 0 ]]; then
+	path=$(convertPosixPathToWindows "$@")
+	# if dir, open
+	if [[ -d "$path" ]]; then
+		start explorer $path
+	# if file, open with file focused
+	elif [[ -f "$path" ]]; then
+		start explorer $path,/select
+	# else throw
+	else
+		echo 1>&2 'fatal: path '\'"$path"\'' is not valid'
+		exit 1
+	fi
 else
 	while read data; do
-		explore "$data" &
+		# exec e does not work
+		e "$data"
 	done
 fi

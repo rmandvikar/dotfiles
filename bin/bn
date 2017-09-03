@@ -1,0 +1,27 @@
+#!/bin/sh
+
+#usage:
+#   bn <path>
+#   ... | bn
+#
+# basename
+
+# see http://sed.sourceforge.net/local/docs/emulating_unix.txt
+
+# verify using:
+# 	$ diff <(git ls-files | dq | bn) <(git ls-files | dq | xargs -I_ basename _)
+
+command='
+		# remove " from beginning and end
+		s,^",,
+		s,"$,,
+		# remove last /
+		s,/$,,
+		# main command
+		s,.*/,,
+		'
+if [ $# -gt 0 ]; then
+	sed "$command" <<< "$1"
+else
+	sed "$command"
+fi

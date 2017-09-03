@@ -114,22 +114,32 @@ $ s file.txt
 
 ```bash
 # To wrap paths having spaces with double quotes for piping to text editor
-$ git ls-files "*config" | wrap | o
+$ git ls-files "*config" | dq | o
 # To open grepped files
-$ git grep "config" | cut -d':' -f1 | wrap | o
+$ git grep "config" | cut -d':' -f1 | dq | o
 ```
 
 ```bash
 # To open grepped files with custom cut alias, cutg
-$ git grep "config" | cutg | wrap | o
+$ git grep "config" | cutg | dq | o
 # To cut status with custom cut alias, cuts
-$ git diff --name-status | cuts | wrap | o
+$ git diff --name-status | cuts | dq | o
+```
+
+```bash
+# To get dirname or basename
+$ echo "a/b/c" | dn
+$ echo "a/b/c" | bn
 ```
 
 ```bash
 # To open a dir in explorer
 $ e bin/
 $ e .git/hooks
+$ e "new folder"
+# To open a file's dir with file focused in explorer
+$ e .git/hooks/readme.txt
+$ e "new folder/readme.txt"
 ```
 
 ```bash
@@ -229,9 +239,11 @@ $ SKIP_HOOKS=true git commit
 
 ```
 # prompt format
-<hh:mm:ss> <path> (<branch>) <user>@<host> MINGW64
-# example
-03:14:15 ~ (master) me@Machine MINGW64
+<hh:mm:ss> <path> (<branch>) [<branchStatus>] <hash> <user>@<host> MINGW64
+# example with remote branch status
+03:14:15 ~ (master) -0,+0 8a338cc me@Machine MINGW64
+# example with no remote branch status
+03:14:15 ~ (prompt)  8a338cc me@Machine MINGW64
 ```
 
 ##### git template dir, git hooks dir
