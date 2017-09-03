@@ -12,8 +12,8 @@ if [ "$local_sha" = $z40 ]; then
 	# handle delete, do nothing
 	:
 elif [ "$remote_sha" = $z40 ]; then
-	# handle new branch, look at commits not in master
-	commits=$(~/.git-hooks/helpers/merge-as-normal-commit-detector "master..$local_sha")
+	# handle new branch, look at commits not in remote master
+	commits=$(~/.git-hooks/helpers/merge-as-normal-commit-detector "master@{u}..$local_sha")
 else
 	# handle existing branch, look at commits not in remote branch
 	commits=$(~/.git-hooks/helpers/merge-as-normal-commit-detector "$remote_sha..$local_sha")
