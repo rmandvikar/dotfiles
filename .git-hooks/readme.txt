@@ -1,1 +1,1 @@
-See comments in 'hook-main-wrapper' script.
+See comments in '_hook-main-wrapper' script.

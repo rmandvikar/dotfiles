@@ -3,4 +3,4 @@
 # post-commit hook does:
 #	- Warn if merge recorded as normal commit detected
 export hookname=$(bn "$0")
-~/.git-hooks/hook-main-wrapper "$@"
+~/.git-hooks/_hook-main-wrapper "$@"

@@ -16,4 +16,4 @@
 #	- Remove placeholder
 #	- Explicitly call commit-msg hook for merge commits
 export hookname=$(bn "$0")
-~/.git-hooks/hook-main-wrapper "$@"
+~/.git-hooks/_hook-main-wrapper "$@"

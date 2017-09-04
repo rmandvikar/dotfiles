@@ -166,11 +166,11 @@ $ git purge-branches [-n | --dry-run]
 
 ##### git hooks
 
-Each hook is comprised of sub-hooks that are placed in the '\<hook>.d' dir at ~/.git-hooks/ path. This allows to
+Each hook is comprised of sub-hooks that are placed in the '`~/.git-hooks/<hook>.d/`' dir and '`.git/hooks/<hook>.d/`' dir. This allows to
 - arbitrarily call any function in a desired order.
 - call proprietary or work hooks without committing.
 
-The sub-hooks in '\<hook>.d' dir are called in the sorted order of 'ls' command after ignoring files with extensions (ls -I '*.*' -1 "\<hook>.d"). Sub-hooks with '(gitignore)' in their names are git-ignored.
+The sub-hooks are called in the sorted order of 'sort -n' command of filenames after ignoring files with extensions. Sub-hooks with '(gitignore)' in their names are git-ignored.
 
 ###### apply-commit-message-convention sub-hook
 
