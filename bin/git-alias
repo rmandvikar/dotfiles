@@ -7,8 +7,7 @@
 if [[ "$1" == "-h" ]]; then print-file-comments "$0"; exit; fi
 
 git config --get-regex "^alias\.$1" | \
-	sed 's/^alias\.//' | \
-	sed -r 's/\t+/\'$'\n&/g' | sed -r 's/^\t{4}//'
+	sed 's,^alias\.,,'
 ls ~/bin/ | \
 	egrep "^git-$1" | \
 	while read line;
@@ -16,5 +15,5 @@ ls ~/bin/ | \
 		# print script path
 		echo "~/bin/$line"
 		# cat script with 1 tab indent
-		echo ~/bin/"$line" | xargs cat | sed 's/^/\t/'
+		cat ~/bin/"$line" | sed 's,^,\t,'
 	done

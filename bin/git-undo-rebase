@@ -1,0 +1,17 @@
+#!/bin/sh
+
+#usage: git undo-rebase
+#
+# Undo a rebase.
+
+if [[ "$1" == "-h" ]]; then print-file-comments "$0"; exit; fi
+
+# Note: 
+# ORIG_HEAD is the commit before starting the rebase and resetting
+# to ORIG_HEAD after rebase goes to the state before the rebase. 
+# Doing it again goes to state after the rebase.
+git reset --hard ORIG_HEAD
+# abort only if rebase is in progress
+if [[ -d ".git/rebase-merge" || -d ".git/rebase-apply" ]]; then
+	git rebase --abort
+fi
