@@ -14,7 +14,7 @@ if [ "$local_sha" = $z40 ]; then
 else
 	# ex $local_ref as "refs/heads/dev"
 	branch=$(git rev-parse --abbrev-ref "$local_ref")
-	~/.git-hooks/helpers/foxtrot-merge-detector "$branch"
+	~/.git-hooks/_helpers/foxtrot-merge-detector "$branch"
 	# check exit code and exit if needed
 	exitcode=$?
 	if [ $exitcode -ne 0 ]; then

@@ -1,6 +1,6 @@
 #!/bin/sh
 
-commit=$(~/.git-hooks/helpers/merge-as-normal-commit-detector "HEAD^!")
+commit=$(~/.git-hooks/_helpers/merge-as-normal-commit-detector "HEAD^!")
 if [ ! -z "$commit" ]; then
 	echo -e "${Yellow}WARNING:${None} merge recorded as normal commit detected"
 	echo -e "  $commit"
