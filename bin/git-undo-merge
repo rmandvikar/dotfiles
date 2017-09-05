@@ -1,0 +1,13 @@
+#!/bin/sh
+
+#usage: git undo-merge
+#
+# Undo a merge.
+
+if [[ "$1" == "-h" ]]; then print-file-comments "$0"; exit; fi
+
+# Note: 
+# ORIG_HEAD is the commit before starting the merge and resetting
+# to ORIG_HEAD after merge goes to the state before the merge. 
+# Doing it again goes to state after the merge.
+git reset --merge ORIG_HEAD
