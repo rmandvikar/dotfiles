@@ -6,8 +6,27 @@
 
 if [[ "$1" == "-h" ]]; then print-file-comments "$0"; exit; fi
 
+GerritUrlQuery="$GerritUrl/#/q/"
 git config --get-regex remote\..*\.url \
 	| cut -d' ' -f2 \
-	| sed 's/\.git$//' | sed 's/^git@//' \
-	| sed 's,^https\?://,,' | sed 's,:,/,' \
+	| \
+		while read line;
+		do
+			if egrep -q '@'"$GerritUrl"':' <<< "$line"; then
+				# gerrit
+				sed -r '
+					s,\.git$,,
+					s,^ssh://.+@'"$GerritUrl"':[0-9]+/,,
+					s,^,'"$GerritUrlQuery"'project:,
+					' <<< "$line"
+			else
+				# others: github, gitlab, etc.
+				sed -r '
+					s,\.git$,,
+					s,^git@,,
+					s,^https?://,,
+					s,:,/,
+					' <<< "$line"
+			fi
+		done \
 	| browse
