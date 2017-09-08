@@ -7,6 +7,7 @@
 if [[ "$1" == "-h" ]]; then print-file-comments "$0"; exit; fi
 
 GerritUrlQuery="$GerritUrl/#/q/"
+remoteBranch=$(git remote-branch HEAD 2>/dev/null)
 git config --get-regex remote\..*\.url \
 	| cut -d' ' -f2 \
 	| \
@@ -21,11 +22,16 @@ git config --get-regex remote\..*\.url \
 					' <<< "$line"
 			else
 				# others: github, gitlab, etc.
+				# add branch specific url part
+				if [[ ! -z "$remoteBranch" && "$remoteBranch" != "master" ]]; then
+					tree="/tree/$remoteBranch"
+				fi
 				sed -r '
 					s,\.git$,,
 					s,^git@,,
 					s,^https?://,,
 					s,:,/,
+					s,$,'"$tree"',
 					' <<< "$line"
 			fi
 		done \
