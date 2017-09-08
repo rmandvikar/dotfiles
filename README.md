@@ -231,8 +231,10 @@ $ git config hook.changeid true
 ###### skip hooks
 
 ```
-# use 'SKIP_HOOKS' environment variable to skip hooks
+# use 'SKIP_HOOKS' or 'skip_hooks' environment variable to skip hooks
+# set to true or 1 to skip hooks
 $ SKIP_HOOKS=true git commit
+$ skip_hooks=1 git commit
 ```
 
 ##### git prompt script
