@@ -13,11 +13,11 @@ applyCommitMessageConventionInternal() {
 		exit
 	fi
 	# clean msg to trim lines and remove starting blank lines
-	echo "$msgText" | sed 's/ *$//' | sed '/./,$! d' > "$msgbak"
+	sed 's/ *$//
+		/./,$! d' <<< "$msgText" > "$msgbak"
 	# subject
 	subject=$(head -n 1 "$msgbak")
-	if $(echo "$subject" | \
-		egrep -q "^((Merge (((remote-tracking )?branch(es)?)|(commit(s)?)|(tag(s)?)))|(Revert)|(fixup!)) ")
+	if $(egrep -q "^((Merge (((remote-tracking )?branch(es)?)|(commit(s)?)|(tag(s)?)))|(Revert)|(fixup!)) " <<< "$subject")
 	then
 		echo "  keeping merge/commit/tag/revert/fixup subject as is"
 		echo "$subject" > "$msgconvention"
@@ -25,14 +25,14 @@ applyCommitMessageConventionInternal() {
 		# remove trailing period
 		if [[ "$subject" == *. ]]; then
 			echo "  removing trailing period"
-			subject=$(echo "$subject" | sed 's/\.$//')
+			subject=$(sed 's/\.$//' <<< "$subject")
 		fi
 		# hack: warn if subject >$subjectLen chars
 		# with exit, user will have to type message again
 		if [ ${#subject} -gt $subjectLen ]; then
 			echo -e "  ${Yellow}WARNING:${None} subject should be upto $subjectLen chars"
 			# format
-			subject=$(echo "$subject" | fmt -s -w $subjectLen)
+			subject=$(fmt -s -w $subjectLen <<< "$subject")
 		fi
 		echo "$subject" > "$msgconvention"
 	fi
@@ -41,23 +41,24 @@ applyCommitMessageConventionInternal() {
 	if [[ $(validTextCount "$rest") -ne 0 ]]; then
 		# 2nd line should be blank
 		bodylineStart=2
-		line2=$(echo "$rest" | head -n 1)
+		line2=$(head -n 1 <<< "$rest" )
 		if [[ $(validTextCount "$line2") -ne 0 ]]; then
 			echo "  adding a blank line after subject"
 			bodylineStart=1
 		fi
 		echo "" >> "$msgconvention"
 		# body
-		body=$(echo "$rest" | tail -n +"$bodylineStart")
+		body=$(tail -n +"$bodylineStart" <<< "$rest")
 		# fmt does not handle '#' properly so filter out
-		echo "$body" | sed '/^# --* >8 --*$/,$ d' | sed '/^#/ d' \
+		sed '/^# --* >8 --*$/,$ d
+			/^#/ d' <<< "$body" \
 			| fmt -s -w $bodyLen >> "$msgconvention"
 	else
 		echo "" >> "$msgconvention"
 	fi
 	# put back unified diff and comments by appending
-	udiff=$(echo "$rest" | sed -n '/^# --* >8 --*$/,$ p')
-	echo "$rest" | sed '/^# --* >8 --*$/,$ d' \
+	udiff=$(sed -n '/^# --* >8 --*$/,$ p' <<< "$rest")
+	sed '/^# --* >8 --*$/,$ d' <<< "$rest" \
 		| sed -n '/^#/ p' >> "$msgconvention"
 	echo "$udiff" >> "$msgconvention"
 	# copy .convention to msg
@@ -69,14 +70,15 @@ applyCommitMessageConventionInternal() {
 validText() {
 	text="$1"
 	# remove blank lines, starting empty lines, unified diff, comments
-	echo "$text" \
-		| sed 's/ *$//' | sed '/./,$! d' \
-		| sed '/^# --* >8 --*$/,$ d' | sed '/^#/ d'
+	sed 's/ *$//
+		/./,$! d
+		/^# --* >8 --*$/,$ d
+		/^#/ d' <<< "$text"
 }
 # text count after removing spaces (even between words), newlines
 validTextCount() {
 	text="$1"
-	echo $(validText "$text") | tr -d " \r\n" | wc -c
+	tr -d " \r\n" <<< $(validText "$text") | wc -c
 }
 
 # compare files exactly
