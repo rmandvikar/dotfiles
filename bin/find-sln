@@ -1,0 +1,35 @@
+#!/bin/sh
+
+#usage:
+#   find-sln [-l | --list] <filename>
+#
+# Find sln files that contain file (recursing with proj files).
+
+while true; do
+	case "$1" in
+		-h ) print-file-comments "$0"; exit ;;
+		-l | --list )
+			list="-l"; shift ;;
+		-- ) shift; break ;;
+		-* )
+			if [ ! -z "$1" ]; then
+				echo 1>&2 "fatal: unknown option $1"
+				exit 1
+			fi
+			break ;;
+		* )
+			if [ -z "$1" ]; then
+				break
+			fi
+			file="$1"
+			shift ;;
+	esac
+done
+
+search='(\"|\\)'"$file"'"'
+# print sln files
+git grep --line-number --extended-regexp $list $search -- *sln
+# recurse with proj files
+git grep --line-number --extended-regexp -l    $search -- *proj | \
+	bn | \
+	xargs -r -I_ find-sln $list _
