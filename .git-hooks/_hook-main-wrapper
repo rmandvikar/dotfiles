@@ -1,0 +1,56 @@
+#!/bin/sh
+
+# Loop through the sub-hooks in the '~/.git-hooks/<hook>.d' dir and
+# '.git/hooks/<hook>.d' dir taken together and call them in a sorted
+# order of filenames (sort -n) after ignoring files with extensions.
+#
+# Example:
+# The 'commit-msg' hook calls the '_hook-main-wrapper' script which
+# calls the sub-hooks in the '~/.git-hooks/commit-msg.d' dir and
+# '.git/hooks/commit-msg.d' dir.
+
+# clean up
+cleanUp() {
+	rm -f .git/hook.change
+}
+export -f cleanUp
+
+# config get
+getConfig() {
+	git config --get "$1"
+}
+export -f getConfig
+
+# Call sub-hooks in <hook>.d dir.
+callSubhooks() {
+	# skip hooks
+	skipHooks=${SKIP_HOOKS-"$skip_hooks"}
+	if [[ "$skipHooks" == "1" || "$skipHooks" == "true" ]]; then
+		return
+	fi
+	# hookname is passed as env variable
+	hookdir="$hookname.d"
+	if [[ -d ~/.git-hooks/"$hookdir" || -d .git/hooks/"$hookdir" ]]; then
+		# ignore files with extensions
+		subhooks=$(
+			find ~/.git-hooks/"$hookdir" .git/hooks/"$hookdir" \
+				! -name '*.*' -type f -maxdepth 1 2>/dev/null \
+			| awk -F "/" '{print $NF"|"$0}' | sort -ns | cut -f2- -d'|' \
+			)
+		if [[ ! -z "$subhooks" ]]; then
+			# echo hook name only if there are subhooks
+			echo "hooks/$hookname"
+			for subhook in $subhooks; do
+				"$subhook" "$@"
+				# check exit code and exit if needed
+				exitcode=$?
+				if [[ $exitcode -ne 0 ]]; then
+					exit $exitcode
+				fi
+			done
+		fi
+	fi
+}
+
+
+callSubhooks "$@"

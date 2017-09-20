@@ -50,7 +50,10 @@ function custom_ps1_v2() {
 	if [[ ! -d ".git" ]]; then return; fi
 	hash=$(git rev-parse --short HEAD)
 	branchStatus=$(git rev-list --left-right --count @{u}...@ 2>/dev/null \
-		| sed 's/\t/,+/' | sed 's/^/-/')
+		| sed '
+			s/\t/,+/
+			s/^/-/
+			')
 	printf " $branchStatus $hash"
 }
 

@@ -1,0 +1,17 @@
+#!/bin/sh
+
+#usage: git remote-branch [<branch>]
+#
+# Get remote branch name of branch.
+
+if [[ "$1" == "-h" ]]; then print-file-comments "$0"; exit; fi
+
+branch=$(git rev-parse --abbrev-ref ${1-"@"})
+remote=$(git config --get branch."$branch".remote)
+remotePath=$(git rev-parse --abbrev-ref "$branch@{u}" 2>/dev/null)
+remoteBranch=${remotePath#"$remote"/}
+if [[ -z "$remoteBranch" ]]; then
+	echo 1>&2 "fatal: no remote branch configured for branch '$branch'"
+	exit 1
+fi
+echo "$remoteBranch"

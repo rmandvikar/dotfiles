@@ -1,6 +1,6 @@
 #!/bin/sh
 
-~/.git-hooks/helpers/foxtrot-merge-detector
+~/.git-hooks/_helpers/foxtrot-merge-detector
 # check exit code and exit if needed
 exitcode=$?
 if [ $exitcode -ne 0 ]; then

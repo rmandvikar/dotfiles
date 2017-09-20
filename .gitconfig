@@ -99,13 +99,6 @@
 	
 	#usage: git undo -dx
 	undo 		= !"git reset --hard && git clean -f"
-	undo-merge 	= reset --merge orig_head
-	undo-rebase = !"f() { \
-					git reset --hard orig_head; \
-					: abort only if rebase is in progress; \
-					(test -d ".git/rebase-merge" || test -d ".git/rebase-apply") \
-						&& git rebase --abort; \
-				}; f"
 	
 	## advanced ##
 	bsync 	= branch-sync
