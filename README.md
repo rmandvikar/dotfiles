@@ -1,4 +1,4 @@
-# git-setup
+# git-shell-setup
 
 A discombobulated potpourri of disparate esoteric stuff that's so b0rked and in flux that no proper readme is attempted.
 
