@@ -1,13 +1,49 @@
 #!/bin/sh
 
 #usage: remote
+#           [(-l | --log)    [<branch>]]
+#           [(-c | --commit) [<commit>]]
+#           [(-t | --tree)   [<branch>]]
 #
-# Browse to remote's url.
-
-if [[ "$1" == "-h" ]]; then print-file-comments "$0"; exit; fi
+# Browse to remote url or branch's log (commits) or branch's tree
+# or a commit.
 
 GerritUrlQuery="$GerritUrl/#/q/"
-remoteBranch=$(git remote-branch HEAD 2>/dev/null)
+
+while true; do
+	case "$1" in
+		-h ) print-file-comments "$0"; exit ;;
+		-l | --log)
+			option="log";
+			remoteBranch="$2"
+			if [[ -z "$remoteBranch" ]]; then
+				remoteBranch=$(git remote-branch HEAD 2>/dev/null);
+			fi
+			break ;;
+		-c | --commit)
+			option="commit";
+			commit=$(git rev-parse --verify ${2-HEAD} 2>/dev/null);
+			if [[ -z "$commit" ]]; then
+				echo 1>&2 "fatal: unknown commit $2"
+				exit 1
+			fi
+			break ;;
+		-t | --tree)
+			option="tree";
+			remoteBranch="$2"
+			if [[ -z "$remoteBranch" ]]; then
+				remoteBranch=$(git remote-branch HEAD 2>/dev/null);
+			fi
+			break ;;
+		* )
+			if [ ! -z "$1" ]; then
+				echo 1>&2 "fatal: unknown option $1"
+				exit 1
+			fi
+			break ;;
+	esac
+done
+
 git config --get-regex remote\..*\.url \
 	| cut -d' ' -f2 \
 	| \
@@ -22,16 +58,33 @@ git config --get-regex remote\..*\.url \
 					' <<< "$line"
 			else
 				# others: github, gitlab, etc.
-				# add branch specific url part
-				if [[ ! -z "$remoteBranch" && "$remoteBranch" != "master" ]]; then
-					tree="/tree/$remoteBranch"
+				# add log, commit, tree specific url part
+				if [[ "$option" == "log" ]]; then
+					if [[ -z "$remoteBranch" ]]; then
+						echo 1>&2 "fatal: remoteBranch required"
+						exit 1
+					fi
+					urlPart="/commits/$remoteBranch"
+				elif [[ "$option" == "commit" ]]; then
+					if [[ -z "$commit" ]]; then
+						echo 1>&2 "fatal: commit required"
+						exit 1
+					fi
+					urlPart="/commit/$commit"
+				elif [[ "$option" == "tree" ]]; then
+					if [[ -z "$remoteBranch" ]]; then
+						echo 1>&2 "fatal: remoteBranch required"
+						exit 1
+					fi
+					urlPart="/tree/$remoteBranch"
 				fi
 				sed -r '
 					s,\.git$,,
 					s,^git@,,
 					s,^https?://,,
 					s,:,/,
-					s,$,'"$tree"',
+					# add url part
+					s,$,'"$urlPart"',
 					' <<< "$line"
 			fi
 		done \
