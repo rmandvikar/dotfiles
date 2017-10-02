@@ -1,15 +1,11 @@
 #!/bin/sh
 
-# Explicitly call commit-msg hook for merge commits
+# Explicitly call commit-msg hook for clean merge commits
 applyCommitHook() {
-	case "$2" in
-		merge)
-			# to avoid calling commit-msg twice when in conflicts, call
-			# only if no conflicts
-			if ! grep -q "^# Conflicts:$" ".git/MERGE_MSG"; then
-				echo " -apply 'commit-msg' hook for merge commit"
-				~/.git-hooks/commit-msg "$msg" "$2" "prepare-commit-msg"
-			fi
+	case "$1,$2" in
+		".git/MERGE_MSG,merge")
+			echo " -apply 'commit-msg' hook for clean merge commit"
+			~/.git-hooks/commit-msg "$msg" "$2" "prepare-commit-msg"
 			;;
 		*) ;;
 	esac
