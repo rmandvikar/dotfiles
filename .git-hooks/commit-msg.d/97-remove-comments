@@ -1,12 +1,14 @@
 #!/bin/sh
 
 # Remove comments for merges only
-# Note: Removing comments does not work for 'git commit -v'
+# Note: Removing just '#' comments does not work for 'git commit -v'
+# so also remove scissor '>8' comments 
 removeComments() {
 	case "$2" in
 		merge)
 			if [[ "$GIT_MERGE_AUTOEDIT" == "no" ]]; then
-				sed -i "/^#/ d" "$msg"
+				sed -i '/^# --* >8 --*$/,$ d
+					/^#/ d' "$msg"
 			fi
 			;;
 		*) ;;
