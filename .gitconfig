@@ -19,6 +19,7 @@
 
 [help]
 	autocorrect = 23
+	htmlPath 	= https://git-scm.com/docs
 
 [diff]
 	tool 			= winmerge
