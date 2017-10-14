@@ -1,0 +1,21 @@
+#!/bin/bash
+
+#usage: pdiff <commit1> <commit2>
+#
+# Diff patch outputs of two commits.
+
+if [[ "$1" == "-h" ]]; then print-file-comments "$0"; exit; fi
+
+commit1="$1"
+commit2="$2"
+if [[ -z "$commit1" ]]; then
+	echo 1>&2 "fatal: commit 1 is required"
+	exit 1
+fi
+if [[ -z "$commit2" ]]; then
+	commit2="HEAD"
+fi
+
+diff \
+	<(git diff "$commit1"^!) \
+	<(git diff "$commit2"^!)
