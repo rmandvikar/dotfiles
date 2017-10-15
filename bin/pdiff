@@ -17,5 +17,6 @@ if [[ -z "$commit2" ]]; then
 fi
 
 diff \
-	<(git diff "$commit1"^!) \
-	<(git diff "$commit2"^!)
+	<(git diff --color=always "$commit1"^!) \
+	<(git diff --color=always "$commit2"^!) \
+	| less -R

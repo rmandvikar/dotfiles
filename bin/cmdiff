@@ -17,5 +17,6 @@ if [[ -z "$commit2" ]]; then
 fi
 
 diff \
-	<(git log -1 "$commit1") \
-	<(git log -1 "$commit2")
+	<(git log --color=always -1 "$commit1") \
+	<(git log --color=always -1 "$commit2") \
+	| less -R
