@@ -17,9 +17,6 @@ tabs 4
 # scite is on path
 export EDITOR=scite # '/d/setups/wscite/SciTE.exe'
 
-# git env
-export GIT_MERGE_AUTOEDIT=no
-
 # colors
 export     White='\033[1;37m'
 export    Yellow='\033[1;33m'
