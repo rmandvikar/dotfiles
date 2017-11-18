@@ -8,6 +8,12 @@ addPlaceholder() {
 			sed -i '/^# Please enter a commit message to explain why this merge is necessary,$/i '`
 				`'#######\n' \
 				"$msg"
+			# add placeholder only if conflicts to avoid double-add in normal commit
+			if grep -q "^# Conflicts:" ".git/MERGE_MSG"; then
+				sed -i '/^# It looks like you may be committing a merge.$/i '`
+					`'#######\n' \
+					"$msg"
+			fi
 			;;
 		*)
 			# commit, *: add placeholder
