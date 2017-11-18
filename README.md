@@ -261,3 +261,9 @@ $ skip_hooks=1 git commit
 SciTEStartup.lua
 SciTEUser.properties
 ```
+
+##### AutoHotkey script
+
+```
+AutoHotkey.ahk
+```
