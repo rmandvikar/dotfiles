@@ -7,6 +7,5 @@
 #		conditionally, no warning if skipped
 #	- Add gerrit changeid
 #		conditionally, no warning if skipped
-#	- Remove comments for merges
 export hookname=$(bn "$0")
 ~/.git-hooks/_hook-main-wrapper "$@"
