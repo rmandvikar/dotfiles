@@ -1,8 +1,8 @@
 #!/bin/bash
 
-#usage: cmdiff <commit1> <commit2>
+#usage: pdiff <commit1> <commit2>
 #
-# Diff log messages of two commits.
+# Diff patch outputs of two commits.
 
 if [[ "$1" == "-h" ]]; then print-file-comments "$0"; exit; fi
 
@@ -17,6 +17,6 @@ if [[ -z "$commit2" ]]; then
 fi
 
 diff \
-	<(git log --color=always -1 "$commit1") \
-	<(git log --color=always -1 "$commit2") \
+	<(git diff --color=always "$commit1"^!) \
+	<(git diff --color=always "$commit2"^!) \
 	| less -R

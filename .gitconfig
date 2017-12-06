@@ -19,6 +19,7 @@
 
 [help]
 	autocorrect = 23
+	htmlPath 	= https://git-scm.com/docs
 
 [diff]
 	tool 			= winmerge
@@ -206,6 +207,7 @@
 # color: normal, black, red, green, yellow, blue, magenta, cyan, white
 # attribute: bold, dim, ul, blink, reverse
 [color]
+	# with always, scripts break for status, branch
 	diff 		= true
 	status 		= true
 	branch 		= true

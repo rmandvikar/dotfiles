@@ -4,6 +4,10 @@
 addPlaceholder() {
 	case "$2" in
 		merge)
+			# add placeholder
+			sed -i '/^# Please enter a commit message to explain why this merge is necessary,$/i '`
+				`'#######\n' \
+				"$msg"
 			# merge commit:
 			# with
 			#   GIT_MERGE_AUTOEDIT=no
@@ -11,14 +15,11 @@ addPlaceholder() {
 			# a clean merge which can be used as a hook to insert
 			# placeholder so just append it at end.
 			if [[ "$GIT_MERGE_AUTOEDIT" == "no" ]]; then
-				# append placeholder at eof
-				sed -i '$a#######' "$msg"
-			else
-				# add placeholder
-				sed -i '/^# Please enter a commit message to explain why this merge is necessary,$/i '`
-					`'#######\n' \
-					"$msg"
+				if ! grep -q "^#######$" "$msg"; then
+					# append placeholder at eof
+					sed -i '$a#######' "$msg"
 				fi
+			fi
 			;;
 		*)
 			# commit, *: add placeholder

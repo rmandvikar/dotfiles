@@ -17,6 +17,7 @@ bak/
 .minttyrc
 .viminfo
 NTUSER*
+local.bashrc
 work.bashrc
 work
 workspace
