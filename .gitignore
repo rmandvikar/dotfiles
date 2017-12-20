@@ -14,9 +14,10 @@ bak/
 .gitk
 .bash_history
 .lesshst
-.minttyrc
 .viminfo
 NTUSER*
+.*rc
+.*
 local.bashrc
 work.bashrc
 work
