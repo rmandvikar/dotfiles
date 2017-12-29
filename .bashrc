@@ -26,3 +26,11 @@ export    Yellow='\033[1;33m'
 export       Red='\033[0;31m'
 export    Prompt='\033[38;2;255;136;255m'
 export      None='\033[0m' 		# No Color
+
+if [ -f ~/work.bashrc ]; then
+	source ~/work.bashrc
+fi
+
+if [ -f ~/local.bashrc ]; then
+	source ~/local.bashrc
+fi
