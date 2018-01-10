@@ -2,6 +2,7 @@
 
 # aliases
 alias clip=pbcopy
+alias o=vim
 
 tabs -8
 
