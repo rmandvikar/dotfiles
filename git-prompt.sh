@@ -50,7 +50,7 @@ function custom_ps1_v2() {
 	if [[ ! -d ".git" ]]; then return; fi
 	hash=$(git rev-parse --short HEAD)
 	branchStatus=$(git rev-list --left-right --count @{u}...@ 2>/dev/null \
-		| sed '
+		| sed $'
 			s/\t/,+/
 			s/^/-/
 			')
@@ -75,10 +75,10 @@ then
 	then
 		. "$COMPLETION_PATH/git-completion.bash"
 		. "$COMPLETION_PATH/git-prompt.sh"
-		PS1="$PS1"'\[\033[36m\]'    # change color to cyan
-		PS1="$PS1"'`__git_ps1`'     # bash function
-		PS1="$PS1"'`custom_ps1_v2`' # bash function
 	fi
+	PS1="$PS1"'\[\033[36m\]'    # change color to cyan
+	PS1="$PS1"'`__git_ps1`'     # bash function
+	PS1="$PS1"'`custom_ps1_v2`' # bash function
 fi
 #PS1="$PS1"'\[\033[32m\]'      # change to green
 PS1="$PS1"'\e[38;5;28m'        # change to ~DarkGreen
