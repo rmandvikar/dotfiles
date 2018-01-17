@@ -16,23 +16,23 @@ export      None='\033[0m' 		# No Color
 
 case "$OSTYPE" in
 	linux*)
-		if [ -f ~/linux.bashrc ]; then
-			source ~/linux.bashrc
+		if [ -f ~/.bashrc.linux.bashrc ]; then
+			source ~/.bashrc.linux.bashrc
 		fi ;;
 	msys*)
-		if [ -f ~/windows.bashrc ]; then
-			source ~/windows.bashrc
+		if [ -f ~/.bashrc.windows.bashrc ]; then
+			source ~/.bashrc.windows.bashrc
 		fi ;;
 	darwin*)
-		if [ -f ~/mac.bashrc ]; then
-			source ~/mac.bashrc
+		if [ -f ~/.bashrc.mac.bashrc ]; then
+			source ~/.bashrc.mac.bashrc
 		fi ;;
 esac
 
-if [ -f ~/work.bashrc ]; then
-	source ~/work.bashrc
+if [ -f ~/.bashrc.work.bashrc ]; then
+	source ~/.bashrc.work.bashrc
 fi
 
-if [ -f ~/local.bashrc ]; then
-	source ~/local.bashrc
+if [ -f ~/.bashrc.local.bashrc ]; then
+	source ~/.bashrc.local.bashrc
 fi
