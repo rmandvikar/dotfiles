@@ -2,12 +2,12 @@
 
 # aliases
 alias clip=pbcopy
-alias o=vim
+#alias o=vim
 alias ls="ls -1"
 
 tabs -4
 
-export EDITOR=vim
+export EDITOR="code -n"
 
 # add ~/bin to path
 PATH=$PATH:~/bin
