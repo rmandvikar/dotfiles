@@ -56,6 +56,40 @@ git config --get-regex remote\..*\.url \
 					s,^ssh://.+@'"$GerritUrl"':[0-9]+/,,
 					s,^,'"$GerritUrlQuery"'project:,
 					' <<< "$line"
+			elif egrep -q 'amazonaws.com' <<< "$line"; then
+				# codecommit
+				region=$(sed '
+					s,^.*git-codecommit\.,,
+					s,\.amazonaws\.com.*,,
+					' <<< "$line")
+				if [[ -z "$region" ]]; then
+					echo 1>&2 "fatal: region required"
+					exit 1
+				fi
+				if [[ "$option" == "log" ]]; then
+					if [[ -z "$remoteBranch" ]]; then
+						echo 1>&2 "fatal: remoteBranch required"
+						exit 1
+					fi
+					urlPart="commits/$remoteBranch"
+				elif [[ "$option" == "commit" ]]; then
+					if [[ -z "$commit" ]]; then
+						echo 1>&2 "fatal: commit required"
+						exit 1
+					fi
+					urlPart="commit/$commit"
+				elif [[ "$option" == "tree" ]]; then
+					if [[ -z "$remoteBranch" ]]; then
+						echo 1>&2 "fatal: remoteBranch required"
+						exit 1
+					fi
+					urlPart="browse/$remoteBranch/--/"
+				fi
+				sed '
+					s,^.*/repos/,https://'"$region"'.console.aws.amazon.com/codecommit/home?region='"$region"'#/repository/,
+					s,$,/,
+					s,$,'"$urlPart"',
+					' <<< "$line"
 			else
 				# others: github, gitlab, etc.
 				# add log, commit, tree specific url part
