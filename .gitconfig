@@ -27,7 +27,9 @@
 [difftool]
 	prompt 	= false
 [difftool "winmerge"]
-	cmd 	= winmerge.sh "$LOCAL" "$REMOTE" # see gist for winmerge.sh
+	cmd 	= winmerge.sh "$LOCAL" "$REMOTE" # see winmerge.sh
+[difftool "vscode"]
+	cmd 	= code -n --diff --wait "$LOCAL" "$REMOTE"
 
 [merge]
 	tool 			= winmerge
