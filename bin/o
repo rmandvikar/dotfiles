@@ -1,11 +1,18 @@
 #!/bin/sh
 
 if [ $# -gt 0 ]; then
-	"$EDITOR" "$@" &
+	$EDITOR "$@" &
 else
 	args=""
 	while read data; do
 		args=$args$data" "
 	done
-	echo $args | xargs -r "$EDITOR" &
+	case "$OSTYPE" in
+		linux* | msys*)
+			echo $args | xargs -r $EDITOR &
+			;;
+		darwin*)
+			echo $args | xargs $EDITOR &
+			;;
+	esac
 fi
