@@ -51,6 +51,7 @@ function custom_ps1_v2() {
 	hash=$(git rev-parse --short HEAD)
 	branchStatus=$(git rev-list --left-right --count @{u}...@ 2>/dev/null \
 		| sed $'
+			s:0\t0::
 			s:\t:,+:
 			s:^:-:
 			')
