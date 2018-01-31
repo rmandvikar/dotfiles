@@ -172,8 +172,9 @@
 	rebase 	= preserve
 
 [rebase]
-	autoStash 	= true
-	autoSquash 	= true
+	autoStash 			= true
+	autoSquash 			= true
+	abbreviateCommands 	= true
 
 [branch]
 	autoSetupMerge 		= false
