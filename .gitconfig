@@ -42,6 +42,8 @@
 	keepBackup = false
 	trustExitCode = false
 	cmd = '/c/Program Files (x86)/meld/meld.exe' "$BASE" "$LOCAL" "$REMOTE" -o "$MERGED"
+[mergetool "vscode"]
+	cmd = code -n --wait $MERGED
 
 [alias]
 	# note: shell commands (with !) will be executed from the top-level directory of a repository,
