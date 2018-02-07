@@ -1,0 +1,19 @@
+#!/bin/sh
+
+#usage: setup
+#
+# To setup env.
+
+# .gitconfig per ostype
+case "$OSTYPE" in
+	linux*)
+		ostype_gitconfig=".gitconfig.linux.gitconfig" ;;
+	msys*)
+		ostype_gitconfig=".gitconfig.windows.gitconfig" ;;
+	darwin*)
+		ostype_gitconfig=".gitconfig.mac.gitconfig" ;;
+esac
+if [ ! -z "$ostype_gitconfig" ]; then
+	> "ostype.gitconfig"
+	git config --file "ostype.gitconfig" --add include.path "$ostype_gitconfig"
+fi

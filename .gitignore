@@ -42,4 +42,5 @@ workspace
 user.gitconfig
 work-user.gitconfig
 
+ostype.gitconfig
 overrides.gitconfig

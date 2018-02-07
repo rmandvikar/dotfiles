@@ -262,5 +262,7 @@
 [include]
 	# user
 	path = user.gitconfig
+	# ostype
+	path = ostype.gitconfig
 	# overrides: this needs to be the last line
 	path = overrides.gitconfig
