@@ -35,8 +35,14 @@ if [[ $# -gt 0 ]]; then
 	if [[ -d "$path" ]]; then
 		start explorer $path
 	# if file, open with file focused
+	#	-f returns true for file or executable (file without exe extension)
 	elif [[ -f "$path" ]]; then
-		start explorer $path,/select
+		# if executable (file without exe extension)
+		if [[ -f $path".exe" ]]; then
+			start explorer $path".exe",/select
+		else
+			start explorer $path,/select
+		fi
 	# else throw
 	else
 		echo 1>&2 'fatal: path '\'"$path"\'' is not valid'
