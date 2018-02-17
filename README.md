@@ -194,6 +194,11 @@ $ git find-tag <commit> [<branch>]
 $ git purge-branches [-n | --dry-run]
 ```
 
+```bash
+# To open file using the default application (xdg-open, start, open)
+$ app <file>
+```
+
 ##### git hooks
 
 Each hook is comprised of sub-hooks that are placed in the '`~/.git-hooks/<hook>.d/`' dir and '`.git/hooks/<hook>.d/`' dir. This allows to
