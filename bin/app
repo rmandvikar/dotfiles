@@ -1,0 +1,26 @@
+#!/bin/sh
+
+#usage:
+#   app <file>
+#   ... | app
+#
+# Open file using the default application for that file (wraps start, 
+# open commands).
+
+if [[ "$1" == "-h" ]]; then print-file-comments "$0"; exit; fi
+
+if [ $# -gt 0 ]; then
+	case "$OSTYPE" in
+		linux*)
+			xdg-open "$@" ;;
+		msys*)
+			start "$@" ;;
+		darwin*)
+			open "$@" ;;
+	esac
+else
+	while read data; do
+		# exec app does not work
+		app "$data"
+	done
+fi

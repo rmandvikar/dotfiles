@@ -4,6 +4,7 @@
 alias g=git
 alias gti=git
 alias gt=git
+alias a=app
 # bfg.jar is at ~/
 alias bfg="java -jar ~/bfg.jar"
 
