@@ -1,8 +1,23 @@
 #!/bin/sh
 
-#usage: setup
+#usage: setup [-q | --quiet]
 #
 # To setup env.
+
+while true; do
+	case "$1" in
+		-h ) print-file-comments "$0"; exit ;;
+		-q | --quiet)
+			quiet=1; shift ;;
+		* )
+			break ;;
+	esac
+done
+
+if [ -s "$HOME/ostype.gitconfig" ]; then
+	[ ! $quiet ] && echo "file '~/ostype.gitconfig' is not empty, not overwriting"
+	exit 0
+fi
 
 # .gitconfig per ostype
 case "$OSTYPE" in
@@ -12,8 +27,10 @@ case "$OSTYPE" in
 		ostype_gitconfig=".gitconfig.windows.gitconfig" ;;
 	darwin*)
 		ostype_gitconfig=".gitconfig.mac.gitconfig" ;;
+	*)
+		echo 1>&2 "fatal: no gitconfig configured for ostype '$OSTYPE'"
+		exit 1
 esac
-if [ ! -z "$ostype_gitconfig" ]; then
-	> "ostype.gitconfig"
-	git config --file "ostype.gitconfig" --add include.path "$ostype_gitconfig"
-fi
+
+[ ! $quiet ] && echo "Using '$ostype_gitconfig'"
+git config --file "$HOME/ostype.gitconfig" --add include.path "$ostype_gitconfig"

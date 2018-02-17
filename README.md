@@ -98,7 +98,7 @@ $ c
 
 ###### .gitconfig per $OSTYPE
 
-It's not possible to set variables in gitconfig conditionally as bashrc. So a script `'setup'` is used for wiring. `'.gitconfig'` has a include.path for file `'ostype.gitconfig'` which is gitignored. gitconfig settings per OS are in below files which are committed. The script `'setup'` generates file `'ostype.gitconfig'` with a include.path for the corresponding file per `'$OSTYPE'`.
+It's not possible to set variables in gitconfig conditionally as bashrc. So a script `'setup'` is used for wiring. `'.gitconfig'` has a include.path for file `'ostype.gitconfig'` which is gitignored. gitconfig settings per OS are in below files which are committed. The script `'setup'` generates file `'ostype.gitconfig'` with a include.path for the corresponding file per `'$OSTYPE'`. `'setup'` is called from `'.bash_profile'` and can also be run on-demand.
 
 ```bash
 # gitconfig files per OS
