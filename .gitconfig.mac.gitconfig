@@ -1,5 +1,5 @@
 [ostype]
-	mac = true
+	value = mac
 
 [credential]
 	helper = osxkeychain
