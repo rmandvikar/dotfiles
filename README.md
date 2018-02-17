@@ -87,6 +87,22 @@ $ git coe aste
 #   which are overridden by overrides.gitconfig
 ```
 
+###### .gitconfig per $OSTYPE
+
+It's not possible to set variables in gitconfig conditionally as bashrc. So a script `'setup'` is used for wiring. `'.gitconfig'` has a include.path for file `'ostype.gitconfig'` which is gitignored. gitconfig settings per OS are in below files which are committed. The script `'setup'` generates file `'ostype.gitconfig'` with a include.path for the corresponding file per `'$OSTYPE'`.
+
+```bash
+# gitconfig files per OS
+.gitconfig.linux.gitconfig
+.gitconfig.windows.gitconfig
+.gitconfig.mac.gitconfig
+```
+
+```bash
+# Run setup to wire the correct gitconfig per ostype
+$ setup
+```
+
 ##### winmerge script
 
 ```bash
