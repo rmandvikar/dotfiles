@@ -87,6 +87,15 @@ $ git coe aste
 #   which are overridden by overrides.gitconfig
 ```
 
+###### global and local .gitconfigs
+
+```bash
+# .gitconfig (global config)
+$ gc
+# local config
+$ c
+```
+
 ##### winmerge script
 
 ```bash
@@ -97,11 +106,16 @@ $ git dt head~ head deleted-file.txt
 
 ##### .bashrc/.bash_profile scripts
 
+###### .bashrc files per $OSTYPE
+
 ```bash
-# .gitconfig (global config)
-$ gc
-# local config
-$ c
+# .bashrc sources OS specific .bashrc files
+.bashrc.linux.bashrc
+.bashrc.windows.bashrc
+.bashrc.mac.bashrc
+# .bashrc also sources local and work .bashrc files which are gitignored for adhoc commands
+.bashrc.work.bashrc
+.bashrc.local.bashrc
 ```
 
 ##### bin/ dir scripts
