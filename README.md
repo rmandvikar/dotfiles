@@ -87,6 +87,15 @@ $ git coe aste
 #   which are overridden by overrides.gitconfig
 ```
 
+###### global and local .gitconfigs
+
+```bash
+# .gitconfig (global config)
+$ gc
+# local config
+$ c
+```
+
 ##### winmerge script
 
 ```bash
@@ -96,13 +105,6 @@ $ git dt head~ head deleted-file.txt
 ```
 
 ##### .bashrc/.bash_profile scripts
-
-```bash
-# .gitconfig (global config)
-$ gc
-# local config
-$ c
-```
 
 ##### bin/ dir scripts
 
