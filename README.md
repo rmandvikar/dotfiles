@@ -153,6 +153,7 @@ $ which e | e
 # To open mount drives
 $ e /d
 $ e /c/
+$ e /d:/
 ```
 
 ```bash

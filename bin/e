@@ -41,12 +41,12 @@ _convertMountPath() {
 		fpath=$(sed 's:.*,::' <<< $df)
 		if [[ $mount != "/" ]]; then
 			# break on mount path match /d/*, /x/*
-			#   and on special case paths /d, /x
-			if [[ "$path" == $mount/* || "$path" == $mount ]]; then
+			#   and on special case paths /d, /x and /d:*, /x:*
+			if [[ "$path" == $mount/* || "$path" == $mount || "$path" == $mount:* ]]; then
 				break
 			fi
 			# c drive is not mounted so hardcode it
-			if [[ "$path" == /c/* || "$path" == /c ]]; then
+			if [[ "$path" == /c/* || "$path" == /c || "$path" == /c:* ]]; then
 				break
 			fi
 		fi
@@ -74,8 +74,8 @@ _convertPosixPath() {
 		s,"$,,
 		# ensure 2nd / is present at end for special case "/c"
 		\,^/[^/]+$, s,$,/,
-		# if starting with /, replace the 2nd / with :/
-		\,^/, s,/,:/,2
+		# if starting with / and no :/, replace the 2nd / with :/
+		\,^/[^:]+/, s,/,:/,2
 		# remove leading /
 		s,^/,,
 		# replace all / with \
