@@ -7,6 +7,60 @@
 # Open POSIX paths in explorer.
 
 convertPosixPathToWindows() {
+	path="$@"
+	path=$(_convertMountPath "$path")
+	path=$(_convertPosixPath "$path")
+	echo "$path"
+}
+
+_convertMountPath() {
+	# only convert path with "/" mount that do not match drive mounts
+	# ex: for mounts, /, and drive mounts /c and /d,
+	#     do not convert paths /c, /c/, /d, /d/
+	#     but convert paths /m, /etc, /cc, /dd
+	#     as converting drive mount path is handled by _convertPosixPath
+	path="$@"
+	# get all mounts
+	dfs=$(
+		# get all mounts as "/d  D:" pairs
+		df -h --output=target,source | \
+		# remove header
+		tail -n +2 | \
+		# replace spaces with comma delim
+		sed -r 's: +:,:' | \
+		# put "/" mount at the end so it is matched last
+		tac
+		)
+	# loop through mounts and break on drive mount match and convert
+	#   /* path
+	OIFS="$IFS"
+	IFS=$'\n'
+	for df in ${dfs[@]}; do
+		# split on comma delim, "/d,D:"
+		mount=$(sed 's:,.*::' <<< $df)
+		fpath=$(sed 's:.*,::' <<< $df)
+		if [[ $mount != "/" ]]; then
+			# break on mount path match /d/*, /x/*
+			#   and on special case paths /d, /x
+			if [[ "$path" == $mount/* || "$path" == $mount ]]; then
+				break
+			fi
+			# c drive is not mounted so hardcode it
+			if [[ "$path" == /c/* || "$path" == /c ]]; then
+				break
+			fi
+		fi
+		# convert only if mount /
+		if [[ $mount == "/" ]]; then
+			# replace / with C:/Program Files/Git/ (with trailing /)
+			path=$(sed 's,^'"$mount"','"$fpath/"',' <<< "$path")
+		fi
+	done
+	IFS="$OIFS"
+	echo "$path"
+}
+
+_convertPosixPath() {
 	# convert /c/ to /c:/ to c:/ to c:\
 	#   drive letter can be multiple chars
 	# convert some/dir/ to some\dir\
