@@ -26,11 +26,12 @@ while true; do
 	esac
 done
 
-search='(\"|\\)'"$file"'"'
-# print proj files
-git grep --color=always --line-number --extended-regexp $list $search -- *proj
-# recurse with proj files
-git grep --color=never  --line-number --extended-regexp -l    $search -- *proj | \
-	bn | \
-	xargs -r -I_ find-proj $list _ | \
-	uniq
+(
+	search='(\"|\\)'"$file"'"'
+	# print proj files
+	git grep --color=always --line-number --extended-regexp $list $search -- *proj
+	# recurse with proj files
+	git grep --color=never  --line-number --extended-regexp -l    $search -- *proj | \
+		bn | \
+		xargs -r -I_ find-proj $list _
+) | uniq
