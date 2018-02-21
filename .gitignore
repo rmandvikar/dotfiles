@@ -11,12 +11,14 @@ bak/
 *.bak
 *.ini
 *.txt
+*.jar
 .gitk
 .bash_history
 .lesshst
-.minttyrc
 .viminfo
 NTUSER*
+.*rc
+.*
 local.bashrc
 work.bashrc
 work
@@ -42,4 +44,5 @@ workspace
 user.gitconfig
 work-user.gitconfig
 
+ostype.gitconfig
 overrides.gitconfig

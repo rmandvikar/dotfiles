@@ -1,0 +1,18 @@
+[ostype]
+	value = mac
+
+[credential]
+	helper = osxkeychain
+
+[core]
+	autocrlf = input
+
+[core]
+	editor = code -n --wait
+
+# diff tool
+[diff]
+	tool = vscode
+# merge tool
+[merge]
+	tool = vscode

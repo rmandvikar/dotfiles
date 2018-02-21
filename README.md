@@ -87,6 +87,31 @@ $ git coe aste
 #   which are overridden by overrides.gitconfig
 ```
 
+###### global and local .gitconfigs
+
+```bash
+# .gitconfig (global config)
+$ gc
+# local config
+$ c
+```
+
+###### .gitconfig per $OSTYPE
+
+It's not possible to set variables in gitconfig conditionally as bashrc. So a script `'setup'` is used for wiring. `'.gitconfig'` has a include.path for file `'ostype.gitconfig'` which is gitignored. gitconfig settings per OS are in below files which are committed. The script `'setup'` generates file `'ostype.gitconfig'` with a include.path for the corresponding file per `'$OSTYPE'`. `'setup'` is called from `'.bash_profile'` and can also be run on-demand.
+
+```bash
+# gitconfig files per OS
+.gitconfig.linux.gitconfig
+.gitconfig.windows.gitconfig
+.gitconfig.mac.gitconfig
+```
+
+```bash
+# Run setup to wire the correct gitconfig per ostype
+$ setup
+```
+
 ##### winmerge script
 
 ```bash
@@ -97,11 +122,16 @@ $ git dt head~ head deleted-file.txt
 
 ##### .bashrc/.bash_profile scripts
 
+###### .bashrc files per $OSTYPE
+
 ```bash
-# .gitconfig (global config)
-$ gc
-# local config
-$ c
+# .bashrc sources OS specific .bashrc files
+.bashrc.linux.bashrc
+.bashrc.windows.bashrc
+.bashrc.mac.bashrc
+# .bashrc also sources local and work .bashrc files which are gitignored for adhoc commands
+.bashrc.work.bashrc
+.bashrc.local.bashrc
 ```
 
 ##### bin/ dir scripts
@@ -140,6 +170,20 @@ $ e "new folder"
 # To open a file's dir with file focused in explorer
 $ e .git/hooks/readme.txt
 $ e "new folder/readme.txt"
+# To open special paths
+$ e ~
+$ e .
+$ e ..
+# To open mount paths
+$ e /
+$ e /bin
+$ which git | e
+$ which which | e
+$ which e | e
+# To open mount drives
+$ e /d
+$ e /c/
+$ e /d:/
 ```
 
 ```bash
@@ -162,6 +206,11 @@ $ git find-tag <commit> [<branch>]
 ```bash
 # To purge merged branches except certain ones
 $ git purge-branches [-n | --dry-run]
+```
+
+```bash
+# To open file using the default application (xdg-open, start, open)
+$ app <file>
 ```
 
 ##### git hooks
@@ -243,7 +292,8 @@ $ skip_hooks=1 git commit
 # prompt format
 <hh:mm:ss> <path> (<branch>) [<branchStatus>] <hash> <user>@<host> MINGW64
 # example with remote branch status
-03:14:15 ~ (master) -0,+0 8a338cc me@Machine MINGW64
+03:14:15 ~ (master) - 8a338cc me@Machine MINGW64
+03:14:15 ~ (master) -0,+1 4ea746e me@Machine MINGW64
 # example with no remote branch status
 03:14:15 ~ (prompt)  8a338cc me@Machine MINGW64
 ```

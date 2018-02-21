@@ -9,7 +9,21 @@
 if [[ "$1" == "-h" ]]; then print-file-comments "$0"; exit; fi
 
 if [ $# -gt 0 ]; then
-	start chrome --new-window "$@"
+	case "$OSTYPE" in
+		linux* | msys*)
+			start chrome --new-window "$@"
+			;;
+		darwin*)
+			open -na "Google Chrome" --args "$@"
+			;;
+	esac
 else
-	xargs -r start chrome --new-window
+	case "$OSTYPE" in
+		linux* | msys*)
+			xargs -r start chrome --new-window
+			;;
+		darwin*)
+			xargs open -na "Google Chrome" --args
+			;;
+	esac
 fi

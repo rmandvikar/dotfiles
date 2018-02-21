@@ -27,7 +27,9 @@
 [difftool]
 	prompt 	= false
 [difftool "winmerge"]
-	cmd 	= winmerge.sh "$LOCAL" "$REMOTE" # see gist for winmerge.sh
+	cmd 	= winmerge.sh "$LOCAL" "$REMOTE" # see winmerge.sh
+[difftool "vscode"]
+	cmd 	= code -n --diff --wait "$LOCAL" "$REMOTE"
 
 [merge]
 	tool 			= winmerge
@@ -42,6 +44,8 @@
 	keepBackup = false
 	trustExitCode = false
 	cmd = '/c/Program Files (x86)/meld/meld.exe' "$BASE" "$LOCAL" "$REMOTE" -o "$MERGED"
+[mergetool "vscode"]
+	cmd = code -n --wait $MERGED
 
 [alias]
 	# note: shell commands (with !) will be executed from the top-level directory of a repository,
@@ -100,6 +104,8 @@
 	
 	#usage: git undo -dx
 	undo 		= !"git reset --hard && git clean -f"
+
+	unhide-all 	= !"git hidden | xargs git unhide"
 	
 	## advanced ##
 	bsync 	= branch-sync
@@ -170,8 +176,9 @@
 	rebase 	= preserve
 
 [rebase]
-	autoStash 	= true
-	autoSquash 	= true
+	autoStash 			= true
+	autoSquash 			= true
+	abbreviateCommands 	= true
 
 [branch]
 	autoSetupMerge 		= false
@@ -185,7 +192,8 @@
 [init]
 	templateDir = ~/.git-templates
 [core]
-	hooksPath 	= ~/.git-hooks
+	hooksPath 		= ~/.git-hooks
+	excludesfile 	= ~/.gitexcludes
 
 # url shortcuts
 # git clone h:github:rmandvikar/csharp-trie
@@ -262,5 +270,7 @@
 [include]
 	# user
 	path = user.gitconfig
+	# ostype
+	path = ostype.gitconfig
 	# overrides: this needs to be the last line
 	path = overrides.gitconfig
