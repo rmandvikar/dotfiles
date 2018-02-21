@@ -7,6 +7,40 @@
 # Open POSIX paths in explorer.
 
 convertPosixPathToWindows() {
+	path="$@"
+	path=$(_convertMountPath "$path")
+	path=$(_convertPosixPath "$path")
+	echo "$path"
+}
+
+_convertMountPath() {
+	# only convert path with "/" mount that do not match drive mounts
+	# ex: for mounts, /, and drive mounts /c and /d,
+	#     do not convert paths /c, /c/, /d, /d/
+	#     but convert paths /m, /etc, /cc, /dd
+	#     as converting drive mount path is handled by _convertPosixPath
+	path="$@"
+	# bust out if path does not match /*
+	if egrep -q -v "^/" <<< "$path"; then
+		echo "$path"
+		return
+	fi
+	# concat all drive mounts to egrep
+	drives=$(df -h --output=target | grep "^/." | paste -sd'/' | sed 's,/,,g')
+	# c drive is not mounted so add it
+	drives="c$drives"
+	# bust out if path matches drive patterns, /d/* /d /d:*
+	if egrep -q -i "^/[$drives](/|$|:)" <<< "$path"; then
+		echo "$path"
+		return
+	fi
+	# / mount if here
+	rootpath=$(df -h --output=target,source | grep "^/[^a-z]" | sed -r 's:/ +::')
+	path=$(sed 's,^,'"$rootpath"',' <<< "$path")
+	echo "$path"
+}
+
+_convertPosixPath() {
 	# convert /c/ to /c:/ to c:/ to c:\
 	#   drive letter can be multiple chars
 	# convert some/dir/ to some\dir\
@@ -20,8 +54,8 @@ convertPosixPathToWindows() {
 		s,"$,,
 		# ensure 2nd / is present at end for special case "/c"
 		\,^/[^/]+$, s,$,/,
-		# if starting with /, replace the 2nd / with :/
-		\,^/, s,/,:/,2
+		# if starting with / and no :/, replace the 2nd / with :/
+		\,^/[^:]+/, s,/,:/,2
 		# remove leading /
 		s,^/,,
 		# replace all / with \
