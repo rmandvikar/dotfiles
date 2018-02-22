@@ -39,7 +39,7 @@ return
 
 ;;;; code editors ;;;;
 
-;#v::Run "C:\Program Files\Microsoft Visual Studio 10.0\Common7\IDE\devenv.exe"
+#v::Run "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\devenv.exe"
 ;#q::Run C:\Program Files\Microsoft SQL Server\90\Tools\Binn\VSShell\Common7\IDE\SqlWb.exe
 #s::Run scite
 #g::Run SciTE "%homepath%/.gitconfig"
