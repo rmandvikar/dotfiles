@@ -48,7 +48,8 @@ return
 
 #w::Run "c:\Program Files (x86)\Winamp\winamp.exe"
 #m::Run "C:\Program Files\MPC-HC\mpc-hc64.exe"
-#b::Run "C:\Program Files\Git\git-bash.exe", "%homepath%"
+;#b::Run "C:\Program Files\Git\git-bash.exe", "%homepath%"
+#b::Run "C:\Program Files\Git\git-bash.exe"
 
 ;;;; laptop ;;;;
 PrintScreen::AppsKey
