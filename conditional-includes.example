@@ -1,0 +1,8 @@
+# example: conditional includes
+
+# github
+[includeIf "gitdir/i:github/"]
+	path = user.gitconfig
+# work gitconfig
+[includeIf "gitdir/i:work/"]
+	path = work-user.gitconfig
