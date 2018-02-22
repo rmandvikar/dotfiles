@@ -21,8 +21,9 @@ for ((i=1;i<=$#;i++)); do
 		continue
 	fi
 	if [ "$branch" = "$currBranch" ]; then
-		# if current branch, then reset --hard
-		command=$(echo "git reset --hard $remoteBranch")
+		# if current branch, then checkout -B as reset --hard will wipe
+		# changes even if they could be applied on top of remote branch
+		command=$(echo "git checkout -B $branch $remoteBranch")
 		echo -e "${White}$command${None}"
 		$command
 	else
