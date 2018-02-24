@@ -63,3 +63,8 @@
 ;;;; laptop ;;;;
 PrintScreen::AppsKey
 #PrintScreen::PrintScreen
+
+;;;; mouse (sculpt ergo) ;;;;
+;WheelLeft::Browser_Back
+;WheelRight::Browser_Forward
+RWin::Browser_Forward
