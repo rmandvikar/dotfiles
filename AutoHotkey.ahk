@@ -29,6 +29,13 @@
 ; It explains how to perform common automation tasks such as sending
 ; keystrokes and mouse clicks.  It also explains more about hotkeys.
 
+; help
+; keylist: https://autohotkey.com/docs/KeyList.htm
+; # win, + shift, ! alt, ^ ctrl
+
+;;;; autohotkey ;;;;
+!+a::Reload ; reload
+
 ;;;; browsers ;;;;
 
 #c::Run "C:\Program Files (x86)\Google\Chrome\Application\chrome.exe"
@@ -41,7 +48,10 @@
 #v::Run "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\devenv.exe"
 ;#q::Run C:\Program Files\Microsoft SQL Server\90\Tools\Binn\VSShell\Common7\IDE\SqlWb.exe
 #s::Run scite
+
+;;;; files ;;;;
 #g::Run SciTE "%homepath%/.gitconfig"
+#k::Run SciTE "%homepath%/Documents/AutoHotkey.ahk"
 
 ;;;; misc applications ;;;;
 
