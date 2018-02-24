@@ -13,15 +13,14 @@
 ; and it launches a new Notepad window (or activates an existing one).  To
 ; try out these hotkeys, run AutoHotkey again, which will load this file.
 
-#z::Run www.autohotkey.com
-
-^!n::
-IfWinExist Untitled - Notepad
-	WinActivate
-else
-	Run Notepad
-return
-
+;#z::Run www.autohotkey.com
+;
+;^!n::
+;IfWinExist Untitled - Notepad
+;	WinActivate
+;else
+;	Run Notepad
+;return
 
 ; Note: From now on whenever you run AutoHotkey directly, this script
 ; will be loaded.  So feel free to customize it to suit your needs.
