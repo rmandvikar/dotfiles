@@ -1,7 +1,7 @@
 #!/bin/sh
 
 if [ $# -gt 0 ]; then
-	$EDITOR "$@" &
+	exec $EDITOR "$@" &
 else
 	args=""
 	while read data; do
@@ -9,10 +9,10 @@ else
 	done
 	case "$OSTYPE" in
 		linux* | msys*)
-			echo $args | xargs -r $EDITOR &
+			exec echo $args | xargs -r $EDITOR &
 			;;
 		darwin*)
-			echo $args | xargs $EDITOR &
+			exec echo $args | xargs $EDITOR &
 			;;
 	esac
 fi
