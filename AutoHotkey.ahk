@@ -13,15 +13,14 @@
 ; and it launches a new Notepad window (or activates an existing one).  To
 ; try out these hotkeys, run AutoHotkey again, which will load this file.
 
-#z::Run www.autohotkey.com
-
-^!n::
-IfWinExist Untitled - Notepad
-	WinActivate
-else
-	Run Notepad
-return
-
+;#z::Run www.autohotkey.com
+;
+;^!n::
+;IfWinExist Untitled - Notepad
+;	WinActivate
+;else
+;	Run Notepad
+;return
 
 ; Note: From now on whenever you run AutoHotkey directly, this script
 ; will be loaded.  So feel free to customize it to suit your needs.
@@ -29,6 +28,13 @@ return
 ; Please read the QUICK-START TUTORIAL near the top of the help file.
 ; It explains how to perform common automation tasks such as sending
 ; keystrokes and mouse clicks.  It also explains more about hotkeys.
+
+; help
+; keylist: https://autohotkey.com/docs/KeyList.htm
+; # win, + shift, ! alt, ^ ctrl
+
+;;;; autohotkey ;;;;
+!+a::Reload ; reload
 
 ;;;; browsers ;;;;
 
@@ -39,13 +45,26 @@ return
 
 ;;;; code editors ;;;;
 
-;#v::Run "C:\Program Files\Microsoft Visual Studio 10.0\Common7\IDE\devenv.exe"
+#v::Run "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\devenv.exe"
 ;#q::Run C:\Program Files\Microsoft SQL Server\90\Tools\Binn\VSShell\Common7\IDE\SqlWb.exe
 #s::Run scite
+
+;;;; files ;;;;
 #g::Run SciTE "%homepath%/.gitconfig"
+#k::Run SciTE "%homepath%/Documents/AutoHotkey.ahk"
 
 ;;;; misc applications ;;;;
 
 #w::Run "c:\Program Files (x86)\Winamp\winamp.exe"
 #m::Run "C:\Program Files\MPC-HC\mpc-hc64.exe"
-#b::Run "C:\Program Files\Git\git-bash.exe", "%homepath%"
+;#b::Run "C:\Program Files\Git\git-bash.exe", "%homepath%"
+#b::Run "C:\Program Files\Git\git-bash.exe"
+
+;;;; laptop ;;;;
+PrintScreen::AppsKey
+#PrintScreen::PrintScreen
+
+;;;; mouse (sculpt ergo) ;;;;
+;WheelLeft::Browser_Back
+;WheelRight::Browser_Forward
+RWin::Browser_Forward
