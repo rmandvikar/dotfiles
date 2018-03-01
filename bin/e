@@ -64,7 +64,13 @@ _convertPosixPath() {
 }
 
 if [[ $# -gt 0 ]]; then
-	path=$(convertPosixPathToWindows "$@")
+	path="$@"
+	if [[ "$path" = /tmp* ]]; then
+		# start explorer does not recognize /tmp
+		start "$path"
+		exit
+	fi
+	path=$(convertPosixPathToWindows "$path")
 	# if dir, open
 	if [[ -d "$path" ]]; then
 		start explorer $path
