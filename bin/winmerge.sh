@@ -11,15 +11,24 @@ difftool="WinMergeU"
 NULL="/dev/null"
 empty="$HOME/winmerge.empty"
 
+# add readonly switches for generated temp files
+# 	generated files are created in %temp% dir (/tmp)
+if test -f /tmp/"$(bn $1)"; then
+	readonly="$readonly -wl"
+fi
+if test -f /tmp/"$(bn $2)"; then
+	readonly="$readonly -wr"
+fi
+
 if [ "$1" == "$NULL" ]; then
 	# echo "added"
-	"$difftool" -e -u -wl "$empty" "$2"
+	"$difftool" -e -u -wl $readonly -dl "(empty)" "$empty" "$2"
 elif [ "$2" == "$NULL" ]; then
 	# echo 'removed'
-	"$difftool" -e -u -wr "$1" "$empty"
+	"$difftool" -e -u -wr $readonly -dr "(empty)" "$1" "$empty"
 else
 	# echo 'modified'
-	"$difftool" -e -u "$1" "$2"
+	"$difftool" -e -u     $readonly               "$1" "$2"
 fi
 
 # switches:
@@ -27,3 +36,5 @@ fi
 # -u	Don't add any path to MRU
 # -wl	left side readonly
 # -wr	right side readonly
+# -dl	description for left side
+# -dr	description for right side

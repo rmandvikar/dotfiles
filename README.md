@@ -167,19 +167,24 @@ $ echo "a/b/c" | bn
 $ e bin/
 $ e .git/hooks
 $ e "new folder"
+
 # To open a file's dir with file focused in explorer
 $ e .git/hooks/readme.txt
 $ e "new folder/readme.txt"
+
 # To open special paths
 $ e ~
 $ e .
 $ e ..
+
 # To open mount paths
 $ e /
 $ e /bin
 $ which git | e
 $ which which | e
 $ which e | e
+$ e /tmp
+
 # To open mount drives
 $ e /d
 $ e /c/
