@@ -10,5 +10,10 @@ export -f j
 jp() { "jq-win64.exe" "$@"; }
 export -f jp
 
+# WinMergeU is on path
+difftool() { "WinMergeU" -e -u "$@"; }
+export -f difftool
+alias dt=difftool
+
 # scite is on path
 export EDITOR=scite # '/d/setups/wscite/SciTE.exe'
