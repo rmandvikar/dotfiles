@@ -1,0 +1,16 @@
+#!/bin/sh
+
+#usage: git bak [<message>]
+#
+# Stash changes but keep in working directory.
+
+if [[ "$1" == "-h" ]]; then print-file-comments "$0"; exit; fi
+
+if [ $(git status -s | wc -l) -eq 0 ]; then
+	echo "no changes"
+	exit
+fi
+
+git stash push -q -u -k -m "${1-BAK}" && \
+	git stash apply -q --index 0 && \
+	echo "done"
