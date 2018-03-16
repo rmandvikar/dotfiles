@@ -56,7 +56,19 @@
 ;;;; misc applications ;;;;
 
 #w::Run "c:\Program Files (x86)\Winamp\winamp.exe"
-#m::Run "C:\Program Files\MPC-HC\mpc-hc64.exe"
+#m::
+	sel := Explorer_GetSelected()
+	loopcount = 0
+	Loop, parse, sel, `n, `r
+	{
+		Run, "C:\Program Files\MPC-HC\mpc-hc64.exe" `"%A_LoopField%`"
+		loopcount++
+	}
+	if (loopcount == 0)
+	{
+		Run, "C:\Program Files\MPC-HC\mpc-hc64.exe"
+	}
+	Return
 ;#b::Run "C:\Program Files\Git\git-bash.exe", "%homepath%"
 #b::Run "C:\Program Files\Git\git-bash.exe"
 
