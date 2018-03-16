@@ -47,8 +47,12 @@
 
 #v::Run "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\devenv.exe"
 ;#q::Run C:\Program Files\Microsoft SQL Server\90\Tools\Binn\VSShell\Common7\IDE\SqlWb.exe
-#s::Run scite
-
+#s::
+	sel := Explorer_GetSelected()
+	sel := RegExReplace(sel, "^", """")
+	sel := RegExReplace(sel, "$", """")
+	Run, SciTE %sel%
+	Return
 ;;;; files ;;;;
 #g::Run SciTE "%homepath%/.gitconfig"
 #k::Run SciTE "%homepath%/Documents/AutoHotkey.ahk"
