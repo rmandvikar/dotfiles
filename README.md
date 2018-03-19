@@ -218,6 +218,11 @@ $ git purge-branches [-n | --dry-run]
 $ app <file>
 ```
 
+```bash
+# Stash changes but keep in working directory
+$ git bak [<message>]
+```
+
 ##### git hooks
 
 Each hook is comprised of sub-hooks that are placed in the '`~/.git-hooks/<hook>.d/`' dir and '`.git/hooks/<hook>.d/`' dir. This allows to

@@ -93,6 +93,8 @@
 	aca 	= !"git add --all && git ca"
 	#note: add --date=now to change author date
 	acan 	= !"git add --all && git can" # --date=now
+	acf 	= !"git add --all && git cf"
+	cf 		= commit --fixup
 	del 	= rm
 	ren 	= mv
 	hide 	= update-index --assume-unchanged
@@ -104,7 +106,7 @@
 	
 	#usage: git undo -dx
 	undo 		= !"git reset --hard && git clean -f"
-
+	
 	unhide-all 	= !"git hidden | xargs git unhide"
 	
 	## advanced ##
