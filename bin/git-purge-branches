@@ -27,6 +27,7 @@ branches=$(
 	| egrep -v "^(master|next|pu|maint|todo)$" \
 	| egrep -v "^(dev|stg|stage|last)$" \
 	| egrep -v "^(bak/|cr/)" \
+	| egrep -v "^(_)$" \
 )
 for branch in ${branches[@]}; do
 	if [ $dryRun == true ]; then
