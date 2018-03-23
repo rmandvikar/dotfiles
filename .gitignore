@@ -3,34 +3,25 @@
 # ignore dirs
 /*/
 
-bak/
 *.lnk
-*.gist
-*.session
-*.log
-*.bak
-*.ini
-*.txt
-*.jar
+NTUSER*
+SciTE.session
+
 .gitk
 .bash_history
 .lesshst
 .viminfo
-NTUSER*
-.*rc
-.*
-local.bashrc
-work.bashrc
-work
-workspace
-~
+.node_repl_history
+#.*rc
+#.*
+
+/dump/*
 
 !.gitignore
 !*.gitconfig
 !*.sh
-!*.properties
-!.bash_profile
-!.bashrc
+!*.bash_profile
+!*.bashrc
 !*.lua
 !*.properties
 !/bin/
@@ -40,6 +31,9 @@ workspace
 !/.git-templates/
 !winmerge.empty
 !readme.txt
+
+.bashrc.local.bashrc
+.bashrc.work.bashrc
 
 user.gitconfig
 work-user.gitconfig
