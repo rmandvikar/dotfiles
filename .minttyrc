@@ -1,0 +1,15 @@
+BoldAsFont=no
+ClicksPlaceCursor=yes
+MiddleClickAction=extend
+RightClickAction=paste
+Scrollbar=none
+FontHeight=11
+FontSmoothing=full
+Font=Consolas
+BoldAsColour=yes
+ClipShortcuts=yes
+Transparency=medium
+OpaqueWhenFocused=yes
+BackspaceSendsBS=yes
+CtrlShiftShortcuts=yes
+Rows=40
