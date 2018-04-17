@@ -54,8 +54,8 @@
 	Run, SciTE %sel%
 	Return
 ;;;; files ;;;;
-#g::Run SciTE "%homepath%/.gitconfig"
-#k::Run SciTE "%homepath%/Documents/AutoHotkey.ahk"
+#g::Run SciTE "%HOMEDRIVE%%HOMEPATH%/.gitconfig"
+#k::Run SciTE "%HOMEDRIVE%%HOMEPATH%/Documents/AutoHotkey.ahk"
 
 ;;;; misc applications ;;;;
 
