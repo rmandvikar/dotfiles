@@ -96,19 +96,32 @@ git config --get-regex remote\..*\.url \
 					s,$,'"$urlPart"',
 					' <<< "$line"
 			else
-				# others: github, gitlab, etc.
-				# add log, commit, tree specific url part
-				if [[ "$option" == "log" ]]; then
-					urlPart="/commits/$remoteBranch"
-				elif [[ "$option" == "commit" ]]; then
-					urlPart="/commit/$commit"
-				elif [[ "$option" == "tree" ]]; then
-					urlPart="/tree/$remoteBranch"
+				if egrep -q 'bitbucket.org' <<< "$line"; then
+					# bitbucket
+					if [[ "$option" == "log" ]]; then
+						urlPart="/commits/branch/$remoteBranch"
+					elif [[ "$option" == "commit" ]]; then
+						urlPart="/commits/$commit"
+					elif [[ "$option" == "tree" ]]; then
+						urlPart="/src/$remoteBranch"
+					fi
+				else
+					# others: github, gitlab, etc.
+					# add log, commit, tree specific url part
+					if [[ "$option" == "log" ]]; then
+						urlPart="/commits/$remoteBranch"
+					elif [[ "$option" == "commit" ]]; then
+						urlPart="/commit/$commit"
+					elif [[ "$option" == "tree" ]]; then
+						urlPart="/tree/$remoteBranch"
+					fi
 				fi
+				# avoid sed -r as -r is not available on mac
 				sed '
 					s,\.git$,,
 					s,^git@,,
-					s,^https?://,,
+					s,^https://,,
+					s,^ssh://,,
 					s,:,/,
 					# add url part
 					s,$,'"$urlPart"',
