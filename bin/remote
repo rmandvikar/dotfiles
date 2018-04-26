@@ -105,10 +105,12 @@ git config --get-regex remote\..*\.url \
 				elif [[ "$option" == "tree" ]]; then
 					urlPart="/tree/$remoteBranch"
 				fi
+				# avoid sed -r as -r is not available on mac
 				sed '
 					s,\.git$,,
 					s,^git@,,
-					s,^https?://,,
+					s,^https://,,
+					s,^ssh://,,
 					s,:,/,
 					# add url part
 					s,$,'"$urlPart"',
