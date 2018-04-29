@@ -1,0 +1,15 @@
+#!/bin/bash
+
+#usage: uptime
+#
+# Show uptime.
+
+if [[ "$1" == "-h" ]]; then print-file-comments "$0"; exit; fi
+
+#systeminfo | \
+#	grep "System Boot Time" | \
+#	sed -r 's/System Boot Time:\s+//'
+
+net statistics workstation | \
+	grep "Statistics since " | \
+	sed 's/Statistics since //'
