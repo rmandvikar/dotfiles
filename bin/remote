@@ -4,9 +4,10 @@
 #           [(-l | --log)    [<branch>]]
 #           [(-c | --commit) [<commit>]]
 #           [(-t | --tree)   [<branch>]]
+#           [(-d | --diff)   <commit1> [<commit2>]]
 #
 # Browse to remote url or branch's log (commits) or branch's tree
-# or a commit.
+# or a commit or diff between two commits.
 
 GerritUrlQuery="$GerritUrl/#/q/"
 
@@ -14,14 +15,14 @@ while true; do
 	case "$1" in
 		-h ) print-file-comments "$0"; exit ;;
 		-l | --log)
-			option="log";
+			option="log"
 			remoteBranch="$2"
 			if [[ -z "$remoteBranch" ]]; then
 				remoteBranch=$(git remote-branch HEAD 2>/dev/null);
 			fi
 			break ;;
 		-c | --commit)
-			option="commit";
+			option="commit"
 			commit=$(git rev-parse --verify ${2-HEAD} 2>/dev/null);
 			if [[ -z "$commit" ]]; then
 				echo 1>&2 "fatal: unknown commit $2"
@@ -29,10 +30,35 @@ while true; do
 			fi
 			break ;;
 		-t | --tree)
-			option="tree";
+			option="tree"
 			remoteBranch="$2"
 			if [[ -z "$remoteBranch" ]]; then
 				remoteBranch=$(git remote-branch HEAD 2>/dev/null);
+			fi
+			break ;;
+		-d | --diff)
+			option="diff"
+			shift
+			# get branch or hash for head
+			head=$(git rev-parse --abbrev-ref HEAD)
+			if [[ -z "$head" ]]; then
+				head=$(git rev-parse $head)
+			fi
+			commit1="$1"
+			commit1=$(sed -E 's/(HEAD|@)/'$head'/i' <<< "$commit1")
+			if [[ -z "$commit1" ]]; then
+				echo 1>&2 "fatal: unknown commit1 '$1'"
+				exit 1
+			fi
+			if ! git cat-file -e "$commit1" 2>/dev/null; then
+				echo 1>&2 "fatal: unknown commit1 '$1'"
+				exit 1
+			fi
+			commit2="${2-HEAD}"
+			commit2=$(sed -E 's/(HEAD|@)/'$head'/i' <<< "$commit2")
+			if ! git cat-file -e "$commit2" 2>/dev/null; then
+				echo 1>&2 "fatal: unknown commit2 '$2'"
+				exit 1
 			fi
 			break ;;
 		* )
@@ -104,6 +130,8 @@ git config --get-regex remote\..*\.url \
 						urlPart="/commits/$commit"
 					elif [[ "$option" == "tree" ]]; then
 						urlPart="/src/$remoteBranch"
+					elif [[ "$option" == "diff" ]]; then
+						urlPart="/branches/compare/$commit2..$commit1#diff"
 					fi
 				else
 					# others: github, gitlab, etc.
@@ -114,6 +142,8 @@ git config --get-regex remote\..*\.url \
 						urlPart="/commit/$commit"
 					elif [[ "$option" == "tree" ]]; then
 						urlPart="/tree/$remoteBranch"
+					elif [[ "$option" == "diff" ]]; then
+						urlPart="/compare/$commit1...$commit2"
 					fi
 				fi
 				# avoid sed -r as -r is not available on mac

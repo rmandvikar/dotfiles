@@ -223,6 +223,20 @@ $ app <file>
 $ git bak [<message>]
 ```
 
+```bash
+# Browse branch's log
+$ remote (-l | --log) [<branch>]
+
+# Browse commit
+$ remote (-c | --commit) [<commit>]
+
+# Browse branch's tree
+$ remote (-t | --tree) [<branch>]
+
+# Browse diff of two commits
+$ remote (-d | --diff) <commit1> [<commit2>]
+```
+
 ##### git hooks
 
 Each hook is comprised of sub-hooks that are placed in the '`~/.git-hooks/<hook>.d/`' dir and '`.git/hooks/<hook>.d/`' dir. This allows to
