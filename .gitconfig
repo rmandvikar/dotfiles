@@ -26,6 +26,7 @@
 [diff]
 	tool 			= winmerge
 	mnemonicPrefix 	= true
+	noprefix 		= true
 [difftool]
 	prompt 	= false
 [difftool "winmerge"]
