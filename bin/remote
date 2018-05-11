@@ -41,7 +41,7 @@ while true; do
 			shift
 			# get branch or hash for head
 			head=$(git rev-parse --abbrev-ref HEAD)
-			if [[ -z "$head" ]]; then
+			if [[ -z "$head" || "$head" == "HEAD" ]]; then
 				head=$(git rev-parse $head)
 			fi
 			commit1="$1"
