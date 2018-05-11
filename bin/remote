@@ -41,7 +41,7 @@ while true; do
 			shift
 			# get branch or hash for head
 			head=$(git rev-parse --abbrev-ref HEAD)
-			if [[ -z "$head" ]]; then
+			if [[ -z "$head" || "$head" == "HEAD" ]]; then
 				head=$(git rev-parse $head)
 			fi
 			commit1="$1"
@@ -54,11 +54,19 @@ while true; do
 				echo 1>&2 "fatal: unknown commit1 '$1'"
 				exit 1
 			fi
+			# get remote branch name if local branch
+			if git show-ref -q --verify refs/heads/"$commit1"; then
+				commit1=$(git remote-branch "$commit1")
+			fi
 			commit2="${2-HEAD}"
 			commit2=$(sed -E 's/(HEAD|@)/'$head'/i' <<< "$commit2")
 			if ! git cat-file -e "$commit2" 2>/dev/null; then
 				echo 1>&2 "fatal: unknown commit2 '$2'"
 				exit 1
+			fi
+			# get remote branch name if local branch
+			if git show-ref -q --verify refs/heads/"$commit2"; then
+				commit2=$(git remote-branch "$commit2")
 			fi
 			break ;;
 		* )
