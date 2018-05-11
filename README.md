@@ -237,6 +237,14 @@ $ remote (-t | --tree) [<branch>]
 $ remote (-d | --diff) <commit1> [<commit2>]
 ```
 
+```bash
+# Diff commit patches (to verify if two commits are cherrypicks)
+$ pdiff master dev
+
+# Diff commit range patches (to verify rebase with conflicts is good)
+$ pdiff dev'..pdiff' dev..pdiff
+```
+
 ##### git hooks
 
 Each hook is comprised of sub-hooks that are placed in the '`~/.git-hooks/<hook>.d/`' dir and '`.git/hooks/<hook>.d/`' dir. This allows to

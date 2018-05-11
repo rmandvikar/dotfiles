@@ -1,22 +1,42 @@
 #!/bin/bash
 
-#usage: pdiff <commit1> <commit2>
+#usage: pdiff
+#           (<commit1> | <patch1>)
+#           [(<commit1> | <patch2>)]
 #
-# Diff patch outputs of two commits.
+# Diff two patches (changes).
+
+# 'pdiff' is helpful after rebasing a branch with conflicts to verify
+# that the changes after rebasing are the same as before rebasing.
+#
+# For example, after rebasing pdiff on dev,
+#
+#     $ git diff pdiff' pdiff
+#
+# will have diff of changes between the old merge-base commit and
+# current merge-base (dev'..dev) and is not helpful. To verify, the
+# diff between patch files of dev'..pdiff' and dev..pdiff should give
+# zero diff.
 
 if [[ "$1" == "-h" ]]; then print-file-comments "$0"; exit; fi
 
-commit1="$1"
-commit2="$2"
-if [[ -z "$commit1" ]]; then
-	echo 1>&2 "fatal: commit 1 is required"
+patch1="$1"
+patch2="$2"
+if [[ -z "$patch1" ]]; then
+	echo 1>&2 "fatal: patch 1 is required"
 	exit 1
 fi
-if [[ -z "$commit2" ]]; then
+if git cat-file -e "$patch1" 2>/dev/null; then
+	patch1="$patch1^!"
+fi
+if [[ -z "$patch2" ]]; then
 	commit2="HEAD"
+fi
+if git cat-file -e "$patch2" 2>/dev/null; then
+	patch2="$patch2^!"
 fi
 
 diff \
-	<(git diff --color=always "$commit1"^!) \
-	<(git diff --color=always "$commit2"^!) \
+	<(git diff --color=always "$patch1") \
+	<(git diff --color=always "$patch2") \
 	| less -R
