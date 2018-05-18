@@ -239,6 +239,9 @@ $ remote --tree dev
 # Browse diff of two commits
 $ remote -d     fc378ce 19ff585
 $ remote --diff fc378ce 19ff585
+
+# Browse pr
+$ remote --pr 42
 ```
 
 ##### git hooks
