@@ -16,22 +16,25 @@ while true; do
 		-h ) print-file-comments "$0"; exit ;;
 		-l | --log)
 			option="log"
-			remoteBranch="$2"
+			shift
+			remoteBranch="$1"
 			if [[ -z "$remoteBranch" ]]; then
 				remoteBranch=$(git remote-branch HEAD 2>/dev/null);
 			fi
 			break ;;
 		-c | --commit)
 			option="commit"
-			commit=$(git rev-parse --verify ${2-HEAD} 2>/dev/null);
+			shift
+			commit=$(git rev-parse --verify ${1-HEAD} 2>/dev/null);
 			if [[ -z "$commit" ]]; then
-				echo 1>&2 "fatal: unknown commit $2"
+				echo 1>&2 "fatal: unknown commit $1"
 				exit 1
 			fi
 			break ;;
 		-t | --tree)
 			option="tree"
-			remoteBranch="$2"
+			shift
+			remoteBranch="$1"
 			if [[ -z "$remoteBranch" ]]; then
 				remoteBranch=$(git remote-branch HEAD 2>/dev/null);
 			fi
