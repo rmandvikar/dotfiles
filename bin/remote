@@ -5,6 +5,7 @@
 #           [(-c | --commit) [<commit>]]
 #           [(-t | --tree)   [<branch>]]
 #           [(-d | --diff)   <commit1> [<commit2>]]
+#           [--pr            [<pr>]]
 #
 # Browse to remote url or branch's log (commits) or branch's tree
 # or a commit or diff between two commits.
@@ -16,22 +17,25 @@ while true; do
 		-h ) print-file-comments "$0"; exit ;;
 		-l | --log)
 			option="log"
-			remoteBranch="$2"
+			shift
+			remoteBranch="$1"
 			if [[ -z "$remoteBranch" ]]; then
 				remoteBranch=$(git remote-branch HEAD 2>/dev/null);
 			fi
 			break ;;
 		-c | --commit)
 			option="commit"
-			commit=$(git rev-parse --verify ${2-HEAD} 2>/dev/null);
+			shift
+			commit=$(git rev-parse --verify ${1-HEAD} 2>/dev/null);
 			if [[ -z "$commit" ]]; then
-				echo 1>&2 "fatal: unknown commit $2"
+				echo 1>&2 "fatal: unknown commit $1"
 				exit 1
 			fi
 			break ;;
 		-t | --tree)
 			option="tree"
-			remoteBranch="$2"
+			shift
+			remoteBranch="$1"
 			if [[ -z "$remoteBranch" ]]; then
 				remoteBranch=$(git remote-branch HEAD 2>/dev/null);
 			fi
@@ -68,6 +72,11 @@ while true; do
 			if git show-ref -q --verify refs/heads/"$commit2"; then
 				commit2=$(git remote-branch "$commit2")
 			fi
+			break ;;
+		--pr)
+			option="pr"
+			shift
+			pr="$1"
 			break ;;
 		* )
 			if [ ! -z "$1" ]; then
@@ -140,6 +149,8 @@ git config --get-regex remote\..*\.url \
 						urlPart="/src/$remoteBranch"
 					elif [[ "$option" == "diff" ]]; then
 						urlPart="/branches/compare/$commit2..$commit1#diff"
+					elif [[ "$option" == "pr" ]]; then
+						urlPart="/pull-requests/$pr"
 					fi
 				else
 					# others: github, gitlab, etc.
@@ -152,6 +163,12 @@ git config --get-regex remote\..*\.url \
 						urlPart="/tree/$remoteBranch"
 					elif [[ "$option" == "diff" ]]; then
 						urlPart="/compare/$commit1...$commit2"
+					elif [[ "$option" == "pr" ]]; then
+						if [[ -z "$pr" ]]; then
+							urlPart="/pulls"
+						else
+							urlPart="/pull/$pr"
+						fi
 					fi
 				fi
 				# avoid sed -r as -r is not available on mac
