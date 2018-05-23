@@ -148,7 +148,7 @@
 	graphColors = red, green, yellow, magenta, cyan, bold red, bold green, bold yellow, bold magenta, bold cyan
 
 [push]
-	default = current
+	default = upstream
 
 [format]
 	pretty = fuller
