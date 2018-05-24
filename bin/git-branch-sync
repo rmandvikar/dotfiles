@@ -15,7 +15,7 @@ if [ -z "$1" ]; then
 fi
 for ((i=1;i<=$#;i++)); do
 	branch=${!i}
-	if ! git show-ref -q --verify refs/heads/"$branch"; then
+	if ! git branch-exists "$branch"; then
 		echo 1>&2 "fatal: branch '$branch' does not exists"
 		continue
 	fi

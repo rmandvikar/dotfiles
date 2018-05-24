@@ -59,7 +59,7 @@ while true; do
 				exit 1
 			fi
 			# get remote branch name if local branch
-			if git show-ref -q --verify refs/heads/"$commit1"; then
+			if git branch-exists "$commit1"; then
 				commit1=$(git remote-branch "$commit1")
 			fi
 			commit2="${2-HEAD}"
@@ -69,7 +69,7 @@ while true; do
 				exit 1
 			fi
 			# get remote branch name if local branch
-			if git show-ref -q --verify refs/heads/"$commit2"; then
+			if git branch-exists "$commit2"; then
 				commit2=$(git remote-branch "$commit2")
 			fi
 			break ;;

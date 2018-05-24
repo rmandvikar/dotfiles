@@ -252,6 +252,11 @@ $ pdiff master dev
 $ pdiff dev'..pdiff' dev..pdiff
 ```
 
+```bash
+# Check if branch exists
+$ git branch-exists dev && echo "branch exists"
+```
+
 ##### git hooks
 
 Each hook is comprised of sub-hooks that are placed in the '`~/.git-hooks/<hook>.d/`' dir and '`.git/hooks/<hook>.d/`' dir. This allows to
