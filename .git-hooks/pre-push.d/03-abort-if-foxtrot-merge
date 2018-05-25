@@ -13,13 +13,17 @@ if [ "$local_sha" = $z40 ]; then
 	:
 else
 	# ex $local_ref as "refs/heads/dev"
-	branch=$(git rev-parse --abbrev-ref "$local_ref")
-	~/.git-hooks/_helpers/foxtrot-merge-detector "$branch"
+	branch=$(sed 's,refs/heads/,,' <<< $local_ref)
+	remoteBranch=$(sed 's,refs/heads/,,' <<< $remote_ref)
+	~/.git-hooks/_helpers/foxtrot-merge-detector "$branch" "$remote/$remoteBranch"
 	# check exit code and exit if needed
 	exitcode=$?
-	if [ $exitcode -ne 0 ]; then
+	if [ $exitcode -eq 1 ]; then
 		echo 1>&2 "fatal: foxtrot merge detected, aborting push"
-		echo 1>&2 "fatal: branch '$branch'"
+		echo 1>&2 "fatal: from '$branch' to '$remoteBranch'"
+		exit $exitcode
+	elif [ $exitcode -ne 0 ]; then
+		# some other error
 		exit $exitcode
 	fi
 fi
