@@ -14,7 +14,11 @@ if [ -z "$1" ]; then
 	set -- "$currBranch"
 fi
 for ((i=1;i<=$#;i++)); do
-	branch=$(git rev-parse --abbrev-ref ${!i})
+	branch=${!i}
+	if ! git branch-exists "$branch"; then
+		echo 1>&2 "fatal: branch '$branch' does not exists"
+		continue
+	fi
 	remoteBranch=$(git rev-parse --abbrev-ref $branch@{u} 2>/dev/null)
 	if [ -z $remoteBranch ]; then
 		echo 1>&2 "fatal: no remote branch for branch $branch"

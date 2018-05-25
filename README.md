@@ -225,16 +225,36 @@ $ git bak [<message>]
 
 ```bash
 # Browse branch's log
-$ remote (-l | --log) [<branch>]
+$ remote -l    dev
+$ remote --log dev
 
 # Browse commit
-$ remote (-c | --commit) [<commit>]
+$ remote -c       19ff585
+$ remote --commit 19ff585
 
 # Browse branch's tree
-$ remote (-t | --tree) [<branch>]
+$ remote -t     dev
+$ remote --tree dev
 
 # Browse diff of two commits
-$ remote (-d | --diff) <commit1> [<commit2>]
+$ remote -d     fc378ce 19ff585
+$ remote --diff fc378ce 19ff585
+
+# Browse pr
+$ remote --pr 42
+```
+
+```bash
+# Diff commit patches (to verify if two commits are cherrypicks)
+$ pdiff master dev
+
+# Diff commit range patches (to verify rebase with conflicts is good)
+$ pdiff dev'..pdiff' dev..pdiff
+```
+
+```bash
+# Check if branch exists
+$ git branch-exists dev && echo "branch exists"
 ```
 
 ##### git hooks
