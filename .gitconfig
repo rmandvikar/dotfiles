@@ -82,6 +82,10 @@
 	has 	= branch -r --contains
 	no-has 	= branch -r --no-contains
 	g 		= grep --heading
+	m 		= merge
+	r 		= rebase
+	f 		= fetch
+	p 		= pull
 	
 	## write ##
 	a 		= add
