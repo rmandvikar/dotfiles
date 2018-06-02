@@ -163,7 +163,7 @@
 	#short 				= true
 
 [merge]
-	log 			= true
+	log 			= 1000000000 # true defaults to 20
 	ff 				= false
 	#conflictStyle 	= diff3
 
