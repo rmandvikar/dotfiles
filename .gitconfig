@@ -82,6 +82,10 @@
 	has 	= branch -r --contains
 	no-has 	= branch -r --no-contains
 	g 		= grep --heading
+	m 		= merge
+	r 		= rebase
+	f 		= fetch
+	p 		= pull
 	
 	## write ##
 	a 		= add
@@ -145,7 +149,7 @@
 	date 			= format:%a %d-%b-%Y %H:%M
 	abbrevCommit 	= true
 	# exclude blue and bold blue due to visibility
-	graphColors = red, green, yellow, magenta, cyan, bold red, bold green, bold yellow, bold magenta, bold cyan
+	graphColors 	= red, green, yellow, magenta, cyan, bold red, bold green, bold yellow, bold magenta, bold cyan
 
 [push]
 	default = upstream
@@ -159,7 +163,7 @@
 	#short 				= true
 
 [merge]
-	log 			= true
+	log 			= 1000000000 # true defaults to 20
 	ff 				= false
 	#conflictStyle 	= diff3
 
