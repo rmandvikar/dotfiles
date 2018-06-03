@@ -102,7 +102,7 @@
 	ren 	= mv
 	hide 	= update-index --assume-unchanged
 	unhide 	= update-index --no-assume-unchanged
-	hidden 	= !"git ls-files -v | grep '^h' | cut -c3- | dq"
+	hidden 	= !"git ls-files -v | grep '^h' | cut -c3- | qp"
 	unstage = reset
 	cp 		= cherry-pick
 	pushf 	= push --force-with-lease
