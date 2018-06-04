@@ -10,12 +10,35 @@
 # See http://bit-booster.blogspot.cz/2016/02/no-foxtrots-allowed.html
 # https://stackoverflow.com/questions/35962754/git-how-can-i-prevent-foxtrot-merges-in-my-master-branch
 
-remoteBranch=$(git rev-parse --abbrev-ref "$1"@{u} 2>/dev/null)
-# no remote tracking branch, exit
-if [[ -z "$remoteBranch" ]]; then
-	exit 0
+branch="$1"
+if [[ -z "$branch" ]]; then
+	branch=$(git symbolic-ref --short head 2>/dev/null)
+	# detached head, exit
+	if [[ -z "$branch" ]]; then
+		exit 0
+	fi
 fi
-branch=$(git rev-parse --abbrev-ref "${1-@}" 2>/dev/null)
+
+if git branch-exists "$branch"; then
+	# branch to remote ref, dev:dev
+	# no remote tracking branch, exit
+	if ! git cat-file -e "$branch"@{u} 2>/dev/null; then
+		exit 0
+	fi
+	remoteBranch=$(git rev-parse --abbrev-ref "$branch"@{u} 2>/dev/null)
+else
+	# commit to remote ref, head:dev
+	remoteBranch="$2"
+	if [[ -z "$remoteBranch" ]]; then
+		echo 1>&2 "fatal: remote branch is required"
+		exit 2
+	fi
+	# no remote tracking branch, exit
+	if ! git cat-file -e "$remoteBranch" 2>/dev/null; then
+		exit 0
+	fi
+fi
+
 # branch commit does not cover remote branch commit, exit
 if ! $(git merge-base --is-ancestor $remoteBranch $branch); then
 	exit 0

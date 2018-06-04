@@ -3,7 +3,10 @@
 ~/.git-hooks/_helpers/foxtrot-merge-detector
 # check exit code and exit if needed
 exitcode=$?
-if [ $exitcode -ne 0 ]; then
+if [ $exitcode -eq 1 ]; then
 	echo -e "  ${Yellow}WARNING:${None} foxtrot merge detected"
 	# swallow exit code
+elif [ $exitcode -ne 0 ]; then
+	# some other error
+	exit $exitcode
 fi
