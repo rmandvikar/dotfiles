@@ -188,6 +188,7 @@
 	autoStash 			= true
 	autoSquash 			= true
 	abbreviateCommands 	= true
+	instructionFormat 	= "%s - %aN"
 
 [branch]
 	autoSetupMerge 		= false
