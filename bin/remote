@@ -177,7 +177,10 @@ git config --get-regex remote\..*\.url \
 					s,^git@,,
 					s,^https://,,
 					s,^ssh://,,
-					s,:,/,
+					# remove "user:password@" part
+					s,^.*:.*@,,
+					# remove "user@" part
+					s,^.*@,,
 					# add url part
 					s,$,'"$urlPart"',
 					' <<< "$line"
