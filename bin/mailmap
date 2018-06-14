@@ -1,0 +1,32 @@
+#!/bin/sh
+
+#usage: mailmap
+#
+# Add authors to mailmap.
+
+# existing authors
+existing=$(
+	cat .mailmap 2>/dev/null \
+		| grep -v "^#" \
+		| sed '/^\s*$/d' \
+		| sed -r 's,.+ <.+> <(.+)>,\1,' \
+		| uniq \
+		| tr '\n' '|' \
+		| sed 's,|$,,'
+	)
+
+# new authors
+new=$(
+	git shortlog -se \
+		| sed -r 's,^ +[0-9]+\t,,' \
+		| sed -r 's,(<.+>),\1 \1,' \
+		| ( [[ ! -z "$existing" ]] && egrep -v "$existing" || cat )
+	)
+
+# append to mailmap
+if [[ ! -z "$new" ]]; then
+	(
+		echo "#----#"
+		echo "$new"
+	) >> .mailmap
+fi
