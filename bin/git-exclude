@@ -4,7 +4,22 @@
 #
 # Exclude file by appending to '.git/info/exclude'.
 
-if [[ "$1" == "-h" ]]; then print-file-comments "$0"; exit; fi
+while true; do
+	case "$1" in
+		-h ) print-file-comments "$0"; exit ;;
+		-e | --edit)
+			o ".git/info/exclude"
+			exit ;;
+		-* )
+			if [ ! -z "$1" ]; then
+				echo 1>&2 "fatal: unknown option $1"
+				exit 1
+			fi
+			exit ;;
+		* )
+			break ;;
+	esac
+done
 
 if [ -z "$1" ]; then
 	echo 1>&2 "fatal: file required"

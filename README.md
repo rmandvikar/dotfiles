@@ -257,6 +257,12 @@ $ pdiff dev'..pdiff' dev..pdiff
 $ git branch-exists dev && echo "branch exists"
 ```
 
+```bash
+# Add to .git/info/exclude file
+$ git exclude "a/b/c"
+$ git exclude --edit
+```
+
 ##### git hooks
 
 Each hook is comprised of sub-hooks that are placed in the '`~/.git-hooks/<hook>.d/`' dir and '`.git/hooks/<hook>.d/`' dir. This allows to
