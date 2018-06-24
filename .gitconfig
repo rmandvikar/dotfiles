@@ -114,6 +114,7 @@
 	#usage: git undo -dx
 	undo 		= !"git reset --hard && git clean -f"
 	
+	hide-all 	= !"git status -s | cut -c3- | xargs git hide"
 	unhide-all 	= !"git hidden | xargs git unhide"
 	
 	## advanced ##
@@ -188,6 +189,7 @@
 	autoStash 			= true
 	autoSquash 			= true
 	abbreviateCommands 	= true
+	instructionFormat 	= "%s - %aN"
 
 [branch]
 	autoSetupMerge 		= false

@@ -12,6 +12,7 @@ SciTE.session
 .lesshst
 .viminfo
 .node_repl_history
+.git-credentials
 #.*rc
 #.*
 
