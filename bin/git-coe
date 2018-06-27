@@ -1,6 +1,6 @@
 #!/bin/sh
 
-#usage: git coe branch
+#usage: git coe <branch>
 #
 # Fuzzy checkout using a partial branch name.
 
@@ -11,8 +11,24 @@ if [ $# -gt 1 ] || [ "$1" == "." ] || [ "$1" == "-" ] || [[ "$1" == *":"* ]]; th
 	git checkout "$@"
 	exit
 fi
-# grep for local branches except current
-branches=($(git b | grep -v "^\\*" | grep "$1" | cut -c3-))
+# die if empty arg
+if [ -z "$1" ]; then
+	echo 1>&2 "fatal: branch required"
+	exit 1
+fi
+# get tracking branches
+trackingBranches=$(git for-each-ref --format='%(upstream:short)' refs/heads \
+	| sed '/^$/d')
+# grep for all branches except current, tracking branches
+branches=($(
+	git branch -a \
+		| grep -v "^\\*" \
+		| cut -c3- \
+		| grep -v "\->" \
+		| sed 's,^remotes/,,' \
+		| grep -v "$trackingBranches" \
+		| grep "$1"
+		))
 # die if no branches matched
 if [ ${#branches[@]} -eq 0 ]; then
 	echo 1>&2 "fatal: no branch matched"
@@ -26,4 +42,15 @@ if [ ${#branches[@]} -gt 1 ]; then
 	done
 	exit 1
 fi
-git checkout ${branches[0]}
+# checkout local or remote branch
+branch=${branches[0]}
+remote=$(git remote | head -1)
+if egrep -q "^$remote" <<< "$branch"; then
+	command="git checkout -t $branch"
+	echo -e "${White}$command${None}"
+	$command
+else
+	command="git checkout $branch"
+	echo -e "${White}$command${None}"
+	$command
+fi
