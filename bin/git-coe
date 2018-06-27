@@ -34,17 +34,23 @@ if [ ${#branches[@]} -eq 0 ]; then
 	echo 1>&2 "fatal: no branch matched"
 	exit 1
 fi
+remote=$(git remote | head -1)
 # die if 2+ branches matched
 if [ ${#branches[@]} -gt 1 ]; then
-	echo 1>&2 "fatal: multiple branches matched"
-	for branch in ${branches[@]}; do
-		echo 1>&2 -e '  '$branch
-	done
-	exit 1
+	# checkout if only one local branch matched
+	localBranches=($(
+		printf -- '%s\n' "${branches[@]}" \
+			| egrep -v "^$remote"))
+	if [ ${#localBranches[@]} -ne 1 ]; then
+		echo 1>&2 "fatal: multiple branches matched"
+		for branch in ${branches[@]}; do
+			echo 1>&2 -e '  '$branch
+		done
+		exit 1
+	fi
 fi
 # checkout local or remote branch
 branch=${branches[0]}
-remote=$(git remote | head -1)
 if egrep -q "^$remote" <<< "$branch"; then
 	command="git checkout -t $branch"
 	echo -e "${White}$command${None}"
