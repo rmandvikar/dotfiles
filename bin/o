@@ -2,9 +2,7 @@
 
 if [ $# -gt 0 ]; then
 	if [ "$1" = "-" ]; then
-		# see https://gist.github.com/earthgecko/3089509
-		random=$(cat /dev/urandom | tr -dc 'a-zA-Z_-' | fold -w 8 | head -n 1)
-		stdinfile="/tmp/stdin-$random"
+		stdinfile=$(tmpfile)
 		exec > "$stdinfile"
 		while IFS= read -r line; do
 			printf '%s\n' "$line"
