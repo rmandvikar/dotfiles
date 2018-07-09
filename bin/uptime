@@ -10,6 +10,25 @@ if [[ "$1" == "-h" ]]; then print-file-comments "$0"; exit; fi
 #	grep "System Boot Time" | \
 #	sed -r 's/System Boot Time:\s+//'
 
-net statistics workstation | \
+# show uptime
+up=$(net statistics workstation | \
 	grep "Statistics since " | \
-	sed 's/Statistics since //'
+	sed 's/Statistics since //')
+echo "$up"
+
+# show uptime delta
+upepoch=$(date -d "$up" +%s)
+nowepoch=$(date -d "$(date)" +%s)
+# days 60*60*24
+delta=$(($nowepoch-$upepoch))
+echo -n "$(($delta /(60*60*24)))d "
+# hours 60*60
+delta=$(($delta %(60*60*24)))
+echo -n "$(($delta /(60*60)))h "
+# mins 60
+delta=$(($delta %(60*60)))
+echo -n "$(($delta /(60)))m "
+# secs
+delta=$(($delta %(60)))
+echo -n "$(($delta))s"
+echo
