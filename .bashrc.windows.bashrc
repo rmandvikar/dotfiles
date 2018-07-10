@@ -6,10 +6,14 @@ alias msbuild="'/c/Program Files (x86)/MSBuild/14.0/Bin/MSBuild.exe'"
 alias jira=jq
 alias python='winpty python.exe'
 # jq-win64 is on path
-j() { "jq-win64.exe" "$@"; } # '/d/setups/jq/jq-win64.exe'
+j() { "jq-win64.exe" "$@"; } # '/d/setups/PATH/jq-win64.exe'
 export -f j
 jp() { "jq-win64.exe" "$@"; }
 export -f jp
+# vlip is on path # '/d/setups/PATH/vlip.exe'
+#   note:
+#   paste.exe renamed to vlip.exe as gnu paste conflicts
+#   see http://www.c3scripts.com/tutorials/msdos/paste.html
 
 # WinMergeU is on path
 difftool() { "WinMergeU" -e -u "$@"; }

@@ -6,3 +6,5 @@
 # work gitconfig
 [includeIf "gitdir/i:work/"]
 	path = work-user.gitconfig
+[includeIf "gitdir/i:d:/workspace/company/"]
+	path = d:/workspace/company/company-user.gitconfig
