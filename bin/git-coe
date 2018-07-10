@@ -18,7 +18,9 @@ if [ -z "$1" ]; then
 fi
 # get tracking branches
 trackingBranches=$(git for-each-ref --format='%(upstream:short)' refs/heads \
-	| sed '/^$/d')
+	| sed '/^$/d' \
+	| sed 's,$,$,' \
+	| sed 's,^,^,')
 # grep for all branches except current, tracking branches
 branches=($(
 	git branch -a \
@@ -26,7 +28,7 @@ branches=($(
 		| cut -c3- \
 		| grep -v "\->" \
 		| sed 's,^remotes/,,' \
-		| grep -v "$trackingBranches" \
+		| egrep -v "$trackingBranches" \
 		| grep "$1"
 		))
 # die if no branches matched
