@@ -14,6 +14,8 @@ export -f jp
 #   note:
 #   paste.exe renamed to vlip.exe as gnu paste conflicts
 #   see http://www.c3scripts.com/tutorials/msdos/paste.html
+guidgen() { echo $(guidgen.exe); }
+export -f guidgen
 
 # WinMergeU is on path
 difftool() { "WinMergeU" -e -u "$@"; }
