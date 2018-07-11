@@ -8,7 +8,7 @@ if [[ "$1" == "-h" ]]; then print-file-comments "$0"; exit; fi
 
 # get current branch
 # note: 'git symbolic-ref --short HEAD' throws when in 'detached HEAD' state
-currBranch=$(git rev-parse --abbrev-ref HEAD)
+currBranch=$(git branch-name HEAD)
 # if no arg, bsync current branch
 if [ -z "$1" ]; then
 	set -- "$currBranch"
@@ -19,7 +19,7 @@ for ((i=1;i<=$#;i++)); do
 		echo 1>&2 "fatal: branch '$branch' does not exists"
 		continue
 	fi
-	remoteBranch=$(git rev-parse --abbrev-ref $branch@{u} 2>/dev/null)
+	remoteBranch=$(git branch-name $branch@{u} 2>/dev/null)
 	if [ -z $remoteBranch ]; then
 		echo 1>&2 "fatal: no remote branch for branch $branch"
 		continue

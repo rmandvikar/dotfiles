@@ -22,7 +22,7 @@ Diverged='\033[38;5;208m'
 function custom_ps1_v1() {
 	if [[ ! -d ".git" ]]; then return; fi
 	hash=$(git rev-parse --short HEAD)
-	branch=$(git symbolic-ref --short HEAD 2>/dev/null)
+	branch=$(git branch-name HEAD 2>/dev/null)
 	if [[ -z "$branch" ]]; then
 		printf " ${Default}(($hash...))${Reset}"
 		return
