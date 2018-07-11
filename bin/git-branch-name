@@ -1,0 +1,15 @@
+#!/bin/sh
+
+#usage: git branch-name [<branch>]
+#
+# Get branch name.
+
+if [[ "$1" == "-h" ]]; then print-file-comments "$0"; exit; fi
+
+# note: git symbolic-ref --short dev@{u} does not work so use rev-parse
+branch=$(git rev-parse --abbrev-ref ${1-"@"})
+if [ "$branch" == "HEAD" ]; then
+	echo 1>&2 "fatal: detached branch"
+	exit 1
+fi
+echo "$branch"
