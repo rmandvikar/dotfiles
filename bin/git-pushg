@@ -15,9 +15,9 @@ fi
 remoteDefault=$(git config --get branch.master.remote)
 remote="${2-"$remoteDefault"}"
 # current branch name may not match remote branch
-remotePath=$(git rev-parse --abbrev-ref @{u} 2>/dev/null)
+remotePath=$(git branch-name @{u} 2>/dev/null)
 if [ -z $remotePath ]; then
-	branch=$(git rev-parse --abbrev-ref @)
+	branch=$(git branch-name @)
 	# remote branch name is same as local branch
 	remoteBranch="$branch"
 	# check if remote branch already exists on remote
@@ -41,7 +41,7 @@ if [ -z $remotePath ]; then
 	echo -e "${White}$command${None}"
 	$command
 else
-	branch=$(git rev-parse --abbrev-ref @)
+	branch=$(git branch-name @)
 	# get remote name for branch
 	remote=$(git config --get branch."$branch".remote)
 	remoteBranch=${remotePath#"$remote"/}
