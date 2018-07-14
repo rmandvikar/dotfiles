@@ -1,0 +1,42 @@
+#!/bin/sh
+#
+#usage: retry <command>
+#       [retryCount=<count>] retry <command>
+#
+# Retry a command with exponential backoff delay (200 ms).
+
+if [[ "$1" == "-h" ]]; then print-file-comments "$0"; exit; fi
+
+# +---+----------+--------------------+
+# | i | delay@i  |        delay@i+1   |
+# |---|----------|--------------------|
+# | 0 |       0  |  200*(2^0)   200   |
+# | 1 |     200  |  200*(2^1)   400   |
+# | 2 |     400  |  200*(2^2)   800   |
+# | 3 |     800  |  200*(2^3)  1600   |
+# | 4 |    1600  |  200*(2^4)  3200   |
+# | 5 |    3200  |  200*(2^5)  6400   |
+# +---+----------+--------------------+
+
+retryCount=${retryCount-5}
+     delay=0	# secs
+delaymulti=200	# msecs
+# widths for printf
+delaywidth=$(wc -c <<< $(($delaymulti * (2**$retryCount))))
+retrywidth=$(wc -c <<< $retryCount)
+# retry
+for iretry in $(seq 0 $retryCount); do
+	echo -e -n "${White}"
+	printf "retry: %${retrywidth}s" $iretry
+	printf ", delay %${delaywidth}s s" $delay
+	echo -e "${None}"
+	# sec is the smallest denomination for sleep
+	sleep "$delay"s
+	# run command
+	"$@"
+	# 200 * (2^iretry)
+	msec=$(($delaymulti * (2**$iretry)))
+	# convert int to float
+	sec=$(sed -E 's,(...)$,.\1,' <<< "$msec")
+	delay="$sec"
+done
