@@ -1,0 +1,15 @@
+#!/bin/sh
+
+text="$1"
+if $(head -1 <<< "$text" | egrep -q "^HTTP/"); then
+	headers=$(curl-headers  <<< "$text")
+	   body=$(curl-body     <<< "$text")
+else
+	body="$text"
+fi
+
+if [ ! -z "$headers" ]; then
+	echo "$headers"
+	echo ""
+fi
+echo "$body" | j -C .
