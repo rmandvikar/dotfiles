@@ -1,8 +1,8 @@
 #!/bin/sh
 
 #usage:
-#	jq [<commit>]
-#	jq [<query>]
+#	jiraq [<commit>]
+#	jiraq [<query>]
 #
 # Jira query.
 
