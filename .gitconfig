@@ -86,6 +86,7 @@
 	r 		= rebase
 	f 		= fetch
 	p 		= pull
+	bn 		= branch-name
 	
 	## write ##
 	a 		= add
