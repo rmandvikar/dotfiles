@@ -34,7 +34,7 @@ for iretry in $(seq 0 $retry); do
 	# sec is the smallest denomination for sleep
 	sleep "$delaytotal"s
 	# run command
-	"$@"
+	eval "$@"
 	# 250 * (2^iretry)
 	msec=$(($delay * (2**$iretry)))
 	# convert int to float
