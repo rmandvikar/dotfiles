@@ -12,7 +12,7 @@
 
 branch="$1"
 if [[ -z "$branch" ]]; then
-	branch=$(git symbolic-ref --short head 2>/dev/null)
+	branch=$(git branch-name HEAD 2>/dev/null)
 	# detached head, exit
 	if [[ -z "$branch" ]]; then
 		exit 0
@@ -25,7 +25,7 @@ if git branch-exists "$branch"; then
 	if ! git cat-file -e "$branch"@{u} 2>/dev/null; then
 		exit 0
 	fi
-	remoteBranch=$(git rev-parse --abbrev-ref "$branch"@{u} 2>/dev/null)
+	remoteBranch=$(git branch-name "$branch"@{u} 2>/dev/null)
 else
 	# commit to remote ref, head:dev
 	remoteBranch="$2"

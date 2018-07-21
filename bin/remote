@@ -44,12 +44,12 @@ while true; do
 			option="diff"
 			shift
 			# get branch or hash for head
-			head=$(git rev-parse --abbrev-ref HEAD)
-			if [[ -z "$head" || "$head" == "HEAD" ]]; then
-				head=$(git rev-parse $head)
+			head=$(git branch-name HEAD 2>/dev/null)
+			if [[ -z "$head" ]]; then
+				head=$(git rev-parse HEAD)
 			fi
 			commit1="$1"
-			commit1=$(sed -E 's/(HEAD|@)/'$head'/i' <<< "$commit1")
+			commit1=$(sed -E 's,(HEAD|@),'$head',i' <<< "$commit1")
 			if [[ -z "$commit1" ]]; then
 				echo 1>&2 "fatal: unknown commit1 '$1'"
 				exit 1
@@ -63,7 +63,7 @@ while true; do
 				commit1=$(git remote-branch "$commit1")
 			fi
 			commit2="${2-HEAD}"
-			commit2=$(sed -E 's/(HEAD|@)/'$head'/i' <<< "$commit2")
+			commit2=$(sed -E 's,(HEAD|@),'$head',i' <<< "$commit2")
 			if ! git cat-file -e "$commit2" 2>/dev/null; then
 				echo 1>&2 "fatal: unknown commit2 '$2'"
 				exit 1

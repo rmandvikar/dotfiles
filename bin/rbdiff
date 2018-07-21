@@ -1,0 +1,23 @@
+#!/bin/sh
+
+#usage: rbdiff [<branch>] <branch-off>
+#
+# Diff a rebased branch (branched off of a branch).
+
+if [[ "$1" == "-h" ]]; then print-file-comments "$0"; exit; fi
+
+if [ -z "$1" ]; then
+	echo 1>&2 "fatal: branch(es) required"
+	exit 1
+elif [ -z "$2" ]; then
+	branch=$(git branch-name HEAD)
+	branchOff="$1"
+else
+	branch="$1"
+	branchOff="$2"
+fi
+
+# see pdiff comments
+pdiff \
+	$(git merge-base "$branchOff" "$branch"@{u}).."$branch"@{u} \
+	$(git merge-base "$branchOff" "$branch"    ).."$branch"
