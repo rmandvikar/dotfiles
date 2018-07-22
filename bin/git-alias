@@ -6,10 +6,10 @@
 
 if [[ "$1" == "-h" ]]; then print-file-comments "$0"; exit; fi
 
-git config --get-regex "^alias\.$1" | \
+git config --get-regex "^alias\..*$1.*" | \
 	sed 's,^alias\.,,'
 ls ~/bin/ | \
-	egrep "^git-$1" | \
+	egrep "^git-.*$1.*" | \
 	while read line;
 	do
 		# print script path
