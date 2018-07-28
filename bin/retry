@@ -1,11 +1,11 @@
 #!/bin/sh
 #
-#usage: retry <command>
-#       [retry=<count>] [delay=<delay>] retry <command>
+#usage: retry
+#           [(-r | --retry) <retry>]
+#           [(-d | --delay) <delay>]
+#           <command>
 #
 # Retry a command with exponential backoff delay (250 ms).
-
-if [[ "$1" == "-h" ]]; then print-file-comments "$0"; exit; fi
 
 # +---+----------+--------------------+
 # | i | delay@i  |        delay@i+1   |
@@ -18,8 +18,19 @@ if [[ "$1" == "-h" ]]; then print-file-comments "$0"; exit; fi
 # | 5 |    4000  |  250*(2^5)  8000   |
 # +---+----------+--------------------+
 
-     retry=${retry-5}
-     delay=${delay-250} # msecs
+retry=5
+delay=250 # msecs
+while true; do
+	case "$1" in
+		-h ) print-file-comments "$0"; exit ;;
+		-r | --retry )
+			shift; retry="$1"; shift ;;
+		-d | --delay )
+			shift; delay="$1"; shift ;;
+		*  ) break ;;
+	esac
+done
+
 delaytotal=0			# secs
 # widths for printf
 delaywidth=$(wc -c <<< $(($delay * (2**$retry))))
