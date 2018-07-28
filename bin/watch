@@ -1,0 +1,17 @@
+#!/bin/sh
+#
+#usage: watch [-n <delay>] <command>
+#
+# Watch a command.
+
+delay=2
+case "$1" in
+	-h ) print-file-comments "$0"; exit ;;
+	-n ) shift; delay="$1"; shift ;;
+	*  ) ;;
+esac
+
+while true; do
+	eval "$@"
+	sleep "$delay"s
+done
