@@ -1,20 +1,26 @@
 #!/bin/sh
 
 #usage: remote
-#           [(-l | --log)    [<branch>]]
-#           [(-c | --commit) [<commit>]]
-#           [(-t | --tree)   [<branch>]]
-#           [(-d | --diff)   <commit1> [<commit2>]]
-#           [--pr            [<pr>]]
+#           [(-l | --log)       [<branch>]]
+#           [(-c | --commit)    [<commit>]]
+#           [(-t | --tree)      [<branch>]]
+#           [(-d | --diff)      <commit1> [<commit2>]]
+#           [--pr               [<pr>]]
+#           [(-b | --branches)]
+#           [(-n | --dry-run)]
 #
 # Browse to remote url or branch's log (commits) or branch's tree
-# or a commit or diff between two commits.
+# or a commit or diff between two commits or PRs or branches.
 
 GerritUrlQuery="$GerritUrl/#/q/"
 
 while true; do
 	case "$1" in
 		-h ) print-file-comments "$0"; exit ;;
+		-n | --dry-run )
+			command="xecho"
+			shift
+			continue ;;
 		-l | --log)
 			option="log"
 			shift
@@ -77,6 +83,10 @@ while true; do
 			option="pr"
 			shift
 			pr="$1"
+			break ;;
+		-b | --branches)
+			option="branches"
+			shift
 			break ;;
 		* )
 			if [ ! -z "$1" ]; then
@@ -151,6 +161,8 @@ git config --get-regex remote\..*\.url \
 						urlPart="/branches/compare/$commit2..$commit1#diff"
 					elif [[ "$option" == "pr" ]]; then
 						urlPart="/pull-requests/$pr"
+					elif [[ "$option" == "branches" ]]; then
+						urlPart="/branches"
 					fi
 				else
 					# others: github, gitlab, etc.
@@ -169,6 +181,8 @@ git config --get-regex remote\..*\.url \
 						else
 							urlPart="/pull/$pr"
 						fi
+					elif [[ "$option" == "branches" ]]; then
+						urlPart="/branches"
 					fi
 				fi
 				# avoid sed -r as -r is not available on mac
@@ -181,9 +195,10 @@ git config --get-regex remote\..*\.url \
 					s,^.*:.*@,,
 					# remove "user@" part
 					s,^.*@,,
+					s,:,/,
 					# add url part
 					s,$,'"$urlPart"',
 					' <<< "$line"
 			fi
 		done \
-	| browse
+	| ${command-browse}
