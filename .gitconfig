@@ -235,6 +235,7 @@
 	interactive = true
 	ui 			= true
 	pager 		= true
+	push 		= true
 
 # default colors: http://shallowsky.com/blog/programming/gitcolors.html
 [color "diff"]
@@ -281,6 +282,9 @@
 	match 		= bold red
 	filename 	= "#ffaaff" # ~pink
 	linenumber 	= bold green
+
+[color "push"]
+	error 	= bold red
 
 [include]
 	# user
