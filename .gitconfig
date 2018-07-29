@@ -201,6 +201,9 @@
 	lineNumber 		= true
 	patternType 	= extended
 
+[blame]
+	coloring 	= highlightRecent
+
 # templates
 [init]
 	templateDir = ~/.git-templates
@@ -236,6 +239,7 @@
 	ui 			= true
 	pager 		= true
 	push 		= true
+	blame 		= true
 
 # default colors: http://shallowsky.com/blog/programming/gitcolors.html
 [color "diff"]
@@ -285,6 +289,9 @@
 
 [color "push"]
 	error 	= bold red
+
+[color "blame"]
+	highlightRecent 	= "#abb2b9", 12 month ago, "#ffffff", 1 month ago, "#ffff99"
 
 [include]
 	# user
