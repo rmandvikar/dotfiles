@@ -7,6 +7,7 @@
 #           [(-d | --diff)      <commit1> [<commit2>]]
 #           [--pr               [<pr>]]
 #           [(-b | --branches)]
+#           [(-n | --dry-run)]
 #
 # Browse to remote url or branch's log (commits) or branch's tree
 # or a commit or diff between two commits or PRs or branches.
@@ -16,6 +17,10 @@ GerritUrlQuery="$GerritUrl/#/q/"
 while true; do
 	case "$1" in
 		-h ) print-file-comments "$0"; exit ;;
+		-n | --dry-run )
+			command="xecho"
+			shift
+			continue ;;
 		-l | --log)
 			option="log"
 			shift
@@ -195,4 +200,4 @@ git config --get-regex remote\..*\.url \
 					' <<< "$line"
 			fi
 		done \
-	| browse
+	| ${command-browse}
