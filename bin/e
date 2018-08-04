@@ -89,8 +89,12 @@ if [[ $# -gt 0 ]]; then
 		exit 1
 	fi
 else
-	while read data; do
+	while IFS= read -r line; do
 		# exec e does not work
-		e "$data"
+		e "$line"
 	done
+	if [ -n "$line" ]; then
+		# exec e does not work
+		e "$line"
+	fi
 fi

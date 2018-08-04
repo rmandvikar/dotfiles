@@ -19,8 +19,12 @@ if [ $# -gt 0 ]; then
 			open "$@" ;;
 	esac
 else
-	while read data; do
+	while IFS= read -r line; do
 		# exec app does not work
-		app "$data"
+		app "$line"
 	done
+	if [ -n "$line" ]; then
+		# exec app does not work
+		app "$line"
+	fi
 fi

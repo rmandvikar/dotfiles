@@ -5,6 +5,9 @@
 #
 # Pipe a command that does not support piping (ex echo, cp, etc).
 
-while read data; do
-	eval "$@" "$data"
+while IFS= read -r line; do
+	eval "$@" "$line"
 done
+if [ -n "$line" ]; then
+	eval "$@" "$line"
+fi

@@ -10,7 +10,7 @@ git config --get-regex "^alias\..*$1.*" | \
 	sed 's,^alias\.,,'
 ls ~/bin/ | \
 	egrep "^git-.*$1.*" | \
-	while read line;
+	while IFS= read -r line;
 	do
 		# print script path
 		echo "~/bin/$line"
