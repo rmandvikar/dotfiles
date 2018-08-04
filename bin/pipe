@@ -1,0 +1,10 @@
+#!/bin/sh
+#
+#usage:
+#   ... | pipe <command>
+#
+# Pipe a command that does not support piping (ex echo, cp, etc).
+
+while read data; do
+	eval "$@" "$data"
+done
