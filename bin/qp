@@ -1,9 +1,9 @@
 #!/bin/sh
 
-#usage: 
+#usage:
 #   ... | qp
 #
 # Quote path.
 
 quoteChar=${1-\"}
-exec sed 's,\(.*[ ].*\),'$quoteChar'\1'$quoteChar','
+exec sed 's,.*[ ].*,'$quoteChar'&'$quoteChar','
