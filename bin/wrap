@@ -10,7 +10,11 @@
 
 start=${1}
 end=${2-"$start"}
-while read data; do
+while IFS= read -r line; do
 	# exec echo does not work
-	echo "$start""$data""$end"
+	echo "$start""$line""$end"
 done
+if [ -n "$line" ]; then
+	# exec echo does not work
+	echo "$start""$line""$end"
+fi
