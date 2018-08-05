@@ -1,4 +1,4 @@
 #!/bin/sh
 
 # cut by : and get field 1
-exec cut -d ${2-':'} -f ${1-1}
+exec grep ":" | exec cut -d ${2-':'} -f ${1-1}

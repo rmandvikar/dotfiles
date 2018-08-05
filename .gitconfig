@@ -27,6 +27,7 @@
 	tool 			= winmerge
 	mnemonicPrefix 	= true
 	noprefix 		= true
+	colorMoved 		= true
 [difftool]
 	prompt 	= false
 [difftool "winmerge"]
@@ -200,6 +201,9 @@
 	lineNumber 		= true
 	patternType 	= extended
 
+[blame]
+	coloring 	= highlightRecent
+
 # templates
 [init]
 	templateDir = ~/.git-templates
@@ -234,6 +238,8 @@
 	interactive = true
 	ui 			= true
 	pager 		= true
+	push 		= true
+	blame 		= true
 
 # default colors: http://shallowsky.com/blog/programming/gitcolors.html
 [color "diff"]
@@ -244,6 +250,8 @@
 	frag 		= bold cyan
 	old 		= "#fc9f9f" # ~red
 	new 		= "#9bff9b" # ~green
+	oldMoved 	= "#fcf3cf" # ~light-yellow
+	newMoved 	= "#edbb99" # ~light-brown
 
 [color "status"]
 	#header 		= white
@@ -278,6 +286,12 @@
 	match 		= bold red
 	filename 	= "#ffaaff" # ~pink
 	linenumber 	= bold green
+
+[color "push"]
+	error 	= bold red
+
+[color "blame"]
+	highlightRecent 	= "#abb2b9", 12 month ago, "#ffffff", 1 month ago, "#ffff99"
 
 [include]
 	# user

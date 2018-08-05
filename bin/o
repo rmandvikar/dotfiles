@@ -7,6 +7,9 @@ if [ $# -gt 0 ]; then
 		while IFS= read -r line; do
 			printf '%s\n' "$line"
 		done
+		if [ -n "$line" ]; then
+			printf '%s\n' "$line"
+		fi
 		exec $EDITOR "$stdinfile" &
 	# scite - reads from stdin into Untitled buffer in foreground
 	# scite -@ reads files from stdin in foreground
@@ -17,9 +20,12 @@ if [ $# -gt 0 ]; then
 	fi
 else
 	args=""
-	while read data; do
-		args=$args$data" "
+	while IFS= read -r line; do
+		args=$args$line" "
 	done
+	if [ -n "$line" ]; then
+		args=$args$line" "
+	fi
 	case "$OSTYPE" in
 		linux* | msys*)
 			exec echo $args | xargs -r $EDITOR &

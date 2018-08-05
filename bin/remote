@@ -117,7 +117,7 @@ fi
 git config --get-regex remote\..*\.url \
 	| cut -d' ' -f2 \
 	| \
-		while read line;
+		while IFS= read -r line;
 		do
 			if egrep -q '@'"$GerritUrl"':' <<< "$line"; then
 				# gerrit
