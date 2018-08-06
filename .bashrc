@@ -7,7 +7,8 @@ alias gt=git
 alias a=app
 # bfg.jar is at ~/dump/
 alias bfg="java -jar ~/dump/bfg.jar"
-alias pr="remote --pr"
+alias  pr="remote --pr"
+alias prs="remote --prs"
 alias branch="git branch-name"
 alias     _b="git branch-name"
 
