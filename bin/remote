@@ -79,10 +79,17 @@ while true; do
 				commit2=$(git remote-branch "$commit2")
 			fi
 			break ;;
+		--prs)
+			option="pr"
+			shift
+			break ;;
 		--pr)
 			option="pr"
 			shift
 			pr="$1"
+			if [ -z "$pr" ]; then
+				pr=$(git config --get branch.$(git branch-name).pr)
+			fi
 			break ;;
 		-b | --branches)
 			option="branches"
@@ -112,6 +119,17 @@ elif [[ "$option" == "tree" ]]; then
 		echo 1>&2 "fatal: remoteBranch required"
 		exit 1
 	fi
+elif [[ "$option" == "pr" ]]; then
+	case "$1" in
+		--set )
+			shift
+			git config branch.$(git branch-name).pr "$1"
+			exit ;;
+		--unset )
+			shift
+			git config --unset branch.$(git branch-name).pr
+			exit ;;
+	esac
 fi
 
 git config --get-regex remote\..*\.url \
