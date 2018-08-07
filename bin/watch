@@ -1,17 +1,26 @@
-#!/bin/sh
+#!/bin/bash
 #
-#usage: watch [-n <delay>] <command>
+#usage: watch [-n <delay>] [-d] <command>
 #
 # Watch a command.
 
 delay=2
-case "$1" in
-	-h ) print-file-comments "$0"; exit ;;
-	-n ) shift; delay="$1"; shift ;;
-	*  ) ;;
-esac
+while true; do
+	case "$1" in
+		-h ) print-file-comments "$0"; exit ;;
+		-n ) shift; delay="$1"; shift ;;
+		-d ) diff="true"; shift ;;
+		*  ) break ;;
+	esac
+done
 
 while true; do
-	eval "$@"
+	now="$(eval "$@")"
+	diff --unchanged-line-format= --old-line-format='' --new-line-format='%L' \
+		<(echo "$prev") \
+		<(echo "$now")
 	sleep "$delay"s
+	if [ "$diff" == true ]; then
+		prev="$now"
+	fi
 done
