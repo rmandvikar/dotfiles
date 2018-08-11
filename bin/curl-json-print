@@ -12,4 +12,7 @@ if [ ! -z "$headers" ]; then
 	echo "$headers"
 	echo ""
 fi
-echo "$body" | jq -C .
+
+if ! jq -e -C . 2>/dev/null <<< "$body"; then
+	echo "$body"
+fi
