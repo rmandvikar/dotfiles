@@ -66,8 +66,10 @@
 	dt 		= difftool
 	dtc 	= difftool --staged
 	mt 		= mergetool
-	dw 		= diff --color-words=.
-	dwc 	= diff --color-words=. --staged
+	dr 		= diff --color-words=.
+	drc 	= diff --color-words=. --staged
+	drw 	= diff --color-words
+	drwc 	= diff --color-words --staged
 	de 		= diff --ignore-space-at-eol
 	ds 		= diff --ignore-all-space
 	sb 		= show-branch
