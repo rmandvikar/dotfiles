@@ -4,11 +4,13 @@
 #
 # Exclude file by appending to '.git/info/exclude'.
 
+root=$(git rev-parse --show-toplevel)
+excludeFile="$root/.git/info/exclude"
 while true; do
 	case "$1" in
 		-h ) print-file-comments "$0"; exit ;;
 		-e | --edit)
-			o ".git/info/exclude"
+			o "$excludeFile"
 			exit ;;
 		-* )
 			if [ ! -z "$1" ]; then
@@ -32,7 +34,7 @@ while true; do
 			if [ -z "$1" ]; then
 				break
 			fi
-			echo "$1" >> .git/info/exclude
+			echo "$1" >> "$excludeFile"
 			shift ;;
 	esac
 done
