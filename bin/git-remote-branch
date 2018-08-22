@@ -9,7 +9,7 @@ if [[ "$1" == "-h" ]]; then print-file-comments "$0"; exit; fi
 branch=$(git branch-name ${1-"@"} 2>/dev/null)
 remote=$(git config --get branch."$branch".remote)
 remotePath=$(git branch-name "$branch@{u}" 2>/dev/null)
-remoteBranch=${remotePath#"$remote"/}
+remoteBranch=$(sed 's,^'"$remote"'/,,' <<< "$remotePath")
 if [[ -z "$remoteBranch" ]]; then
 	echo 1>&2 "fatal: no remote branch configured for branch '$branch'"
 	exit 1
