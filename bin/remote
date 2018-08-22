@@ -104,6 +104,12 @@ while true; do
 	esac
 done
 
+# trim out remote if present
+if [[ ! -z "$remoteBranch" ]]; then
+	remote=$(git remote | head -1)
+	remoteBranch=$(sed 's,^'"$remote"'/,,' <<< "$remoteBranch")
+fi
+
 if [[ "$option" == "log" ]]; then
 	if [[ -z "$remoteBranch" ]]; then
 		echo 1>&2 "fatal: remoteBranch required"
