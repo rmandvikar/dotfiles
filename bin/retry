@@ -3,6 +3,7 @@
 #usage: retry
 #           [(-r | --retry) <retry>]
 #           [(-d | --delay) <delay>]
+#           [(-q | --quiet)]
 #           <command>
 #
 # Retry a command with exponential backoff delay (250 ms).
@@ -27,6 +28,8 @@ while true; do
 			shift; retry="$1"; shift ;;
 		-d | --delay )
 			shift; delay="$1"; shift ;;
+		-q | --quiet )
+			quiet="true"; shift ;;
 		*  ) break ;;
 	esac
 done
@@ -38,10 +41,12 @@ delaywidth=$(($delaywidth>4?$delaywidth:4))
 retrywidth=$(wc -c <<< $retry)
 # retry
 for iretry in $(seq 0 $retry); do
-	echo -e -n "${White}"
-	printf "retry: %${retrywidth}s" $iretry
-	printf ", delay %${delaywidth}s s" $delaytotal
-	echo -e "${None}"
+	if [ -z "$quiet" ]; then
+		echo -e -n "${White}"
+		printf "retry: %${retrywidth}s" $iretry
+		printf ", delay %${delaywidth}s s" $delaytotal
+		echo -e "${None}"
+	fi
 	# sec is the smallest denomination for sleep
 	sleep "$delaytotal"s
 	# run command
