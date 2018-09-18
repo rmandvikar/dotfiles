@@ -89,6 +89,7 @@
 	f 		= fetch
 	p 		= pull
 	bn 		= branch-name
+	rdiff 	= range-diff
 	
 	## write ##
 	a 		= add
