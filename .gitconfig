@@ -59,7 +59,6 @@
 	s 		= status -s
 	sl 		= status
 	b 		= branch
-	bs 		= branch --sort=committerdate
 	co 		= checkout
 	d 		= diff
 	dc 		= diff --staged
@@ -198,6 +197,7 @@
 [branch]
 	autoSetupMerge 		= false
 	autoSetupRebase 	= always
+	sort 				= committerdate
 
 [grep]
 	lineNumber 		= true
