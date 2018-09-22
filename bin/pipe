@@ -6,12 +6,8 @@
 # Pipe a command that does not support piping (ex echo, cp, etc).
 
 while IFS= read -r line; do
-	grep -q '\-I_' <<< "$@" && \
-		eval $(sed 's,-I_,"$line",' <<< "$@") || \
-		eval "$@" "$line"
+	eval "$@" "$line"
 done
 if [ -n "$line" ]; then
-	grep -q '\-I_' <<< "$@" && \
-		eval $(sed 's,-I_,"$line",' <<< "$@") || \
-		eval "$@" "$line"
+	eval "$@" "$line"
 fi
