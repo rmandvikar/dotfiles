@@ -1,0 +1,27 @@
+#!/bin/sh
+
+#usage: random
+#            [-w <width>]
+#            [-n <n>]
+#
+# Create random string of chars 'a-zA-Z_-' with width and count.
+
+while true; do
+	case "$1" in
+		-h ) print-file-comments "$0"; exit ;;
+		-w | --width) shift; w="$1"; shift ;;
+		-n | --count) shift; n="$1"; shift ;;
+		* )
+			if [ ! -z "$1" ]; then
+				echo 1>&2 "fatal: unknown option $1"
+				exit 1
+			fi
+			break ;;
+	esac
+done
+
+# see https://gist.github.com/earthgecko/3089509
+cat /dev/urandom | \
+	tr -dc 'a-zA-Z_-' | \
+	fold -w ${w-8} | \
+	head -n ${n-1}
