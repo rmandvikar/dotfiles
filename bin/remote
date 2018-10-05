@@ -105,9 +105,15 @@ while true; do
 done
 
 # trim out remote if present
+remote=$(git remote | head -1)
 if [[ ! -z "$remoteBranch" ]]; then
-	remote=$(git remote | head -1)
 	remoteBranch=$(sed 's,^'"$remote"'/,,' <<< "$remoteBranch")
+fi
+if [[ ! -z "$commit1" ]]; then
+	commit1=$(sed 's,^'"$remote"'/,,' <<< "$commit1")
+fi
+if [[ ! -z "$commit2" ]]; then
+	commit2=$(sed 's,^'"$remote"'/,,' <<< "$commit2")
 fi
 
 if [[ "$option" == "log" ]]; then
