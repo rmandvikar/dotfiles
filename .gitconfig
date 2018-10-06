@@ -151,7 +151,7 @@
 	decorate 		= short
 	mailmap 		= true
 	follow 			= true
-	date 			= format:%a %d-%b-%Y %H:%M
+	date 			= format-local:%a %d-%b-%Y %H:%M
 	abbrevCommit 	= true
 	# exclude blue and bold blue due to visibility
 	graphColors 	= red, green, yellow, magenta, cyan, bold red, bold green, bold yellow, bold magenta, bold cyan
@@ -206,7 +206,7 @@
 
 [blame]
 	coloring 	= highlightRecent
-	date 		= format:%a %d-%b-%Y %H:%M
+	date 		= format-local:%a %d-%b-%Y %H:%M
 
 # templates
 [init]
