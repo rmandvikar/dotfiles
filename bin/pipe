@@ -6,8 +6,10 @@
 # Pipe a command that does not support piping (ex echo, cp, etc).
 
 while IFS= read -r line; do
+	echo "$@" "$line"
 	eval "$@" "$line"
 done
 if [ -n "$line" ]; then
+	echo "$@" "$line"
 	eval "$@" "$line"
 fi
