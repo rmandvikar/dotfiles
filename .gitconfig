@@ -83,7 +83,8 @@
 	lst 	= ls-tree
 	has 	= branch -r --contains
 	no-has 	= branch -r --no-contains
-	g 		= grep --heading
+	g 		= grep
+	greph 	= grep --heading
 	m 		= merge
 	r 		= rebase
 	f 		= fetch
@@ -202,6 +203,7 @@
 
 [grep]
 	lineNumber 		= true
+	column 			= true
 	patternType 	= extended
 
 [blame]
@@ -290,6 +292,7 @@
 	match 		= bold red
 	filename 	= "#ffaaff" # ~pink
 	linenumber 	= bold green
+	column 		= bold green
 
 [color "push"]
 	error 	= bold red
