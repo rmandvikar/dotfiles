@@ -83,7 +83,8 @@
 	lst 	= ls-tree
 	has 	= branch -r --contains
 	no-has 	= branch -r --no-contains
-	g 		= grep --heading
+	g 		= grep
+	greph 	= grep --heading
 	m 		= merge
 	r 		= rebase
 	f 		= fetch
@@ -151,7 +152,7 @@
 	decorate 		= short
 	mailmap 		= true
 	follow 			= true
-	date 			= format:%a %d-%b-%Y %H:%M
+	date 			= format-local:%a %d-%b-%Y %H:%M
 	abbrevCommit 	= true
 	# exclude blue and bold blue due to visibility
 	graphColors 	= red, green, yellow, magenta, cyan, bold red, bold green, bold yellow, bold magenta, bold cyan
@@ -202,11 +203,12 @@
 
 [grep]
 	lineNumber 		= true
+	column 			= true
 	patternType 	= extended
 
 [blame]
 	coloring 	= highlightRecent
-	date 		= format:%a %d-%b-%Y %H:%M
+	date 		= format-local:%a %d-%b-%Y %H:%M
 
 # templates
 [init]
@@ -290,6 +292,7 @@
 	match 		= bold red
 	filename 	= "#ffaaff" # ~pink
 	linenumber 	= bold green
+	column 		= bold green
 
 [color "push"]
 	error 	= bold red

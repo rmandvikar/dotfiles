@@ -1,0 +1,24 @@
+#!/bin/sh
+
+#usage:
+#   ext <path>
+#   ... | ext
+#
+# Get file extension.
+
+command='
+		# remove " from beginning and end
+		s,^",,
+		s,"$,,
+		# main command
+		s,.*\.,.,
+		# test command, see http://www.grymoire.com/Unix/Sed.html#uh-59
+		t
+		# get command, see http://www.grymoire.com/Unix/Sed.html#uh-42
+		g
+		'
+if [ $# -gt 0 ]; then
+	sed "$command" <<< "$1"
+else
+	sed "$command"
+fi
