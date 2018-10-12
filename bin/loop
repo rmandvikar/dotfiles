@@ -1,0 +1,13 @@
+#!/bin/sh
+#
+#usage:
+#   ... | loop <command>
+#
+# Loop a command.
+
+while IFS= read -r line; do
+	eval "$@"
+done
+if [ -n "$line" ]; then
+	eval "$@"
+fi
