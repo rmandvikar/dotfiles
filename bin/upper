@@ -1,0 +1,14 @@
+#!/bin/sh
+
+#usage:
+#   upper <text>
+#   ... | upper
+#
+# To upper case.
+
+command='s,.,\U&,g'
+if [ $# -gt 0 ]; then
+	sed "$command" <<< "$1"
+else
+	sed "$command"
+fi

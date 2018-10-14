@@ -1,0 +1,115 @@
+#!/usr/bin/env bash
+
+#usage: jwt
+#
+# Create jwt (rsa256).
+#
+#       Files:
+#       jwtRS256.key: pem encoded file with rsa private key
+#       jwtRS256.cer: pem encoded file with certificate (begin certificate, end certificate)
+#       jwt.header, jwt.payload: files for jwt header, payload
+#       
+#       To create a private rsa key from pfx,
+#       $ winpty openssl pkcs12 -in <name>.pfx -nocerts -out <name>.key.pem
+#       $ winpty openssl rsa -in <name>.key.pem -out <name>.key
+#       
+#       To create a private rsa key from ssh (with empty password),
+#       (see https://gist.github.com/ygotthilf/baa58da5c3dd1f69fae9)
+#       $ ssh-keygen -t rsa -b 4096 -f <name>.key
+#       
+#       To create a certificate from private rsa key,
+#       $ openssl req -new -x509 -key <name>.key -out <name>.cer
+#       
+#       To see certificate's contents,
+#       $ openssl x509 -noout -text -in <name>.cer
+
+if [[ "$1" == "-h" ]]; then print-file-comments "$0"; exit; fi
+
+# files
+key='jwtRS256.key'
+cer='jwtRS256.cer'
+
+# header
+header=$(< jwt.header)
+
+# payload
+payload=$(
+	jq \
+		--arg timeStr "$(date +%s)" \
+	'
+	($timeStr | tonumber) as $timeNum |
+	.nbf = $timeNum |
+	.exp = ($timeNum + 600) |
+	.iat = $timeNum
+	' < jwt.payload
+)
+
+# if cer file present
+if [ -f "$cer" ]; then
+	# header
+	kid=$(
+		openssl x509 -noout -in "$cer" -fingerprint | \
+			sed 's,.*=,,g' | sed 's,:,,g' | \
+			lower
+	)
+	x5t=$(xxd -r -p <<< "$kid" | b64url -w 0)
+	
+	header=$(
+		jq \
+			--arg kid "$kid" \
+			--arg x5t "$x5t" \
+		'
+		.kid = $kid |
+		.x5t = $x5t
+		' <<< "$header"
+	)
+	
+	# payload
+	iss=$(
+		openssl x509 -noout -in "$cer" -subject | \
+			sed 's,/,\n,g' | \
+			grep "^CN" | \
+			sed 's,^CN=,,'
+	)
+	
+	payload=$(
+		jq \
+			--arg iss "$iss" \
+		'
+		.iss = $iss
+		' <<< "$payload"
+	)
+fi
+
+rs256_sign()
+{
+	openssl dgst -sha256 -sign "$key"
+}
+
+# remove placeholders of "<KEY>"
+header=$(
+	jq \
+	'
+	[. |
+	to_entries[] |
+	select(("<" + (.key | ascii_upcase) + ">") != .value)
+	] | from_entries
+	' <<< "$header"
+)
+payload=$(
+	jq \
+	'
+	[. |
+	to_entries[] |
+	select(("<" + (.key | ascii_upcase) + ">") != .value)
+	] | from_entries
+	' <<< "$payload"
+)
+
+ header_base64=$(jq -c . <<< "${header}"  | b64url -w 0)
+payload_base64=$(jq -c . <<< "${payload}" | b64url -w 0)
+
+header_payload="${header_base64}.${payload_base64}"
+signature=$(printf '%s' "${header_payload}" | rs256_sign | b64url -w 0)
+
+echo "${header_payload}.${signature}"

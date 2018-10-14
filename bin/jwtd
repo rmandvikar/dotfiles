@@ -1,0 +1,55 @@
+#!/usr/bin/env bash
+
+#usage: jwtd
+#
+# Decode jwt (rsa256).
+#
+#       Files:
+#       jwtRS256.key.pub: pem encoded file with rsa public key
+#       
+#       To create a public rsa key,
+#       $ winpty openssl pkcs12 -in <name>.pfx -clcerts -nokeys -out <name>.crt
+#       $ openssl x509 -in <name>.crt -pubkey -noout > <name>.key.pub
+#       
+#       To create a public rsa key from ssh,
+#       (see https://gist.github.com/ygotthilf/baa58da5c3dd1f69fae9)
+#       $ openssl rsa -in <name>.key -pubout -outform PEM -out <name>.key.pub
+
+if [[ "$1" == "-h" ]]; then print-file-comments "$0"; exit; fi
+
+pub='jwtRS256.key.pub'
+
+verify_signature()
+{
+	declare header_payload="${1}"
+	declare signature="${2}"
+	if printf '%s' "${header_payload}" | \
+		openssl dgst -sha256 -verify "$pub" -signature "$signature" 1>/dev/null; then
+		echo "signature verified"
+	else
+		echo 1>&2 "fatal: INVALID Signature"
+		echo 1>&2 'header_payload:'
+		echo 1>&2 "'${header_payload}'"
+		exit 1
+	fi
+}
+
+declare token=${1:-$(</dev/stdin)}
+IFS='.' read -ra pieces <<< "$token"
+declare    header=${pieces[0]}
+declare   payload=${pieces[1]}
+declare signature=${pieces[2]}
+
+echo "header:"
+printf '%s' "${header}"  | b64urld | jq -C .
+
+echo "payload:"
+printf '%s' "${payload}" | b64urld | jq -C .
+
+# command substitution skips null byte '\0' so inline and write to file
+#signature=$(printf '%s' "$signature" | b64urld)
+jwtSign="/tmp/jwt.sign.$(random).out"
+printf '%s' "${signature}" | \
+	b64urld > "$jwtSign"
+
+verify_signature "${header}.${payload}" "$jwtSign" && rm "$jwtSign"
