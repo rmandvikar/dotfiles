@@ -1,5 +1,5 @@
 #!/bin/sh
 
-json=$(echo $(vlip) | jq .)
+json=$(jq . <<< $(vlip))
 echo "$json"
-echo -n "$json" | clip
+echo "$json" | clip
