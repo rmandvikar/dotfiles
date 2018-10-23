@@ -53,14 +53,21 @@ if [ -f "$cer" ]; then
 			lower
 	)
 	x5t=$(xxd -r -p <<< "$kid" | b64url -w 0)
+	x5c=$(cat "$cer" | \
+		sed -n '/-----BEGIN CERTIFICATE-----/,/-----END CERTIFICATE-----/ p' | \
+		sed '/-----.*/ d' | \
+		tr -d '\n'
+	)
 	
 	header=$(
 		jq \
 			--arg kid "$kid" \
 			--arg x5t "$x5t" \
+			--arg x5c "$x5c" \
 		'
 		.kid |= replace($kid) |
 		.x5t |= replace($x5t) |
+		.x5c |= replace([ $x5c ]) |
 		denull
 		' <<< "$header"
 	)

@@ -19,6 +19,24 @@ if [[ "$1" == "-h" ]]; then print-file-comments "$0"; exit; fi
 
 pub='jwtRS256.key.pub'
 
+check_x5c()
+{
+	declare header="${1}"
+	x5c=$(printf '%s' "$header" | b64urld | jq -r '.x5c[0] // ""')
+	if [ ! -z "$x5c" ]; then
+		cer="/tmp/x5c.$(random).cer"
+		
+		echo -e `
+		`"-----BEGIN CERTIFICATE-----\n"`
+		`"$x5c\n"`
+		`"-----END CERTIFICATE-----\n" \
+		>> "$cer"
+		
+		pub="$cer.key.pub"
+		openssl x509 -in "$cer" -pubkey -noout > "$pub"
+	fi
+}
+
 verify_signature()
 {
 	declare header_payload="${1}"
@@ -52,4 +70,5 @@ jwtSign="/tmp/jwt.sign.$(random).out"
 printf '%s' "${signature}" | \
 	b64urld > "$jwtSign"
 
+check_x5c "${header}"
 verify_signature "${header}.${payload}" "$jwtSign" && rm "$jwtSign"
