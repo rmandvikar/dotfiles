@@ -59,8 +59,9 @@ if [ -f "$cer" ]; then
 			--arg kid "$kid" \
 			--arg x5t "$x5t" \
 		'
-		.kid = $kid |
-		.x5t = $x5t
+		.kid |= replace($kid) |
+		.x5t |= replace($x5t) |
+		denull
 		' <<< "$header"
 	)
 	
@@ -76,7 +77,8 @@ if [ -f "$cer" ]; then
 		jq \
 			--arg iss "$iss" \
 		'
-		.iss = $iss
+		.iss = replace($iss) |
+		denull
 		' <<< "$payload"
 	)
 fi
@@ -87,24 +89,8 @@ rs256_sign()
 }
 
 # remove placeholders of "<KEY>"
-header=$(
-	jq \
-	'
-	[. |
-	to_entries[] |
-	select(("<" + (.key | ascii_upcase) + ">") != .value)
-	] | from_entries
-	' <<< "$header"
-)
-payload=$(
-	jq \
-	'
-	[. |
-	to_entries[] |
-	select(("<" + (.key | ascii_upcase) + ">") != .value)
-	] | from_entries
-	' <<< "$payload"
-)
+ header=$(jq '. | remove_placeholders' <<< "$header")
+payload=$(jq '. | remove_placeholders' <<< "$payload")
 
  header_base64=$(jq -c . <<< "${header}"  | b64url -w 0)
 payload_base64=$(jq -c . <<< "${payload}" | b64url -w 0)
