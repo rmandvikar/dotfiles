@@ -1,0 +1,18 @@
+#!/bin/sh
+
+#usage:
+#   ... | decomment
+#
+# Strip '//' comments.
+#
+# Note: Use for jq as,
+#   ... | decomment | jq .
+
+exec sed -E \
+	'
+	# do not remove // in json property name or value so
+	# remove // after even occurences of ", ie after 4th, 2nd, 0th
+	s:^(([^"/]*"[^"]*"){0,2}[^"/]*)//.*:\1:
+	# remove empty or whitespace lines
+	/^\s*$/ d
+	'
