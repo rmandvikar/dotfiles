@@ -209,9 +209,7 @@ cleanUp() {
 
 # apply wrapper
 applyCommitMessageConventionWrapper() {
-	if [[ $(getConfig "hook.skip-cmc") == "true" ]]; then
-		echo -e " -${Yellow}SKIPPING${None} commit-msg-convention: hook.skip-cmc is true"
-	else
+	if [[ $(getConfig "hook.skip-cmc") != "true" ]]; then
 		# apply convention when not in rebase
 		if [ ! -d .git/rebase-merge ] && [ ! -d .git/rebase-apply ]; then
 			applyCommitMessageConvention "$@"
