@@ -1,0 +1,9 @@
+#!/bin/sh
+
+#usage:
+#   ... | jmunge
+#
+# Munge json values.
+
+jq . | \
+	exec sed -E 's,("[^:]+"\s*:\s*)"(.*)",\1"-- ✂ --",'
