@@ -1,3 +1,10 @@
 #!/bin/sh
 
-sed -n "1,/^$/ p" | sed '/^$/,$ d'
+#usage:
+#   ... | curl-headers
+#
+# Print curl HTTP headers.
+
+sed '/^HTTP/ {n;d;}' | `# remove line after HTTP` \
+	sed -n "1,/^$/ p" | `# print till empty line` \
+	sed '/^$/,$ d' `# remove empty line till end`
