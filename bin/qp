@@ -6,4 +6,4 @@
 # Quote path.
 
 quoteChar=${1-\"}
-exec sed 's,.*[ ].*,'$quoteChar'&'$quoteChar','
+exec sed 's,.* .*,'"$quoteChar"'&'"$quoteChar"','
