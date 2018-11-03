@@ -18,7 +18,7 @@ command='
 		g
 		'
 if [ $# -gt 0 ]; then
-	sed "$command" <<< "$1"
+	exec sed "$command" <<< "$1"
 else
-	sed "$command"
+	exec sed "$command"
 fi
