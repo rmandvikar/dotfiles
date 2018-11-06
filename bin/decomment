@@ -3,7 +3,7 @@
 #usage:
 #   ... | decomment
 #
-# Strip '//' comments.
+# Strip '//' comments, remove trailing ','.
 #
 # Note: Use for jq as,
 #   ... | decomment | jq .
@@ -15,4 +15,7 @@ exec sed -E \
 	s:^(([^"/]*"[^"]*"){0,2}[^"/]*)//.*:\1:
 	# remove empty or whitespace lines
 	/^\s*$/ d
-	'
+	' | \
+	tr -d '\n' | \
+	sed -E 's:,(\s*}):\1:g' | \
+	jq .
