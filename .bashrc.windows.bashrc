@@ -14,6 +14,8 @@ export -f jp
 #   note:
 #   paste.exe renamed to vlip.exe as gnu paste conflicts
 #   see http://www.c3scripts.com/tutorials/msdos/paste.html
+vlip() { echo "$(vlip.exe)"; }
+export -f vlip
 guidgen() { echo $(guidgen.exe); }
 export -f guidgen
 
