@@ -15,7 +15,15 @@ exec sed -E \
 	s:^(([^"/]*"[^"]*"){0,2}[^"/]*)//.*:\1:
 	# remove empty or whitespace lines
 	/^\s*$/ d
-	' | \
-	tr -d '\n' | \
-	sed -E 's:,(\s*}):\1:g' | \
-	jq .
+	# remove trailing comma
+	# see https://stackoverflow.com/questions/53201028/sed-remove-trailing-json-comma/53201424#53201424
+	/^\s*}/ {
+		H
+		x
+		s:,\n:\n:
+		b
+	}
+	x
+	/^\s*}/ d
+	/^$/ d
+	'
