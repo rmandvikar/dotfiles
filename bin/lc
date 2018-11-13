@@ -1,6 +1,6 @@
 #!/bin/sh
 
-#usage: c
+#usage: lc
 #
 # Open config in background.
 
