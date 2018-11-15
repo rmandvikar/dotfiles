@@ -1,0 +1,12 @@
+#!/bin/sh
+
+#usage:
+#   ... | jstrip
+#
+# Wrapper script to strip stuff from json input.
+#
+# Note: Use for jq as,
+#   ... | jstrip | jq .
+
+decomment | \
+	detc

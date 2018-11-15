@@ -18,8 +18,6 @@ export -f jp
 #   see http://www.c3scripts.com/tutorials/msdos/paste.html
 guidgen() { echo "$(guidgen.exe)"; }
 export -f guidgen
-detc() { echo "$(detc.exe)"; }
-export -f detc
 
 # WinMergeU is on path
 difftool() { "WinMergeU" -e -u "$@"; }
