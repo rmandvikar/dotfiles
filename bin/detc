@@ -1,0 +1,13 @@
+#!/bin/sh
+
+#usage:
+#   ... | detc
+#
+# Strip trailing ','.
+#
+# Note: Use for jq as,
+#   ... | detc | jq .
+
+sed '$ a\n' | \
+	sed -E -n 'H; x; s:,(\s*\n\s*}):\1:; P' | \
+	sed '/^$/ d'
