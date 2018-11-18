@@ -1,0 +1,19 @@
+#!/bin/sh
+
+#usage: b64urld
+#
+# Base64 url decode.
+#
+#       convert '_' to '/'
+#       convert '-' to '+'
+#       add '=' padding to make it %4 length
+#       base64 decode
+
+if [[ "$1" == "-h" ]]; then print-file-comments "$0"; exit; fi
+
+# note: can also decode with
+# 	openssl enc -base64 -d -A
+
+tr '_-' '/+' | \
+	perl -ne '$_ .= ("", "", "==", "=")[length($_) % 4]; print' | \
+	base64 --decode "$@"

@@ -1,0 +1,19 @@
+#!/bin/sh
+
+#usage: b64url
+#
+# Base64 url encode.
+#
+#       base64 encode
+#       convert '/' to '_'
+#       convert '+' to '-'
+#       remove '=' padding
+
+if [[ "$1" == "-h" ]]; then print-file-comments "$0"; exit; fi
+
+# note: can also encode with
+# 	openssl enc -base64 -A
+
+base64 "$@" | \
+	tr '/+' '_-' | \
+	tr -d '='

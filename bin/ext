@@ -13,12 +13,26 @@ command='
 		# main command
 		s,.*\.,.,
 		# test command, see http://www.grymoire.com/Unix/Sed.html#uh-59
+		# test command branches to a label if the pattern space is
+		# changed. branch command branches to a label or end of script
+		# if no label.
 		t
 		# get command, see http://www.grymoire.com/Unix/Sed.html#uh-42
+		# get command copies the hold space into pattern space
+		# (deleting the pattern space).
 		g
+		# so,
+		# 1. if there is an extension, "s" command changes the pattern
+		# space, "t" command branches to end of script, the pattern
+		# space is written (which contains the extension).
+		# 2. if there is no extension, the "s" command does not change
+		# the pattern space, "t" command does not branch, "g" command
+		# copies the hold space into pattern space deleting the pattern
+		# space as hold space is empty, the pattern space is written
+		# (which is empty).
 		'
 if [ $# -gt 0 ]; then
-	sed "$command" <<< "$1"
+	exec sed "$command" <<< "$1"
 else
-	sed "$command"
+	exec sed "$command"
 fi

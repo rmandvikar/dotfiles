@@ -10,11 +10,4 @@
 
 start=${1}
 end=${2-"$start"}
-while IFS= read -r line; do
-	# exec echo does not work
-	echo "$start""$line""$end"
-done
-if [ -n "$line" ]; then
-	# exec echo does not work
-	echo "$start""$line""$end"
-fi
+exec sed -E 's,.*,'"$start"'&'"$end"','
