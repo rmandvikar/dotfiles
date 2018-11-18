@@ -1,10 +1,11 @@
 #!/bin/sh
 
 # aliases
-alias g=git
 alias gti=git
 alias gt=git
 alias a=app
+alias g=grep
+alias gi="grep -i"
 # bfg.jar is at ~/dump/
 alias bfg="java -jar ~/dump/bfg.jar"
 alias  pr="remote --pr"
