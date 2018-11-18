@@ -1,0 +1,8 @@
+#!/bin/sh
+
+#usage:
+#   ... | deeoflf
+#
+# Remove EOF linefeed, if present.
+
+perl -pe 'chomp if eof'
