@@ -1,0 +1,26 @@
+#!/bin/sh
+
+#usage:
+#   ... | rotate
+#
+# Rotate words in text.
+
+#	rotate text ->
+#	txet etator ->
+#	etator txet ->
+#	ǝʇɐʇoɹ ʇxǝʇ
+
+sed -E \
+	'
+	# reverse chars in a line
+	# 	see http://sed.sourceforge.net/local/docs/emulating_unix.txt
+	/\n/ !G; s,(.)(.*\n),&\2\1,; // D; s/.//
+	# reverse words in a line
+	# 	see https://unix.stackexchange.com/questions/336149/print-all-words-on-lines-of-a-file-in-reverse-order/336602#336602
+	G; :loop; s,(\S+)( *)(.*\n),\3\2\1,; t loop; s,.*\n| +$,,g
+	# rotate chars
+	# 	see http://www.grymoire.com/Unix/Sed.html#uh-49
+	y/abcdefghijklmnopqrstuvwxyzɐqɔpǝɟƃɥᴉɾʞlɯuodbɹsʇnʌʍxʎz/ɐqɔpǝɟƃɥᴉɾʞlɯuodbɹsʇnʌʍxʎzabcdefghijklmnopqrstuvwxyz/
+	# hack: put punctuations back
+	s:(([<>,?!\.\(\)]+)?)([^<>,?!\.\(\) ]+)(([<>,?!\.\(\)]+)?):\4\3\1:g
+	'
