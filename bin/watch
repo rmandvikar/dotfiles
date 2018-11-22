@@ -1,5 +1,5 @@
 #!/bin/sh
-#
+
 #usage: watch [-n <delay>] <command>
 #
 # Watch a command.
