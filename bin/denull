@@ -1,0 +1,11 @@
+#!/bin/sh
+
+#usage:
+#   ... | denull
+#
+# Strip nulls.
+#
+# Note: Use for jq as,
+#   ... | denull | jq .
+
+sed -E '/null,?$/ d'
