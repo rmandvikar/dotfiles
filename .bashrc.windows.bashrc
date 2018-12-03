@@ -28,3 +28,7 @@ alias dt=difftool
 
 # scite is on path
 export EDITOR=scite # '/d/setups/wscite/SciTE.exe'
+
+# use unicode (utf8)
+#	see https://stackoverflow.com/questions/29279304/git-bash-chcp-windows7-encoding-issue
+chcp.com 65001 1>/dev/null
