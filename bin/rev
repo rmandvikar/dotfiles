@@ -1,0 +1,13 @@
+#!/bin/sh
+
+#usage:
+#   ... | rev
+#
+# Reverse chars in lines.
+
+sed -E \
+	'
+	# reverse chars in a line
+	# 	see http://sed.sourceforge.net/local/docs/emulating_unix.txt
+	/\n/ !G; s,(.)(.*\n),&\2\1,; // D; s/.//
+	'
