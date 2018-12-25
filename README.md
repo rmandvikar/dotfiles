@@ -270,6 +270,15 @@ $ jwt
 $ echo "<jwt>" | jwtd
 ```
 
+```bash
+# Clip
+$ jwt | c
+# Paste
+$ v | jwtd
+# Both, clip and paste
+$ jwt | cv | jwtd
+```
+
 ##### git hooks
 
 Each hook is comprised of sub-hooks that are placed in the '`~/.git-hooks/<hook>.d/`' dir and '`.git/hooks/<hook>.d/`' dir. This allows to
