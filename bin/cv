@@ -1,0 +1,3 @@
+#!/bin/sh
+
+clip && vlip | dos2unix
