@@ -263,6 +263,13 @@ $ git exclude "a/b/c"
 $ git exclude --edit
 ```
 
+```bash
+# Create jwt (uses jwtRS256.key, jwtRS256.cer, jwt.header, jwt.payload)
+$ jwt
+# Decode jwt (uses jwtRS256.key.pub)
+$ echo "<jwt>" | jwtd
+```
+
 ##### git hooks
 
 Each hook is comprised of sub-hooks that are placed in the '`~/.git-hooks/<hook>.d/`' dir and '`.git/hooks/<hook>.d/`' dir. This allows to
