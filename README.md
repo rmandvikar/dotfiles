@@ -93,7 +93,7 @@ $ git coe aste
 # .gitconfig (global config)
 $ gc
 # local config
-$ c
+$ lc
 ```
 
 ###### .gitconfig per $OSTYPE
