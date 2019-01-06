@@ -93,7 +93,7 @@ $ git coe aste
 # .gitconfig (global config)
 $ gc
 # local config
-$ c
+$ lc
 ```
 
 ###### .gitconfig per $OSTYPE
@@ -261,6 +261,22 @@ $ git branch-exists dev && echo "branch exists"
 # Add to .git/info/exclude file
 $ git exclude "a/b/c"
 $ git exclude --edit
+```
+
+```bash
+# Create jwt (uses jwtRS256.key, jwtRS256.cer, jwt.header, jwt.payload)
+$ jwt
+# Decode jwt (uses jwtRS256.key.pub)
+$ echo "<jwt>" | jwtd
+```
+
+```bash
+# Clip
+$ jwt | c
+# Paste
+$ v | jwtd
+# Both, clip and paste
+$ jwt | cv | jwtd
 ```
 
 ##### git hooks

@@ -84,6 +84,7 @@
 	has 	= branch -r --contains
 	no-has 	= branch -r --no-contains
 	g 		= grep
+	gi 		= grep -i
 	greph 	= grep --heading
 	m 		= merge
 	r 		= rebase
