@@ -10,6 +10,8 @@ alias eg=egrep
 alias egi="egrep -i"
 alias ..="cd .."
 alias ....="cd ../.."
+alias ap=abspath
+alias rp=relpath
 # bfg.jar is at ~/dump/
 alias bfg="java -jar ~/dump/bfg.jar"
 alias  pr="remote --pr"
