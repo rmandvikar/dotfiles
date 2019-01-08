@@ -1,0 +1,15 @@
+#!/bin/sh
+
+#usage:
+#   ... | relpath
+#
+# To relative path.
+
+pwd="$(pwd)"
+
+exec sed -E \
+	'
+	\,^/, {
+		s,^'"$pwd"'/,,
+	}
+	'

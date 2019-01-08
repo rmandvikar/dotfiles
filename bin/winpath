@@ -1,0 +1,9 @@
+#!/bin/sh
+
+#usage:
+#   ... | winpath
+#
+# Convert POSIX paths to windows and double quote.
+
+posix2windows.sed | \
+	qp

@@ -7,6 +7,7 @@ alias jira=jiraq
 alias python='winpty python.exe'
 alias c=clip
 alias v=vlip
+alias wp=winpath
 # jq-win64 is on path
 jq() { "jq-win64.exe" "$@"; } # '/d/setups/PATH/jq-win64.exe'
 export -f jq
