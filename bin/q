@@ -1,0 +1,8 @@
+#!/bin/sh
+
+#usage:
+#   ... | q
+#
+# Wrap text with quotes.
+
+exec wrap \'
