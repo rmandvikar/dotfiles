@@ -41,9 +41,25 @@ while true; do
 		-t | --tree)
 			option="tree"
 			shift
-			remoteBranch="$1"
+			if [[ "$1" != "--" ]]; then
+				# check if file exists
+				if ! git cat-file -e "$1" 2>/dev/null; then
+					# file
+					file="$1"
+				else
+					# branch
+					remoteBranch="$1"
+				fi
+			fi
+			shift
 			if [[ -z "$remoteBranch" ]]; then
 				remoteBranch=$(git remote-branch HEAD 2>/dev/null);
+			fi
+			if [[ "$1" == "--" ]]; then
+				shift
+			fi
+			if [[ -z "$file" ]]; then
+				file="$1"
 			fi
 			break ;;
 		-d | --diff)
@@ -187,6 +203,9 @@ git config --get-regex remote\..*\.url \
 						urlPart="/commits/$commit"
 					elif [[ "$option" == "tree" ]]; then
 						urlPart="/src/$remoteBranch"
+						if [[ ! -z "$file" ]]; then
+							urlPart="$urlPart/$file"
+						fi
 					elif [[ "$option" == "diff" ]]; then
 						urlPart="/branches/compare/$commit2..$commit1#diff"
 					elif [[ "$option" == "pr" ]]; then
@@ -203,6 +222,9 @@ git config --get-regex remote\..*\.url \
 						urlPart="/commit/$commit"
 					elif [[ "$option" == "tree" ]]; then
 						urlPart="/tree/$remoteBranch"
+						if [[ ! -z "$file" ]]; then
+							urlPart="$urlPart/$file"
+						fi
 					elif [[ "$option" == "diff" ]]; then
 						urlPart="/compare/$commit1...$commit2"
 					elif [[ "$option" == "pr" ]]; then
