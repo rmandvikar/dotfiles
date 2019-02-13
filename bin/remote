@@ -112,6 +112,17 @@ while true; do
 			if [ -z "$pr" ]; then
 				pr=$(git config --get branch.$(git branch-name).pr)
 			fi
+			# set/unset pr, and exit
+			case "$1" in
+				--set )
+					shift
+					git config branch.$(git branch-name).pr "$1"
+					exit ;;
+				--unset )
+					shift
+					git config --unset branch.$(git branch-name).pr
+					exit ;;
+			esac
 			break ;;
 		-b | --branches)
 			option="branches"
@@ -126,6 +137,18 @@ while true; do
 				echo 1>&2 "fatal: unknown option $1"
 				exit 1
 			fi
+			break ;;
+	esac
+done
+
+while true; do
+	case "$1" in
+		-n | --dry-run)
+			command="xecho"
+			shift
+			break ;;
+		* )
+			shift
 			break ;;
 	esac
 done
@@ -157,17 +180,6 @@ elif [[ "$option" == "tree" ]]; then
 		echo 1>&2 "fatal: remoteBranch required"
 		exit 1
 	fi
-elif [[ "$option" == "pr" ]]; then
-	case "$1" in
-		--set )
-			shift
-			git config branch.$(git branch-name).pr "$1"
-			exit ;;
-		--unset )
-			shift
-			git config --unset branch.$(git branch-name).pr
-			exit ;;
-	esac
 fi
 
 git config --get-regex remote\..*\.url \
