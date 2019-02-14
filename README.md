@@ -53,7 +53,7 @@ $ git last -2
 
 ```bash
 # Fuzzy checkout using a partial branch name (to checkout master)
-$ git coe aste
+$ git echeckout aste
 ```
 
 ###### .gitconfig include.path files
