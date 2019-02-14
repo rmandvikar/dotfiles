@@ -1,6 +1,6 @@
 #!/bin/sh
 
-#usage: git coe <branch>
+#usage: git echeckout <branch>
 #
 # Fuzzy checkout using a partial branch name.
 
