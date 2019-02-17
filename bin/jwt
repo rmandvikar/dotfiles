@@ -74,10 +74,8 @@ if [ -f "$cer" ]; then
 	
 	# payload
 	iss=$(
-		openssl x509 -noout -in "$cer" -subject | \
-			sed 's,/,\n,g' | \
-			grep "^CN" | \
-			sed 's,^CN=,,'
+		openssl x509 -noout -in "$cer" -subject -nameopt multiline | \
+		sed -n 's/ *commonName *= // p'
 	)
 	
 	payload=$(

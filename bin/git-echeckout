@@ -1,6 +1,6 @@
 #!/bin/sh
 
-#usage: git coe <branch>
+#usage: git echeckout <branch>
 #
 # Fuzzy checkout using a partial branch name.
 
@@ -17,10 +17,11 @@ if [ -z "$1" ]; then
 	exit 1
 fi
 # get tracking branches
-trackingBranches=$(git for-each-ref --format='%(upstream:short)' refs/heads \
-	| sed '/^$/d' \
-	| sed 's,$,$,' \
-	| sed 's,^,^,')
+trackingBranches=$(
+	git for-each-ref --format='%(upstream:short)' refs/heads \
+		| sed '/^$/d' \
+		| sed 's,$,$,' \
+		| sed 's,^,^,')
 # grep for all branches except current, tracking branches
 branches=($(
 	git branch -a \
@@ -34,6 +35,9 @@ branches=($(
 # die if no branches matched
 if [ ${#branches[@]} -eq 0 ]; then
 	echo 1>&2 "fatal: no branch matched"
+	if [[ $(git branch-name) == "$1" ]]; then
+		echo 1>&2 "Already on $1"
+	fi
 	exit 1
 fi
 remote=$(git remote | head -1)

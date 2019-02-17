@@ -1,0 +1,15 @@
+#!/bin/sh
+
+#usage:
+#   ... | abspath
+#
+# To absolute path.
+
+pwd="$(pwd)"
+
+exec sed -E \
+	'
+	\,^/,! {
+		s,^,'"$pwd"'/,
+	}
+	'

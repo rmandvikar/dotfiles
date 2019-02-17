@@ -1,0 +1,18 @@
+#!/bin/sh
+
+#usage:
+#   gmail-rip <file> > x.7z
+#
+# Rip base64 encoded attachment from gmail eml file.
+
+if [[ "$1" == "-h" ]]; then print-file-comments "$0"; exit; fi
+
+cat "$1" | \
+	sed \
+		'
+		0,/X-Attachment-Id/ d
+		1,/^$/ d
+		/--/ d
+		' | \
+	tr -d '\r\n' | \
+	b64d
