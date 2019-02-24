@@ -1,0 +1,30 @@
+#!/bin/sh
+
+#usage:
+#   nuget-package-version <package-name>
+#
+# Find nuget package version (case-insensitive) for given nuget
+# package name.
+
+# grep for,
+#	"<package>" for package references in csproj|packages.configs, and
+#	"<package>, for project references in csproj
+git grep -w -i \
+	-e "\"$1\"" --or -e "\"$1," \
+	--and --not -e "dll" \
+	-- "*csproj" "*packages.config" | \
+	# grep only lines containing [Vv]ersion
+	grep -i "version" | \
+	sed -E \
+		'
+		# grep for version in " as
+		#	[Vv]ersion="1.2.3.4"
+		s:.*version="([^"]+)".*:\1: i
+		# grep for version NOT in " as
+		#	Version=1.2.3.4
+		s:.*Version=([^,]+),.*:\1: i
+		# remove last 0 from version as
+		#	1.2.3.0
+		s:(([0-9]+\.){2}[0-9]+)\.0:\1:
+		' | \
+	sort -u
