@@ -16,6 +16,10 @@ if [ -z "$1" ]; then
 	echo 1>&2 "fatal: branch required"
 	exit 1
 fi
+input="$1"
+# remove remote if present
+remote=$(git remote | head -1)
+input=$(sed "s,^$remote/,," <<< "$input")
 # get tracking branches
 trackingBranches=$(
 	git for-each-ref --format='%(upstream:short)' refs/heads \
@@ -30,17 +34,16 @@ branches=($(
 		| grep -v "\->" \
 		| sed 's,^remotes/,,' \
 		| egrep -v "$trackingBranches" \
-		| grep "$1"
+		| grep "$input"
 		))
 # die if no branches matched
 if [ ${#branches[@]} -eq 0 ]; then
 	echo 1>&2 "fatal: no branch matched"
-	if [[ $(git branch-name) == "$1" ]]; then
-		echo 1>&2 "Already on $1"
+	if [[ $(git branch-name) == "$input" ]]; then
+		echo 1>&2 "Already on $input"
 	fi
 	exit 1
 fi
-remote=$(git remote | head -1)
 # die if 2+ branches matched
 if [ ${#branches[@]} -gt 1 ]; then
 	# checkout if only one local branch matched
@@ -54,6 +57,12 @@ if [ ${#branches[@]} -gt 1 ]; then
 		done
 		exit 1
 	fi
+	branches=(${branches[0]})
+fi
+# throw if branches count is not 1
+if [ ${#branches[@]} -ne 1 ]; then
+	echo 1>&2 "fatal: branches count should be 1"
+	exit 1
 fi
 # checkout local or remote branch
 branch=${branches[0]}

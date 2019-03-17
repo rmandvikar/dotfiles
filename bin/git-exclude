@@ -6,6 +6,10 @@
 
 root=$(git rev-parse --show-toplevel)
 excludeFile="$root/.git/info/exclude"
+
+mkdir -p $(dn "$excludeFile") && \
+	touch "$excludeFile"
+
 while true; do
 	case "$1" in
 		-h ) print-file-comments "$0"; exit ;;

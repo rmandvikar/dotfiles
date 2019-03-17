@@ -1,0 +1,10 @@
+#!/bin/sh
+
+#usage:
+#   ... | detreol
+#
+# Remove trailing eols.
+
+# see https://stackoverflow.com/questions/7359527/removing-trailing-starting-newlines-with-sed-awk-tr-and-friends
+sed ':a /^\n*$/ {$ d; N; }; /\n$/ b a' | \
+	deeoflf

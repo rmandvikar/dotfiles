@@ -1,0 +1,31 @@
+#!/bin/sh
+
+#usage: sh sf-app-mode (AutoUpgrade | Keep | Refresh | Remove)
+#
+# Change sf app mode.
+
+mode="$1"
+case "$mode" in
+	-h | --help) print-file-comments "$0"; exit ;;
+	AutoUpgrade | Keep | Refresh | Remove)
+		break ;;
+	-l | --list)
+		mode="list"
+		break ;;
+	*)
+		echo 1>&2 "fatal: unknown option $1"
+		exit 1 ;;
+esac
+
+if [[ "$mode" == "list" ]]; then
+	git grep --untracked --no-exclude-standard "ApplicationDebugMode" \
+		-- "*sfproj.user"
+	exit
+fi
+
+git ls-files | \
+	grep "sfproj$" | \
+	sed 's,$,.user,' | \
+	xargs -I_ sed -i \
+		's,<ApplicationDebugMode>.*</ApplicationDebugMode>'`
+		`',<ApplicationDebugMode>'"$mode"'</ApplicationDebugMode>,' _
