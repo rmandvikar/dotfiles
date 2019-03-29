@@ -5,6 +5,9 @@
 #
 # Print curl body.
 
-sed '/^HTTP/ {n;d;}' | `# remove line after HTTP` \
-	sed -n '/^$/,$ p' | `# print empty line till end` \
-	sed '/^$/ d' `# remove empty lines`
+# delete blank line after HTTP
+sed '/HTTP/ { N; s,\n$,, }' | \
+	# print empty line till end
+	sed -n '/^$/,$ p' | \
+	# remove empty lines
+	sed '/^$/ d'
