@@ -1,0 +1,17 @@
+#!/bin/sh
+
+#usage:
+#   title <text>
+#   ... | title
+#
+# To title case.
+
+command='
+	s,.,\L&,g
+	s,[[:graph:]]*,\u&,g
+'
+if [ $# -gt 0 ]; then
+	sed "$command" <<< "$1"
+else
+	sed "$command"
+fi
