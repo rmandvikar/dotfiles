@@ -28,6 +28,7 @@ while true; do
 			if [[ -z "$remoteBranch" ]]; then
 				remoteBranch=$(git remote-branch HEAD 2>/dev/null);
 			fi
+			shift
 			break ;;
 		-c | --commit)
 			option="commit"
@@ -37,6 +38,7 @@ while true; do
 				echo 1>&2 "fatal: unknown commit $1"
 				exit 1
 			fi
+			shift
 			break ;;
 		-t | --tree)
 			option="tree"
@@ -50,8 +52,8 @@ while true; do
 					# branch
 					remoteBranch="$1"
 				fi
+				shift
 			fi
-			shift
 			if [[ -z "$remoteBranch" ]]; then
 				remoteBranch=$(git remote-branch HEAD 2>/dev/null);
 			fi
@@ -60,6 +62,7 @@ while true; do
 			fi
 			if [[ -z "$file" ]]; then
 				file="$1"
+				shift
 			fi
 			break ;;
 		-d | --diff)
@@ -94,6 +97,8 @@ while true; do
 			if git branch-exists "$commit2"; then
 				commit2=$(git remote-branch "$commit2")
 			fi
+			shift
+			shift
 			break ;;
 		--prs)
 			option="pr"
