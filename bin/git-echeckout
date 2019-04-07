@@ -36,6 +36,13 @@ branches=($(
 		| egrep -v "$trackingBranches" \
 		| grep "$input"
 		))
+# put remote branches to bottom of list
+branches=($(
+	printf -- '%s\n' "${branches[@]}" | \
+		egrep -v "^$remote/"
+	printf -- '%s\n' "${branches[@]}" | \
+		egrep "^$remote/"
+	))
 # die if no branches matched
 if [ ${#branches[@]} -eq 0 ]; then
 	echo 1>&2 "fatal: no branch matched"
