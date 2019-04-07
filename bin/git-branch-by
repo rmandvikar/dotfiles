@@ -1,0 +1,25 @@
+#!/bin/sh
+
+#usage: git branch-by
+#
+# List branches by their authors, committers.
+
+case "$1" in
+	-h | --help) print-file-comments "$0"; exit ;;
+	-*)
+		echo 1>&2 "fatal: unknown option $1"
+		exit 1 ;;
+	*) break ;;
+esac
+
+command="xecho"
+if [[ ! -z "$1" ]]; then
+	command="grep -i $1"
+fi
+
+# see https://stackoverflow.com/questions/36026374/is-there-a-script-to-list-git-branches-created-by-me
+
+git for-each-ref \
+	--format=' %(authorname), %(committername) %09%09 %(refname:short)' \
+	--sort=committerdate | \
+	$command
