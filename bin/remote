@@ -16,8 +16,8 @@ GerritUrlQuery="$GerritUrl/#/q/"
 
 while true; do
 	case "$1" in
-		-h ) print-file-comments "$0"; exit ;;
-		-n | --dry-run )
+		-h | --help) print-file-comments "$0"; exit ;;
+		-n | --dry-run)
 			command="xecho"
 			shift
 			continue ;;
@@ -28,6 +28,7 @@ while true; do
 			if [[ -z "$remoteBranch" ]]; then
 				remoteBranch=$(git remote-branch HEAD 2>/dev/null);
 			fi
+			shift
 			break ;;
 		-c | --commit)
 			option="commit"
@@ -37,13 +38,31 @@ while true; do
 				echo 1>&2 "fatal: unknown commit $1"
 				exit 1
 			fi
+			shift
 			break ;;
 		-t | --tree)
 			option="tree"
 			shift
-			remoteBranch="$1"
+			if [[ "$1" != "--" ]]; then
+				# check if file exists
+				if ! git cat-file -e "$1" 2>/dev/null; then
+					# file
+					file="$1"
+				else
+					# branch
+					remoteBranch="$1"
+				fi
+				shift
+			fi
 			if [[ -z "$remoteBranch" ]]; then
 				remoteBranch=$(git remote-branch HEAD 2>/dev/null);
+			fi
+			if [[ "$1" == "--" ]]; then
+				shift
+			fi
+			if [[ -z "$file" ]]; then
+				file="$1"
+				shift
 			fi
 			break ;;
 		-d | --diff)
@@ -78,6 +97,8 @@ while true; do
 			if git branch-exists "$commit2"; then
 				commit2=$(git remote-branch "$commit2")
 			fi
+			shift
+			shift
 			break ;;
 		--prs)
 			option="pr"
@@ -187,6 +208,9 @@ git config --get-regex remote\..*\.url \
 						urlPart="/commits/$commit"
 					elif [[ "$option" == "tree" ]]; then
 						urlPart="/src/$remoteBranch"
+						if [[ ! -z "$file" ]]; then
+							urlPart="$urlPart/$file"
+						fi
 					elif [[ "$option" == "diff" ]]; then
 						urlPart="/branches/compare/$commit2..$commit1#diff"
 					elif [[ "$option" == "pr" ]]; then
@@ -203,6 +227,9 @@ git config --get-regex remote\..*\.url \
 						urlPart="/commit/$commit"
 					elif [[ "$option" == "tree" ]]; then
 						urlPart="/tree/$remoteBranch"
+						if [[ ! -z "$file" ]]; then
+							urlPart="$urlPart/$file"
+						fi
 					elif [[ "$option" == "diff" ]]; then
 						urlPart="/compare/$commit1...$commit2"
 					elif [[ "$option" == "pr" ]]; then
