@@ -16,8 +16,8 @@ GerritUrlQuery="$GerritUrl/#/q/"
 
 while true; do
 	case "$1" in
-		-h ) print-file-comments "$0"; exit ;;
-		-n | --dry-run )
+		-h | --help) print-file-comments "$0"; exit ;;
+		-n | --dry-run)
 			command="xecho"
 			shift
 			continue ;;
