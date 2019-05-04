@@ -6,14 +6,28 @@
 
 if [[ "$1" == "-h" ]]; then print-file-comments "$0"; exit; fi
 
-git config --get-regex "^alias\..*$1.*" | \
-	sed 's,^alias\.,,'
+git config --get-regex "^alias\..*" | \
+	sed 's,^alias\.,,' | \
+	awk '{
+		split($0, a);
+		if (match(a[1], /'"$1"'/)) {
+			print $0;
+		}
+	}'
+
 ls ~/bin/ | \
-	egrep "^git-.*$1.*" | \
+	grep "^git-" | \
+	sed 's,^git-,,' | \
+	awk '{
+		split($0, a);
+		if (match(a[1], /'"$1"'/)) {
+			print $0;
+		}
+	}' | \
 	while IFS= read -r line;
 	do
 		# print script path
-		echo "~/bin/$line"
+		echo "~/bin/git-$line"
 		# cat script with 1 tab indent
-		cat ~/bin/"$line" | sed 's,^,\t,'
+		cat ~/bin/"git-$line" | sed 's,^,\t,'
 	done
