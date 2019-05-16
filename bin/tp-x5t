@@ -1,0 +1,9 @@
+#!/bin/sh
+
+#usage:
+#   tp-x5t <thumbprint>
+#
+# Convert thumbprint to x5t.
+
+xxd -r -p <<< "$1" | \
+    b64url
