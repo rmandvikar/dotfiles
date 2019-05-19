@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
 #usage: jwtd
+#           [(-f | --file) <suffix>]
 #
 # Decode jwt (rsa256).
 #
@@ -15,9 +16,25 @@
 #       (see https://gist.github.com/ygotthilf/baa58da5c3dd1f69fae9)
 #       $ openssl rsa -in <name>.key -pubout -outform PEM -out <name>.key.pub
 
-if [[ "$1" == "-h" ]]; then print-file-comments "$0"; exit; fi
+while true; do
+	case "$1" in
+		-h ) print-file-comments "$0"; exit ;;
+		-f | --file)
+			file=".$2"
+			shift; shift;
+			break ;;
+		-* )
+			if [ ! -z "$1" ]; then
+				echo 1>&2 "fatal: unknown option $1"
+				exit 1
+			fi
+			exit ;;
+		* )
+			break ;;
+	esac
+done
 
-pub='jwtRS256.key.pub'
+pub="jwtRS256$file.key.pub"
 
 check_x5c()
 {

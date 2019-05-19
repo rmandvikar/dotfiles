@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
 #usage: jwt
+#           [(-f | --file) <suffix>]
 #
 # Create jwt (rsa256).
 #
@@ -23,11 +24,27 @@
 #       To see certificate's contents,
 #       $ openssl x509 -noout -text -in <name>.cer
 
-if [[ "$1" == "-h" ]]; then print-file-comments "$0"; exit; fi
+while true; do
+	case "$1" in
+		-h ) print-file-comments "$0"; exit ;;
+		-f | --file)
+			file=".$2"
+			shift; shift;
+			break ;;
+		-* )
+			if [ ! -z "$1" ]; then
+				echo 1>&2 "fatal: unknown option $1"
+				exit 1
+			fi
+			exit ;;
+		* )
+			break ;;
+	esac
+done
 
 # files
-key='jwtRS256.key'
-cer='jwtRS256.cer'
+key="jwtRS256$file.key"
+cer="jwtRS256$file.cer"
 
 # header
 header=$(< jwt.header)

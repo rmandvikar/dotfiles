@@ -1,0 +1,10 @@
+#!/bin/sh
+
+#usage:
+#   x5t-tp <x5t>
+#
+# Convert x5t to thumbprint.
+
+deeoflf <<< "$1" | \
+    b64urld | \
+    xxd -p

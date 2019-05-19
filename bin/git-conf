@@ -1,6 +1,6 @@
 #!/bin/sh
 
-#usage: git conf <alias>
+#usage: git conf <config>
 #
 # To pretty print git config (uses 'git config --get-regex' internally).
 
@@ -10,4 +10,6 @@ arg="$1"
 if [ $# -eq 2 ]; then
 	arg+=".$2"
 fi
-git config --get-regex "$arg" | sed '/^alias\./ d'
+
+git config --get-regex "$arg" | \
+	sed '/^alias\./ d'
