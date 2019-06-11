@@ -10,11 +10,14 @@ Based from [github help link](https://help.github.com/en/articles/splitting-a-su
     $ git commit --allow-empty -m "root commit"
 ```
 3. Determine the branch and sub-dir to split, and split it.
+   NOTE: sub/dir/to/split refers to the repo location, not local file.  Use / not \
 ```
     $ git filter-branch --force --prune-empty --subdirectory-filter sub/dir/to/split master
     $ git branch sub-dir1 master
 ```
 4. The files from sub-dir are placed at the root path, so move files to correct path and/or delete unneeded ones.
+   NOTE: new/dir/for/files is within this repo, not in a new space
+   NOTE: If you are repeating this step to pull files from another location, change the sub-dir1.
 ```
     $ git checkout sub-dir1
     $ mv *.* new/dir/for/files/
