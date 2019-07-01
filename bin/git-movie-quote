@@ -1,0 +1,22 @@
+#!/bin/sh
+
+#usage: git-movie-quote [<text>]
+#
+# Pick a random movie quote.
+
+if [[ "$1" == "-h" ]]; then print-file-comments "$0"; exit; fi
+
+cat "movie-quotes.txt" | \
+	grep -v "^$" | \
+	# exclude lines starting with # (comment)
+	grep -v "^#" | \
+	grep -i "$1" | \
+	shuf -n 1 | \
+	# formatting
+	sed '1 i \\' | \
+	sed 's,\\n,\n,g' | \
+	# indent lines between “, ” by space except “
+	sed '/“/,/”/ s,^, ,' | \
+		sed '/“/ s,^ “,“,' | \
+	sed 's,\\t,\t,g' | \
+	sed 's,^,\t,'
