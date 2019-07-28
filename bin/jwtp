@@ -1,0 +1,16 @@
+#!/bin/sh
+
+#usage: jwtp
+#
+# Pretty-print jwt
+
+declare token=${1:-$(</dev/stdin)}
+token=$(sed 's/[Bb]earer //' <<< "$token")
+IFS='.' read -ra pieces <<< "$token"
+declare    header=${pieces[0]}
+declare   payload=${pieces[1]}
+declare signature=${pieces[2]}
+
+printf '%s'    "${header}" | jq -C .
+printf '%s'   "${payload}" | jq -C .
+printf '%s' "${signature}"
