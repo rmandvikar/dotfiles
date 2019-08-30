@@ -190,8 +190,8 @@
 
 [pull]
 	ff 		= only
-	# do 'git rebase -p'
-	rebase 	= preserve
+	# do 'git rebase -r'
+	rebase 	= merges
 
 [rebase]
 	autoStash 			= true
