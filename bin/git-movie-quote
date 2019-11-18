@@ -6,7 +6,7 @@
 
 if [[ "$1" == "-h" ]]; then print-file-comments "$0"; exit; fi
 
-cat "movie-quotes.txt" | \
+cat ~/"movie-quotes.txt" | \
 	grep -v "^$" | \
 	# exclude lines starting with # (comment)
 	grep -v "^#" | \
