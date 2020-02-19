@@ -100,12 +100,15 @@ if [ -f "$cer" ]; then
 			sed -n 's/ *commonName *= // p'
 		)
 	fi
+	jti=$(guidgen)
 	
 	payload=$(
 		jq \
 			--arg iss "$iss" \
+			--arg jti "$jti" \
 		'
 		.iss = replace($iss) |
+		.jti |= replace($jti) |
 		denull
 		' <<< "$payload"
 	)
