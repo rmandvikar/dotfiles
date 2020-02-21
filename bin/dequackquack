@@ -1,0 +1,8 @@
+#!/bin/sh
+
+#usage:
+#   ... | dequackquack
+#
+# Strip '//' comments.
+
+exec sed -E 's,//.+,,'

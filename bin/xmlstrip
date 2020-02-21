@@ -1,0 +1,8 @@
+#!/bin/sh
+
+#usage:
+#   ... | xmlstrip
+#
+# Wrapper script to strip stuff from xml input.
+
+dequackquack
