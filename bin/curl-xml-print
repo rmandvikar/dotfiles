@@ -1,0 +1,21 @@
+#!/bin/sh
+
+#usage:
+#   curl-xml-print <curl-output>
+#
+# Print curl output.
+
+text="$1"
+if $(head -1 <<< "$text" | egrep -q "^HTTP/"); then
+	headers=$(curl-headers  <<< "$text")
+	   body=$(curl-body     <<< "$text")
+else
+	body="$text"
+fi
+
+if [ ! -z "$headers" ]; then
+	echo "$headers"
+	echo ""
+fi
+
+xml fo <<< "$body"
