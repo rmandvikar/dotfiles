@@ -1,0 +1,8 @@
+#!/bin/sh
+
+#usage:
+#   ... | despace
+#
+# Strip spaces.
+
+exec sed -E 's/ // g'

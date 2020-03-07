@@ -1,0 +1,8 @@
+#!/bin/sh
+
+#usage:
+#   ... | dexmltag
+#
+# Strip '<xml>', '</xml>' tags.
+
+exec sed -E 's,</?[^>]+>,, g'

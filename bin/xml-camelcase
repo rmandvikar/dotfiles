@@ -1,0 +1,8 @@
+#!/bin/sh
+
+#usage:
+#   ... | xml-camelcase
+#
+# Change xml elements to camel case.
+
+exec sed -E 's,</?.,\L&,g'

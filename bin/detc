@@ -9,5 +9,5 @@
 #   ... | detc | jq .
 
 sed '$ a\n' | \
-	sed -E -n 'H; x; s:,(\s*\n\s*}):\1:; P' | \
+	sed -E -n 'H; x; s:,(\s*\n\s*(}|])):\1:; P' | \
 	sed '/^$/ d'

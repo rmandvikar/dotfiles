@@ -1,0 +1,8 @@
+#!/bin/sh
+
+#usage:
+#   ... | xml-pascalcase
+#
+# Change xml elements to pascal case.
+
+exec sed -E 's,</?.,\U&,g'

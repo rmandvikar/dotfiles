@@ -94,12 +94,21 @@ if [ -f "$cer" ]; then
 		openssl x509 -noout -in "$cer" -subject -nameopt multiline | \
 		sed -n 's/ *commonName *= // p'
 	)
+	if [ "$iss" == "issuer" ]; then
+		iss=$(
+			openssl x509 -noout -in "$cer" -issuer -nameopt multiline | \
+			sed -n 's/ *commonName *= // p'
+		)
+	fi
+	jti=$(guidgen)
 	
 	payload=$(
 		jq \
 			--arg iss "$iss" \
+			--arg jti "$jti" \
 		'
 		.iss = replace($iss) |
+		.jti |= replace($jti) |
 		denull
 		' <<< "$payload"
 	)
