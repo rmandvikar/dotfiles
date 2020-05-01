@@ -46,18 +46,30 @@ done
 key="jwtRS256$file.key"
 cer="jwtRS256$file.cer"
 
+# settings
+now=$(date +%s)
+if [ -f "jwt.settings" ]; then
+	settings=$(< jwt.settings)
+fi
+exp=$(jq '.exp // empty' <<< "$settings")
+if [ -z "$exp" ]; then
+	exp=$(("$now" +600))
+fi
+
 # header
 header=$(< jwt.header)
 
 # payload
 payload=$(
 	jq \
-		--arg timeStr "$(date +%s)" \
+		--arg now "$now" \
+		--arg exp "$exp" \
 	'
-	($timeStr | tonumber) as $timeNum |
-	.nbf = $timeNum |
-	.exp = ($timeNum + 600) |
-	.iat = $timeNum
+	($now | tonumber) as $now |
+	($exp | tonumber) as $exp |
+	.nbf = $now |
+	.exp = $exp |
+	.iat = $now
 	' < jwt.payload
 )
 
