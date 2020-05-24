@@ -46,11 +46,13 @@ done
 key="jwtRS256$file.key"
 cer="jwtRS256$file.cer"
 
-# settings
 now=$(date +%s)
+
+# settings
 if [ -f "jwt.settings" ]; then
 	settings=$(< jwt.settings)
 fi
+
 exp=$(jq '.exp // empty' <<< "$settings")
 if [ -z "$exp" ]; then
 	exp=$(("$now" +600))
