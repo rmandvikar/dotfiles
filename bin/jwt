@@ -19,7 +19,7 @@
 #       $ ssh-keygen -t rsa -b 4096 -f <name>.key
 #       
 #       To create a certificate from private rsa key,
-#       $ openssl req -new -x509 -key <name>.key -out <name>.cer
+#       $ winpty openssl pkcs12 -in <name>.pfx -nokeys -clcerts -out <name>.cer
 #       
 #       To see certificate's contents,
 #       $ openssl x509 -noout -text -in <name>.cer
