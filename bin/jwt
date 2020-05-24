@@ -58,6 +58,8 @@ if [ -z "$exp" ]; then
 	exp=$(("$now" +600))
 fi
 
+iss=$(jq -r '.iss // empty' <<< "$settings")
+
 # header
 header=$(< jwt.header)
 
@@ -104,15 +106,17 @@ if [ -f "$cer" ]; then
 	)
 	
 	# payload
-	iss=$(
-		openssl x509 -noout -in "$cer" -subject -nameopt multiline | \
-		sed -n 's/ *commonName *= // p'
-	)
-	if [ "$iss" == "issuer" ]; then
+	if [ -z "$iss" ]; then
 		iss=$(
-			openssl x509 -noout -in "$cer" -issuer -nameopt multiline | \
+			openssl x509 -noout -in "$cer" -subject -nameopt multiline | \
 			sed -n 's/ *commonName *= // p'
 		)
+		if [ "$iss" == "issuer" ]; then
+			iss=$(
+				openssl x509 -noout -in "$cer" -issuer -nameopt multiline | \
+				sed -n 's/ *commonName *= // p'
+			)
+		fi
 	fi
 	jti=$(guidgen)
 	
