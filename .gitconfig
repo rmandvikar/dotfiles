@@ -217,7 +217,7 @@
 [init]
 	templateDir = ~/.git-templates
 [core]
-	hooksPath 		= ~/.git-hooks
+	#hooksPath 		= ~/.git-hooks
 	excludesfile 	= ~/.gitexcludes
 
 # url shortcuts
