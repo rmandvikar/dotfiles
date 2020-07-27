@@ -19,7 +19,7 @@
 #       $ ssh-keygen -t rsa -b 4096 -f <name>.key
 #       
 #       To create a certificate from private rsa key,
-#       $ openssl req -new -x509 -key <name>.key -out <name>.cer
+#       $ winpty openssl pkcs12 -in <name>.pfx -nokeys -clcerts -out <name>.cer
 #       
 #       To see certificate's contents,
 #       $ openssl x509 -noout -text -in <name>.cer
@@ -46,15 +46,19 @@ done
 key="jwtRS256$file.key"
 cer="jwtRS256$file.cer"
 
-# settings
 now=$(date +%s)
+
+# settings
 if [ -f "jwt.settings" ]; then
 	settings=$(< jwt.settings)
 fi
+
 exp=$(jq '.exp // empty' <<< "$settings")
 if [ -z "$exp" ]; then
 	exp=$(("$now" +600))
 fi
+
+iss=$(jq -r '.iss // empty' <<< "$settings")
 
 # header
 header=$(< jwt.header)
@@ -102,15 +106,17 @@ if [ -f "$cer" ]; then
 	)
 	
 	# payload
-	iss=$(
-		openssl x509 -noout -in "$cer" -subject -nameopt multiline | \
-		sed -n 's/ *commonName *= // p'
-	)
-	if [ "$iss" == "issuer" ]; then
+	if [ -z "$iss" ]; then
 		iss=$(
-			openssl x509 -noout -in "$cer" -issuer -nameopt multiline | \
+			openssl x509 -noout -in "$cer" -subject -nameopt multiline | \
 			sed -n 's/ *commonName *= // p'
 		)
+		if [ "$iss" == "issuer" ]; then
+			iss=$(
+				openssl x509 -noout -in "$cer" -issuer -nameopt multiline | \
+				sed -n 's/ *commonName *= // p'
+			)
+		fi
 	fi
 	jti=$(guidgen)
 	
