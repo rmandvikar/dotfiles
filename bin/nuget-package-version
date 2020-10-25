@@ -12,10 +12,19 @@ while true; do
 		-h | --help) print-file-comments "$0"; exit ;;
 		-l | --list)
 			option="list"
-			shift
+			shift ;;
+		-* )
+			if [ ! -z "$1" ]; then
+				echo 1>&2 "fatal: unknown option $1"
+				exit 1
+			fi
 			break ;;
 		* )
-			break ;;
+			if [ -z "$1" ]; then
+				break
+			fi
+			name="$1"
+			shift ;;
 	esac
 done
 
@@ -23,7 +32,7 @@ done
 #	"<package>" for package references in csproj|packages.configs, and
 #	"<package>, for project references in csproj
 text=$(git grep -w -i \
-	-e "\"$1\"" --or -e "\"$1," \
+	-e "\"$name\"" --or -e "\"$name," \
 	--and --not -e "dll" \
 	-- "*csproj" "*packages.config" | \
 	# grep only lines containing [Vv]ersion
