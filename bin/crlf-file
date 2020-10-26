@@ -1,0 +1,13 @@
+#!/bin/sh
+
+#usage:
+#   crlf-file
+#   ... | crlf-file
+#
+# Convert file line endings to crlf.
+
+if [ $# -gt 0 ]; then
+	unix2dos "$@" 2>/dev/null
+else
+	exec xargs -I_ unix2dos _ 2>/dev/null
+fi
