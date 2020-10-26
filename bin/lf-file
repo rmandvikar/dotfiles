@@ -1,0 +1,13 @@
+#!/bin/sh
+
+#usage:
+#   lf-file
+#   ... | lf-file
+#
+# Convert file line endings to lf.
+
+if [ $# -gt 0 ]; then
+	dos2unix "$@" 2>/dev/null
+else
+	exec xargs -I_ dos2unix _ 2>/dev/null
+fi
