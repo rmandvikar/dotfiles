@@ -9,14 +9,15 @@ if [[ "$1" == "-h" ]]; then print-file-comments "$0"; exit; fi
 # insert snippet (in idempotent way)
 snippet=~/x64.snippet
 git grep -L '<PlatformTarget>x64</PlatformTarget>' -- "*csproj" | \
-    xargs -I_ \
-    sed -i "\,^</Project>$, {
-            r $snippet
-            a </Project>
-            d
-        }" _
+	xargs -I_ \
+	sed -i \
+		"\,^</Project>$, {
+			r $snippet
+			a </Project>
+			d
+		}" _
 
 # convert line endings (lf to crlf)
 git status -s | \
-    cuts | \
-    xargs -I_ unix2dos _ 2>/dev/null
+	cuts | \
+	xargs -I_ unix2dos _ 2>/dev/null
