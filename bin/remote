@@ -3,7 +3,7 @@
 #usage: remote
 #           [(-l | --log)       [<branch>]]
 #           [(-c | --commit)    [<commit>]]
-#           [(-t | --tree)      [<branch>]]
+#           [(-t | --tree)      [<branch>] -- [<path>]]
 #           [(-d | --diff)      <commit1> [<commit2>]]
 #           [--pr               [<pr>]]
 #           [(-b | --branches)]

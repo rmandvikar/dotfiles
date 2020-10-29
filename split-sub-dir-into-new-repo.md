@@ -9,9 +9,9 @@ Based from [github help link](https://help.github.com/en/articles/splitting-a-su
     $ git rm -rf .
     $ git commit --allow-empty -m "root commit"
 ```
-3. Determine the branch and sub-dir to split, and split it.
+3. Determine the branch (`master` in this case) and sub-dir to split, and split it.
 ```
-    $ git filter-branch --force --prune-empty --subdirectory-filter sub/dir/to/split master
+    $ git filter-branch --force --prune-empty --subdirectory-filter sub/dir/1/to/split/ master
     $ git branch sub-dir1 master
 ```
 4. The files from sub-dir are placed at the root path, so move files to correct path and/or delete unneeded ones.
