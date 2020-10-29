@@ -73,6 +73,9 @@
 	drwc 	= diff --color-words --staged
 	ds 		= diff --ignore-all-space
 	db 		= diff --ignore-blank-lines
+	# ignore insignificant changes
+	di 		= diff --ignore-all-space --ignore-blank-lines
+	dic 	= diff --ignore-all-space --ignore-blank-lines --staged
 	sb 		= show-branch
 	wc 		= whatchanged --oneline
 	rp 		= rev-parse
