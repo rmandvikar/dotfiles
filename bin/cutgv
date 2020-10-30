@@ -1,0 +1,4 @@
+#!/bin/sh
+
+# get grepped value honoring git grep's linenumber, column settings
+exec grep ":" | exec sed -E 's/[^:]+:([0-9]+:){0,2}//'
