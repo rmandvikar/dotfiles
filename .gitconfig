@@ -96,7 +96,7 @@
 	f 		= fetch
 	p 		= pull
 	bn 		= branch-name
-	rdiff 	= range-diff
+	ranged 	= range-diff
 	
 	## write ##
 	a 		= add
