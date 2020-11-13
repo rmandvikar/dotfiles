@@ -1,0 +1,33 @@
+#!/bin/sh
+
+#usage:
+#   ... | replace "<regexp>" "<replacement>"
+#
+# sed replace.
+
+if [[ "$1" == "-h" ]]; then print-file-comments "$0"; exit; fi
+
+if [[ ! -z "$3" ]]; then
+	echo 1>&2 "fatal: too many args"
+	exit 1
+fi
+regexp="$1"
+replacement="$2"
+
+# pick delim that's not present in sed s/// expression
+for ch in "/" "," "|" "@"; do
+	if [[ "$regexp" != *"$ch"* && "$replacement" != *"$ch"* ]]; then
+		delim="$ch"
+		break
+	fi
+done
+if [[ -z "$delim" ]]; then
+	echo 1>&2 "fatal: no delim possible"
+	exit 1
+fi
+
+xargs -I____ \
+	sed -i -E 's'"$delim""$regexp""$delim""$replacement""$delim"' g' ____
+git status -s | \
+	cuts | \
+	crlf-file
