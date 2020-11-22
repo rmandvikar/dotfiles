@@ -58,6 +58,8 @@
 	## readonly ##
 	s 		= status -s
 	sl 		= status
+	# conflict (U=Unmerged) files
+	sc 		= diff --name-only --diff-filter=U
 	b 		= branch
 	co 		= checkout
 	eco 	= echeckout
