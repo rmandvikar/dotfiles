@@ -58,6 +58,8 @@
 	## readonly ##
 	s 		= status -s
 	sl 		= status
+	# conflict (U=Unmerged) files
+	sc 		= diff --name-only --diff-filter=U
 	b 		= branch
 	co 		= checkout
 	eco 	= echeckout
@@ -179,7 +181,7 @@
 [merge]
 	log 			= 1000000000 # true defaults to 20
 	ff 				= false
-	#conflictStyle 	= diff3
+	conflictStyle 	= diff3
 
 [merge "ours"]
 	driver = ~/git-merge-keep-ours.sh %O %A %B
