@@ -1,0 +1,21 @@
+#!/bin/sh
+
+#usage:
+#   ... | append "<pattern>"
+#
+# sed append (from file '.append.in').
+
+if [[ "$1" == "-h" ]]; then print-file-comments "$0"; exit; fi
+
+if [[ ! -z "$2" ]]; then
+	echo 1>&2 "fatal: too many args"
+	exit 1
+fi
+pattern="$1"
+
+file=".append.in"
+xargs -I____ \
+	sed -i '/'"$pattern"'/ r '"$file" ____
+git status -s | \
+	cuts | \
+	crlf-file
