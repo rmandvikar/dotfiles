@@ -28,7 +28,7 @@ else
 	fi
 	case "$OSTYPE" in
 		linux* | msys*)
-			exec echo $args | xargs -r $EDITOR &
+			exec echo $args | sed 's,\r,, g' | xargs -r $EDITOR &
 			;;
 		darwin*)
 			exec echo $args | xargs $EDITOR &
