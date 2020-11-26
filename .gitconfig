@@ -58,6 +58,8 @@
 	## readonly ##
 	s 		= status -s
 	sl 		= status
+	# conflict (U=Unmerged) files
+	sc 		= diff --name-only --diff-filter=U
 	b 		= branch
 	co 		= checkout
 	eco 	= echeckout
@@ -96,7 +98,7 @@
 	f 		= fetch
 	p 		= pull
 	bn 		= branch-name
-	rdiff 	= range-diff
+	ranged 	= range-diff
 	
 	## write ##
 	a 		= add
@@ -138,7 +140,7 @@
 	two 	= "format:%C(auto)%h%C(reset) - %C(#ffeeff)%ad%C(reset) %C(#ffaaff)(%ar)%C(reset)%C(auto)%d%C(reset)%n  %C(#ffff99)%s%C(reset) - %C(#ffb799)%aN%C(reset)"
 	four 	= "format:%C(auto)%h%C(reset)%C(auto)%d%C(reset)%n  %C(#ffff99)%s%C(reset)%n  %C(#ffeeff)%ad%C(reset) %C(#ffaaff)(%ar)%C(reset) - %C(#ffb799)%aN%C(reset)%n  %C(#ffeeff)%cd%C(reset) %C(#ffaaff)(%cr)%C(reset) - %C(#ffb799)%cN%C(reset)"
 	note 	= "format:%H"
-	pr 		= "format:%s"
+	subject = "format:%s"
 [alias]
 	#hint: add --all to see whole repo
 	l 		= log --graph --pretty=two
@@ -153,7 +155,8 @@
 	l1 		= log --pretty=one
 	l2 		= log --pretty=two
 	l4 		= log --pretty=four
-	pr 		= log --pretty=pr --no-decorate --no-merges --topo-order --reverse
+	pr 		= log --pretty=subject --no-decorate --no-merges --topo-order --reverse
+	rn 		= log --pretty=subject --no-decorate --first-parent --topo-order --reverse
 
 # default options for commands
 [log]
@@ -179,7 +182,7 @@
 [merge]
 	log 			= 1000000000 # true defaults to 20
 	ff 				= false
-	#conflictStyle 	= diff3
+	conflictStyle 	= diff3
 
 [merge "ours"]
 	driver = ~/git-merge-keep-ours.sh %O %A %B
