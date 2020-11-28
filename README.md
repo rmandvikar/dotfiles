@@ -52,8 +52,8 @@ $ git last -2
 ```
 
 ```bash
-# Fuzzy checkout using a partial branch name (to checkout master)
-$ git echeckout aste
+# Fuzzy checkout using a partial branch name (to checkout main)
+$ git echeckout ain
 ```
 
 ###### .gitconfig include.path files
@@ -246,7 +246,7 @@ $ remote --pr 42
 
 ```bash
 # Diff commit patches (to verify if two commits are cherrypicks)
-$ pdiff master dev
+$ pdiff main dev
 
 # Diff commit range patches (to verify rebase with conflicts is good)
 $ pdiff dev'..pdiff' dev..pdiff
@@ -358,8 +358,8 @@ $ skip_hooks=1 git commit
 # prompt format
 <hh:mm:ss> <path> (<branch>) [<branchStatus>] <hash> <user>@<host> MINGW64
 # example with remote branch status
-03:14:15 ~ (master) - 8a338cc me@Machine MINGW64
-03:14:15 ~ (master) -0,+1 4ea746e me@Machine MINGW64
+03:14:15 ~ (main) - 8a338cc me@Machine MINGW64
+03:14:15 ~ (main) -0,+1 4ea746e me@Machine MINGW64
 # example with no remote branch status
 03:14:15 ~ (prompt)  8a338cc me@Machine MINGW64
 ```
