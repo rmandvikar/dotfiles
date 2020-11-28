@@ -5,14 +5,14 @@ Based from [github help link](https://help.github.com/en/articles/splitting-a-su
 1. Start from an existing repo.
 2. Checkout a new branch with an empty commit.
 ```
-    $ git checkout --orphan split-master
+    $ git checkout --orphan split-main
     $ git rm -rf .
     $ git commit --allow-empty -m "root commit"
 ```
-3. Determine the branch (`master` in this case) and sub-dir to split, and split it.
+3. Determine the branch (`main` in this case) and sub-dir to split, and split it.
 ```
-    $ git filter-branch --force --prune-empty --subdirectory-filter sub/dir/1/to/split/ master
-    $ git branch sub-dir1 master
+    $ git filter-branch --force --prune-empty --subdirectory-filter sub/dir/1/to/split/ main
+    $ git branch sub-dir1 main
 ```
 4. The files from sub-dir are placed at the root path, so move files to correct path and/or delete unneeded ones.
 ```
@@ -24,27 +24,27 @@ Based from [github help link](https://help.github.com/en/articles/splitting-a-su
 ```
 5. If there are multiple sub-dirs to split, split them.
 ```
-    $ git branch -f master origin/master
+    $ git branch -f main origin/main
     # Repeat steps 3-4.
 ```
-6. Merge all sub-dir branches into `split-master`.
+6. Merge all sub-dir branches into `split-main`.
 ```
-    $ git checkout split-master
+    $ git checkout split-main
     $ git merge --allow-unrelated-histories sub-dir1
     # repeat git merge for other sub-dirs
 ```
 7. Commit dot files that should NOT show up in diff as `.gitignore`, `.gitignore`, `.mailmap`, etc.
-8. Point `master` to HEAD.
+8. Point `main` to HEAD.
 ```
-    $ git branch -f master
-    $ git checkout master
+    $ git branch -f main
+    $ git checkout main
 ```
 9. Change the remote url to point to the new repo. Create a new repo if one does not exist.
 ```
     $ git remote set-url origin <new-repo-url>
 ```
-10. Force push `master`.
+10. Force push `main`.
 ```
-    $ git push -f origin master
+    $ git push -f origin main
 ```
 11. Start making changes on a new branch.

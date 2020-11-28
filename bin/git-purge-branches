@@ -24,7 +24,7 @@ branches=$(
 	git branch --merged \
 	| egrep -v "^(\*)" \
 	| cut -c3- \
-	| egrep -v "^(master|next|pu|maint|todo)$" \
+	| egrep -v "^(master|main|next|pu|maint|todo)$" \
 	| egrep -v "^(dev|stg|stage|last)$" \
 	| egrep -v "^(bak/|cr/)" \
 	| egrep -v "^(_)$" \

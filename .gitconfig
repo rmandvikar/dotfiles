@@ -199,6 +199,8 @@
 
 [branch "master"]
 	mergeOptions = --no-ff
+[branch "main"]
+	mergeOptions = --no-ff
 
 [pull]
 	ff 		= only
@@ -227,7 +229,8 @@
 
 # templates
 [init]
-	templateDir = ~/.git-templates
+	templateDir 	= ~/.git-templates
+	defaultBranch 	= main
 [core]
 	#hooksPath 		= ~/.git-hooks
 	excludesfile 	= ~/.gitexcludes
