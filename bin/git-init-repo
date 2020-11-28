@@ -11,6 +11,6 @@ git checkout -f --orphan $branch && \
 	git rm -rf --ignore-unmatch . && \
 	git init && \
 	git commit --allow-empty -m "Root commit" && \
-	git branch -f master $branch && \
-	git checkout master && \
+	git branch -f main $branch && \
+	git checkout main && \
 	git branch -d -f $branch
