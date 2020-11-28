@@ -2,7 +2,7 @@
 
 #usage: git init-repo
 #
-# Init a repo with an empty initial (root) commit.
+# Init a repo with an empty root commit.
 
 if [[ "$1" == "-h" ]]; then print-file-comments "$0"; exit; fi
 
@@ -10,7 +10,7 @@ branch="branch-"$(random)
 git checkout -f --orphan $branch && \
 	git rm -rf --ignore-unmatch . && \
 	git init && \
-	git commit --allow-empty -m "Initial commit" && \
+	git commit --allow-empty -m "Root commit" && \
 	git branch -f master $branch && \
 	git checkout master && \
 	git branch -d -f $branch
