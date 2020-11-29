@@ -28,6 +28,7 @@
 	mnemonicPrefix 	= true
 	noprefix 		= true
 	colorMoved 		= true
+	renames 		= copies
 [difftool]
 	prompt 	= false
 [difftool "winmerge"]
