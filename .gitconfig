@@ -14,6 +14,7 @@
 	preloadindex 	= true
 	fscache 		= true
 	pager 			= less -x4
+	quotePath 		= false
 [gc]
 	#auto = 256 #default 6700
 
@@ -28,6 +29,7 @@
 	mnemonicPrefix 	= true
 	noprefix 		= true
 	colorMoved 		= true
+	renames 		= copies
 [difftool]
 	prompt 	= false
 [difftool "winmerge"]
@@ -92,6 +94,8 @@
 	no-has 	= branch -r --no-contains
 	g 		= grep
 	gi 		= grep -i
+	ga 		= grep --untracked --no-exclude-standard
+	gai 	= grep --untracked --no-exclude-standard -i
 	greph 	= grep --heading
 	m 		= merge
 	r 		= rebase
@@ -195,6 +199,8 @@
 
 [branch "master"]
 	mergeOptions = --no-ff
+[branch "main"]
+	mergeOptions = --no-ff
 
 [pull]
 	ff 		= only
@@ -223,7 +229,8 @@
 
 # templates
 [init]
-	templateDir = ~/.git-templates
+	templateDir 	= ~/.git-templates
+	defaultBranch 	= main
 [core]
 	#hooksPath 		= ~/.git-hooks
 	excludesfile 	= ~/.gitexcludes

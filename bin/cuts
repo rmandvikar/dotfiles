@@ -1,4 +1,13 @@
 #!/bin/sh
 
-# cut and get 3+ chars
-exec cut -c ${1-3}-
+# for renames (status code as C090, R100, etc.), remove <orig-file> also
+#    A <new>
+#    M <modified>
+#   C090 <orig-file> -> <file>
+#   R100 <orig-file> -> <file>
+#   A	<new>
+#   M	<modified>
+#   C090	<orig-file>	<file>
+#   R100	<orig-file>	<file>
+exec sed -E \
+	's,([^\t]+( |\t))+,,'
