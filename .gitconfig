@@ -14,6 +14,7 @@
 	preloadindex 	= true
 	fscache 		= true
 	pager 			= less -x4
+	quotePath 		= false
 [gc]
 	#auto = 256 #default 6700
 
