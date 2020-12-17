@@ -1,0 +1,8 @@
+#!/bin/sh
+
+#usage:
+#   ... | trim
+#
+# Trim.
+
+exec ltrim | rtrim
