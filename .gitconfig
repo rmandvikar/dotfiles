@@ -145,6 +145,7 @@
 	four 	= "format:%C(auto)%h%C(reset)%C(auto)%d%C(reset)%n  %C(#ffff99)%s%C(reset)%n  %C(#ffeeff)%ad%C(reset) %C(#ffaaff)(%ar)%C(reset) - %C(#ffb799)%aN%C(reset)%n  %C(#ffeeff)%cd%C(reset) %C(#ffaaff)(%cr)%C(reset) - %C(#ffb799)%cN%C(reset)"
 	note 	= "format:%H"
 	subject = "format:%s"
+	rn 		= "format:%s - %aN"
 [alias]
 	#hint: add --all to see whole repo
 	l 		= log --graph --pretty=two
@@ -160,7 +161,7 @@
 	l2 		= log --pretty=two
 	l4 		= log --pretty=four
 	pr 		= log --pretty=subject --no-decorate --no-merges --topo-order --reverse
-	rn 		= log --pretty=subject --no-decorate --first-parent --topo-order --reverse
+	rn 		= log --pretty=rn --no-decorate --first-parent --topo-order --reverse
 
 # default options for commands
 [log]
