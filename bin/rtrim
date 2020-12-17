@@ -1,0 +1,8 @@
+#!/bin/sh
+
+#usage:
+#   ... | rtrim
+#
+# Right trim.
+
+exec sed -E 's/[[:blank:]]+$//'
