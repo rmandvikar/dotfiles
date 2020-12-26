@@ -1,0 +1,11 @@
+#!/bin/sh
+
+#usage: git pushu
+#
+# Push and track current branch.
+
+if [[ "$1" == "-h" ]]; then print-file-comments "$0"; exit; fi
+
+command=$(echo "git push -u $(git remote) $(git branch-name)")
+echo -e "${White}$command${None}"
+$command
