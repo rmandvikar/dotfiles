@@ -1,0 +1,69 @@
+#!/bin/sh
+
+#usage:
+#   version
+#       [(-l | --list)]
+#       [(-u | --update) <version>]
+#
+# Show nuget package's version or update version.
+
+while true; do
+	case "$1" in
+		-h | --help) print-file-comments "$0"; exit ;;
+		-l | --list)
+			option="list"
+			shift ;;
+		-u | --update)
+			option="update"
+			shift
+			version="$1"
+			if [[ -z "$version" ]]; then
+				echo 1>&2 "fatal: version cannot be empty"
+				exit 1
+			fi
+			shift
+			break ;;
+		-* )
+			if [ ! -z "$1" ]; then
+				echo 1>&2 "fatal: unknown option $1"
+				exit 1
+			fi
+			break ;;
+		* )
+			if [ -z "$1" ]; then
+				break
+			fi
+			shift ;;
+	esac
+done
+# defaults
+if [ -z "$option" ]; then
+	option="list"
+fi
+version_files=".version-files"
+
+# update
+if [[ "$option" == "update" ]]; then
+	cat "$version_files" | \
+		egrep "(csproj)|(buildfile.json)" | \
+		xargs -I__ \
+		sed -i -E \
+			'
+			# csproj
+			s_(<Version>).+(</Version)_\1'"$version"'\2_
+			# buildfile.json
+			s_("version": ?)".+"_\1"'"$version"'"_
+			' __
+
+	# crlf file
+	git status -s | \
+		cuts | \
+		crlf-file
+	exit
+fi
+
+# list
+cat "$version_files" | \
+	egrep "(csproj)|(buildfile.json)" | \
+	xargs -I__ \
+	git grep -i -e '["<]version[>"]' -- __
