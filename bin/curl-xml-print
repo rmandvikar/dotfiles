@@ -18,4 +18,6 @@ if [ ! -z "$headers" ]; then
 	echo ""
 fi
 
-xml fo <<< "$body"
+if [ ! -z "$body" ]; then
+	xml fo <<< "$body"
+fi
