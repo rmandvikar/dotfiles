@@ -1,0 +1,8 @@
+#!/bin/sh
+
+#usage:
+#   ... | ltrim
+#
+# Left trim.
+
+exec sed -E 's/^[[:blank:]]+//'
