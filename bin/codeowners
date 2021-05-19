@@ -1,0 +1,13 @@
+#!/bin/sh
+
+#usage:
+#   ... | codeowners
+#
+# Prep codeowners file.
+
+sed -E 's,[[:blank:]]+,\n, g' | \
+	sort -u | \
+	sed 's,$, ,' | \
+	tr -d '\n' | \
+	rtrim | \
+	eoflf
