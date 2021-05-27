@@ -13,7 +13,7 @@
 	editor 			= scite
 	preloadindex 	= true
 	fscache 		= true
-	pager 			= less -x4
+	pager 			= less -x4 -q
 	quotePath 		= false
 [gc]
 	#auto = 256 #default 6700
@@ -162,6 +162,7 @@
 	l4 		= log --pretty=four
 	pr 		= log --pretty=subject --no-decorate --no-merges --topo-order --reverse
 	rn 		= log --pretty=rn --no-decorate --first-parent --topo-order --reverse
+	ld 		= log --graph --pretty=two --decorate-refs-exclude=refs/tags
 
 # default options for commands
 [log]
