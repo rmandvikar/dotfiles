@@ -1,0 +1,28 @@
+#!/bin/sh
+
+#usage:
+#   ... | newcsproj2
+#
+# Convert multiline PackageReference with Version element
+# to oneline with Version attribute.
+#
+# ex: converts
+#
+#  <PackageReference Include="X">
+#    <Version>1.2.3</Version>
+#  </PackageReference>
+#
+# to
+#
+# <PackageReference Include="X" Version="1.2.3" />
+
+sed -E \
+	'
+	s,<Version>(.+)</Version>,Version="\1",
+	s,</PackageReference,/,
+	' | \
+sed -E -z \
+	'
+	s,>\n[[:space:]]+(Version), \1, g
+	s,(")\n[[:space:]]+(/>),\1 \2, g
+	'

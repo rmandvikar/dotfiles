@@ -1,0 +1,24 @@
+#!/bin/sh
+
+#usage:
+#   ... | newcsproj1
+#
+# Convert packages.config to PackageReference tags.
+#
+# ex: converts
+#
+#  <package id="X" version="1.2.3" targetFramework="net48" />
+#
+# to
+#
+# <PackageReference Include="X" Version="1.2.3" />
+
+sed -E \
+	'
+	\,<?xml.+?>, d
+	s,packages,ItemGroup,
+	s,package,PackageReference,
+	s,id,Include,
+	s,version,Version,
+	s,targetFramework=".+" ,,
+	'
