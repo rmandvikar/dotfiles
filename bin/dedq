@@ -1,0 +1,8 @@
+#!/bin/sh
+
+#usage:
+#   ... | dedq
+#
+# Unwrap text with double quotes.
+
+exec unwrap \"

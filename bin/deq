@@ -1,0 +1,8 @@
+#!/bin/sh
+
+#usage:
+#   ... | deq
+#
+# Unwrap text with quotes.
+
+exec unwrap \'

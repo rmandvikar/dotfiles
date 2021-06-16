@@ -1,0 +1,13 @@
+#!/bin/sh
+
+#usage:
+#   ... | unwrap \"
+#   ... | unwrap \'
+#   ... | unwrap \(
+#   ... | unwrap \( \)
+#
+# Unwrap text with args.
+
+start=${1}
+end=${2-"$start"}
+exec sed -E 's,'"$start"'(.+)'"$end"',\1,'
