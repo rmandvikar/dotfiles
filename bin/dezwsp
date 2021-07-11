@@ -1,0 +1,13 @@
+#!/bin/sh
+
+#usage:
+#   ... | dezwsp
+#
+# Strip zwsp.
+#
+# Note: Use for jq as,
+#   ... | dezwsp | jq .
+
+# see https://superuser.com/questions/207207/how-can-i-delete-u200b-zero-width-space-using-sed
+
+tr -d $'\u200B'

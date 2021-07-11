@@ -9,4 +9,5 @@
 #   ... | jstrip | jq .
 
 decomment | \
-	detc
+	detc | \
+	dezwsp
