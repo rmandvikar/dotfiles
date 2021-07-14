@@ -19,7 +19,7 @@ export -f jp
 #   see http://www.c3scripts.com/tutorials/msdos/paste.html
 vlip() { echo "$(vlip.exe)"; }
 export -f vlip
-guidgen() { echo "$(guidgen.exe)"; }
+guidgen() { "guidgen.exe" "$@"; }
 export -f guidgen
 
 # WinMergeU is on path
