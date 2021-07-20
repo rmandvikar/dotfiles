@@ -53,6 +53,8 @@ if [ -f "jwt.settings" ]; then
 	settings=$(< jwt.settings)
 fi
 
+sub=$(jq -r '.sub // empty' <<< "$settings")
+
 exp=$(jq '.exp // empty' <<< "$settings")
 if [ -z "$exp" ]; then
 	exp=$(("$now" +600))
@@ -68,12 +70,15 @@ payload=$(
 	jq \
 		--arg now "$now" \
 		--arg exp "$exp" \
+		--arg sub "$sub" \
 	'
 	($now | tonumber) as $now |
 	($exp | tonumber) as $exp |
+	($sub | if length == 0 then null else . end) as $sub |
 	.nbf = $now |
 	.exp = $exp |
-	.iat = $now
+	.iat = $now |
+	.sub = ($sub // .sub)
 	' < jwt.payload
 )
 
