@@ -2,14 +2,17 @@
 
 #usage: jwtp
 #
-# Pretty-print jwt
+# Pretty-print decoded one-line jwt. Parsing is bit flaky.
 
 declare token=${1:-$(</dev/stdin)}
-token=$(sed 's/[Bb]earer //' <<< "$token")
-IFS='.' read -ra pieces <<< "$token"
-declare    header=${pieces[0]}
-declare   payload=${pieces[1]}
-declare signature=${pieces[2]}
+token=$(sed '
+	s/[Bb]earer //
+	s,}\.,}\n, g
+	' <<< "$token")
+
+declare    header=$(sed '1!d' <<< "$token")
+declare   payload=$(sed '2!d' <<< "$token")
+declare signature=$(sed '3!d' <<< "$token")
 
 printf '%s'    "${header}" | jq -C .
 printf '%s'   "${payload}" | jq -C .

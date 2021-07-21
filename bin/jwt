@@ -30,7 +30,19 @@ while true; do
 		-f | --file)
 			file=".$2"
 			shift; shift;
-			break ;;
+			continue ;;
+		--sub)
+			sub="$2"
+			shift; shift;
+			continue ;;
+		--exp)
+			exp="$2"
+			shift; shift;
+			continue ;;
+		--iss)
+			iss="$2"
+			shift; shift;
+			continue ;;
 		-* )
 			if [ ! -z "$1" ]; then
 				echo 1>&2 "fatal: unknown option $1"
@@ -53,12 +65,20 @@ if [ -f "jwt.settings" ]; then
 	settings=$(< jwt.settings)
 fi
 
-exp=$(jq '.exp // empty' <<< "$settings")
-if [ -z "$exp" ]; then
-	exp=$(("$now" +600))
+if [ -z "$sub" ]; then
+	sub=$(jq -r '.sub // empty' <<< "$settings")
 fi
 
-iss=$(jq -r '.iss // empty' <<< "$settings")
+if [ -z "$exp" ]; then
+	exp=$(jq '.exp // empty' <<< "$settings")
+	if [ -z "$exp" ]; then
+		exp=$(("$now" +600))
+	fi
+fi
+
+if [ -z "$iss" ]; then
+	iss=$(jq -r '.iss // empty' <<< "$settings")
+fi
 
 # header
 header=$(< jwt.header)
@@ -68,12 +88,15 @@ payload=$(
 	jq \
 		--arg now "$now" \
 		--arg exp "$exp" \
+		--arg sub "$sub" \
 	'
 	($now | tonumber) as $now |
 	($exp | tonumber) as $exp |
+	($sub | if length == 0 then null else . end) as $sub |
 	.nbf = $now |
 	.exp = $exp |
-	.iat = $now
+	.iat = $now |
+	.sub = ($sub // .sub)
 	' < jwt.payload
 )
 
