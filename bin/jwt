@@ -164,8 +164,8 @@ rs256_sign()
  header=$(jq '. | remove_placeholders' <<< "$header")
 payload=$(jq '. | remove_placeholders' <<< "$payload")
 
- header_base64=$(jq -c . <<< "${header}"  | b64url -w 0)
-payload_base64=$(jq -c . <<< "${payload}" | b64url -w 0)
+ header_base64=$(jq -c -j . <<< "${header}"  | b64url -w 0)
+payload_base64=$(jq -c -j . <<< "${payload}" | b64url -w 0)
 
 header_payload="${header_base64}.${payload_base64}"
 signature=$(printf '%s' "${header_payload}" | rs256_sign | b64url -w 0)
