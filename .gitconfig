@@ -73,8 +73,8 @@
 	mt 		= mergetool
 	dr 		= diff --color-words=.
 	drc 	= diff --color-words=. --staged
-	drw 	= diff --color-words
-	drwc 	= diff --color-words --staged
+	drw 	= diff --color-words="\\\\w+|."
+	drwc 	= diff --color-words="\\\\w+|." --staged
 	ds 		= diff --ignore-all-space
 	db 		= diff --ignore-blank-lines
 	# ignore insignificant changes
