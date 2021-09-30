@@ -1,0 +1,11 @@
+#!/bin/sh
+
+#usage:
+#   ... | lf
+#
+# Convert line-endings to LF.
+
+sed '
+	s,\r,\n,
+	s,\r\n,\n,
+	'

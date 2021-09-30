@@ -65,5 +65,6 @@ fi
 # list
 cat "$version_files" | \
 	egrep "(csproj)|(buildfile.json)" | \
+	lf | \
 	xargs -I__ \
 	git grep -i -e '["<]version[>"]' -- __

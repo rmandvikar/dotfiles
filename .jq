@@ -31,3 +31,22 @@ def camelize:
 # pascalize keys
 def pascalize:
 	case_mod_inner(ascii_upcase);
+
+# ref: https://stackoverflow.com/a/34282594/58678
+def toxsv(transform_function):
+	if length == 0 then empty
+	else
+		(.[0] | keys_unsorted) as $keys
+		| (map(keys) | add | unique) as $allkeys
+		| ($keys + ($allkeys - $keys)) as $cols
+		| ($cols, (.[] as $row | $cols | map($row[.])))
+		| transform_function
+	end;
+
+# csv
+def tocsv:
+	toxsv(@csv);
+
+# tsv
+def totsv:
+	toxsv(@tsv);
