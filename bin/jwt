@@ -62,7 +62,7 @@ now=$(date +%s)
 
 # settings
 if [ -f "jwt.settings" ]; then
-	settings=$(< jwt.settings)
+	settings=$(jstrip < jwt.settings)
 fi
 
 if [ -z "$sub" ]; then
@@ -89,10 +89,11 @@ if [ -z "$iss" ]; then
 fi
 
 # header
-header=$(< jwt.header)
+header=$(jstrip < jwt.header)
 
 # payload
 payload=$(
+	jstrip < jwt.payload | \
 	jq \
 		--arg now "$now" \
 		--arg nbf "$nbf" \
@@ -109,7 +110,7 @@ payload=$(
 	.exp = $exp |
 	.iat = $iat |
 	.sub = ($sub // .sub)
-	' < jwt.payload
+	'
 )
 
 # if cer file present
