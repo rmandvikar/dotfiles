@@ -30,17 +30,20 @@ while true; do
 			fi
 			break ;;
 		* )
-			if [ -z "$1" ]; then
+			if [ ! -z "$1" ]; then
+				tree="$1"
+			else
 				break
 			fi
 			shift ;;
 	esac
 done
+
+version_files=".version-files"
 # defaults
 if [ -z "$option" ]; then
 	option="list"
 fi
-version_files=".version-files"
 
 # update
 if [[ "$option" == "update" ]]; then
@@ -67,4 +70,4 @@ cat "$version_files" | \
 	egrep "(csproj)|(buildfile.json)" | \
 	lf | \
 	xargs -I__ \
-	git grep -i -e '["<]version[>"]' -- __
+	git grep -i -e '["<]version[>"]' $tree -- __
