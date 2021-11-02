@@ -62,18 +62,26 @@ now=$(date +%s)
 
 # settings
 if [ -f "jwt.settings" ]; then
-	settings=$(< jwt.settings)
+	settings=$(jstrip < jwt.settings)
 fi
 
 if [ -z "$sub" ]; then
 	sub=$(jq -r '.sub // empty' <<< "$settings")
 fi
 
+nbf=$(jq '.nbf // empty' <<< "$settings")
+if [ -z "$nbf" ]; then
+	nbf="$now"
+fi
 if [ -z "$exp" ]; then
 	exp=$(jq '.exp // empty' <<< "$settings")
 	if [ -z "$exp" ]; then
 		exp=$(("$now" +600))
 	fi
+fi
+iat=$(jq '.iat // empty' <<< "$settings")
+if [ -z "$iat" ]; then
+	iat="$now"
 fi
 
 if [ -z "$iss" ]; then
@@ -81,23 +89,28 @@ if [ -z "$iss" ]; then
 fi
 
 # header
-header=$(< jwt.header)
+header=$(jstrip < jwt.header)
 
 # payload
 payload=$(
+	jstrip < jwt.payload | \
 	jq \
 		--arg now "$now" \
+		--arg nbf "$nbf" \
 		--arg exp "$exp" \
+		--arg iat "$iat" \
 		--arg sub "$sub" \
 	'
 	($now | tonumber) as $now |
+	($nbf | tonumber) as $nbf |
 	($exp | tonumber) as $exp |
+	($iat | tonumber) as $iat |
 	($sub | if length == 0 then null else . end) as $sub |
-	.nbf = $now |
+	.nbf = $nbf |
 	.exp = $exp |
-	.iat = $now |
+	.iat = $iat |
 	.sub = ($sub // .sub)
-	' < jwt.payload
+	'
 )
 
 # if cer file present
