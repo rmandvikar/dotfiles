@@ -33,3 +33,10 @@ export EDITOR=scite # '/d/setups/wscite/SciTE.exe'
 # use unicode (utf8)
 #	see https://stackoverflow.com/questions/29279304/git-bash-chcp-windows7-encoding-issue
 chcp.com 65001 1>/dev/null
+
+# jq colors
+export FIELD_COLOR="34;1"
+#export JQ_COLORS="1;30:0;37:0;37:0;37:0;32:1;37:1;37"
+#                  null fals true numb stri arra obje
+#                  b bl ? ?? ? ?? ? ?? ? gr b ?? b ??
+ export JQ_COLORS="1;30:5;36:1;36:0;35:0;32:1;37:1;37"
