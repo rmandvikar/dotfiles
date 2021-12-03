@@ -6,6 +6,9 @@
 #           [(-t | --tree)      [<branch>] -- [<path>]]
 #           [(-d | --diff)      <commit1> [<commit2>]]
 #           [--pr               [<pr>]]
+#           [--pr --set         <pr>]
+#           [--pr --unset       <pr>]
+#           [--pr --new]
 #           [(-b | --branches)]
 #           [(-r | --releases)]
 #           [(-n | --dry-run)]
@@ -122,6 +125,11 @@ while true; do
 					shift
 					git config --unset branch.$(git branch-name).pr
 					exit ;;
+				--new )
+					option="newpr"
+					remoteBranch=$(git remote-branch HEAD 2>/dev/null)
+					shift
+					break ;;
 			esac
 			break ;;
 		-b | --branches)
@@ -255,6 +263,8 @@ git config --get-regex remote\..*\.url \
 						else
 							urlPart="/pull/$pr"
 						fi
+					elif [[ "$option" == "newpr" ]]; then
+						urlPart="/pull/new/$remoteBranch"
 					elif [[ "$option" == "branches" ]]; then
 						urlPart="/branches"
 					elif [[ "$option" == "releases" ]]; then
