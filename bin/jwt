@@ -76,7 +76,11 @@ fi
 if [ -z "$exp" ]; then
 	exp=$(jq '.exp // empty' <<< "$settings")
 	if [ -z "$exp" ]; then
-		exp=$(("$now" +600))
+		lifetime=$(jq '.lifetime // empty' <<< "$settings")
+		if [ -z "$lifetime" ]; then
+			lifetime=600
+		fi
+		exp=$(("$now" + "$lifetime"))
 	fi
 fi
 iat=$(jq '.iat // empty' <<< "$settings")
