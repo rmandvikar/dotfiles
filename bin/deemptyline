@@ -1,0 +1,8 @@
+#!/bin/sh
+
+#usage:
+#   ... | deemptyline
+#
+# Remove empty lines, if present.
+
+sed '/^[[:space:]]*$/d'
