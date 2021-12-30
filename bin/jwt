@@ -23,6 +23,9 @@
 #       
 #       To see certificate's contents,
 #       $ openssl x509 -noout -text -in <name>.cer
+#       
+#       To see certificate's expiry,
+#       $ openssl x509 -noout -enddate -in <name>.cer
 
 while true; do
 	case "$1" in
