@@ -48,7 +48,6 @@ fi
 # update
 if [[ "$option" == "update" ]]; then
 	cat "$version_files" | \
-		egrep "(csproj)|(buildfile.json)" | \
 		xargs -I__ \
 		sed -i -E \
 			'
@@ -67,7 +66,6 @@ fi
 
 # list
 cat "$version_files" | \
-	egrep "(csproj)|(buildfile.json)" | \
 	lf | \
 	xargs -I__ \
 	git grep -i -e '["<]version[>"]' $tree -- __
