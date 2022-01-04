@@ -1,0 +1,9 @@
+#!/bin/sh
+
+#usage: git clean-build
+#
+# Clean VS' bin, obj dirs.
+
+if [[ "$1" == "-h" ]]; then print-file-comments "$0"; exit; fi
+
+git clean -fdx -- "**/bin/*" "**/obj/*"
