@@ -1,0 +1,20 @@
+#!/bin/sh
+
+#usage:
+#   ... | delete "<pattern>"
+#
+# sed delete.
+
+if [[ "$1" == "-h" ]]; then print-file-comments "$0"; exit; fi
+
+if [[ ! -z "$2" ]]; then
+	echo 1>&2 "fatal: too many args"
+	exit 1
+fi
+pattern="$1"
+
+xargs -I____ \
+	sed -i -E '/'"$pattern"'/ d' ____
+git status -s | \
+	cuts | \
+	crlf-file
