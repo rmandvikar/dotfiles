@@ -142,6 +142,7 @@
 	lgoc 	= "format:%C(auto)%h%C(reset)%C(auto)%d%C(reset) %C(#ffff99)%s%C(reset) - %C(#ffb799)%aN%C(reset)"
 	one 	= "format:%C(auto)%h%C(reset) %C(#ffaaff)(%ar)%C(reset) %C(#ffff99)%s%C(reset) - %C(#ffb799)%aN%C(reset)%C(auto)%d%C(reset)"
 	two 	= "format:%C(auto)%h%C(reset) - %C(#ffeeff)%ad%C(reset) %C(#ffaaff)(%ar)%C(reset)%C(auto)%d%C(reset)%n  %C(#ffff99)%s%C(reset) - %C(#ffb799)%aN%C(reset)"
+	two-sc 	= "format:%C(auto)%h%C(reset) - %C(#ffeeff)%ad%C(reset) %C(#ffaaff)(%ar)%C(reset)%C(auto)%d%C(reset)%n  %C(#ffff99)%s%C(reset) - %C(#ffb799)%aN%C(reset) (%G?)"
 	four 	= "format:%C(auto)%h%C(reset)%C(auto)%d%C(reset)%n  %C(#ffff99)%s%C(reset)%n  %C(#ffeeff)%ad%C(reset) %C(#ffaaff)(%ar)%C(reset) - %C(#ffb799)%aN%C(reset)%n  %C(#ffeeff)%cd%C(reset) %C(#ffaaff)(%cr)%C(reset) - %C(#ffb799)%cN%C(reset)"
 	note 	= "format:%H"
 	subject = "format:%s"
@@ -150,6 +151,7 @@
 	#hint: add --all to see whole repo
 	l 		= log --graph --pretty=two
 	last 	= log --graph --pretty=two -1
+	lsc 	= log --graph --pretty=two-sc
 	lo 		= log --oneline
 	lg 		= log --graph
 	lgo 	= log --graph --oneline
