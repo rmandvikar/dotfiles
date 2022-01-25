@@ -139,10 +139,10 @@
 	bfrom 	= branched-from
 
 [pretty]
-	lgoc 	= "format:%C(auto)%h%C(reset)%C(auto)%d%C(reset) %C(#ffff99)%s%C(reset) - %C(#ffb799)%aN%C(reset) (%G?)"
+	lgoc 	= "format:%C(auto)%h%C(reset)%C(auto)%d%C(reset) %C(#ffff99)%s%C(reset) - %C(#ffb799)%aN%C(reset)"
 	one 	= "format:%C(auto)%h%C(reset) %C(#ffaaff)(%ar)%C(reset) %C(#ffff99)%s%C(reset) - %C(#ffb799)%aN%C(reset)%C(auto)%d%C(reset)"
-	two 	= "format:%C(auto)%h%C(reset) - %C(#ffeeff)%ad%C(reset) %C(#ffaaff)(%ar)%C(reset)%C(auto)%d%C(reset)%n  %C(#ffff99)%s%C(reset) - %C(#ffb799)%aN%C(reset) (%G?)"
-	four 	= "format:%C(auto)%h%C(reset)%C(auto)%d%C(reset)%n  %C(#ffff99)%s%C(reset)%n  %C(#ffeeff)%ad%C(reset) %C(#ffaaff)(%ar)%C(reset) - %C(#ffb799)%aN%C(reset) (%G?)%n  %C(#ffeeff)%cd%C(reset) %C(#ffaaff)(%cr)%C(reset) - %C(#ffb799)%cN%C(reset) (%G?)"
+	two 	= "format:%C(auto)%h%C(reset) - %C(#ffeeff)%ad%C(reset) %C(#ffaaff)(%ar)%C(reset)%C(auto)%d%C(reset)%n  %C(#ffff99)%s%C(reset) - %C(#ffb799)%aN%C(reset)"
+	four 	= "format:%C(auto)%h%C(reset)%C(auto)%d%C(reset)%n  %C(#ffff99)%s%C(reset)%n  %C(#ffeeff)%ad%C(reset) %C(#ffaaff)(%ar)%C(reset) - %C(#ffb799)%aN%C(reset)%n  %C(#ffeeff)%cd%C(reset) %C(#ffaaff)(%cr)%C(reset) - %C(#ffb799)%cN%C(reset)"
 	note 	= "format:%H"
 	subject = "format:%s"
 	rn 		= "format:%s - %aN"
