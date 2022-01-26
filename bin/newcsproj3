@@ -1,0 +1,25 @@
+#!/bin/sh
+
+#usage:
+#   ... | newcsproj3
+#
+# Convert multiline ProjectReference to oneline.
+#
+# ex: converts
+#
+#  <ProjectReference Include="PATH">
+#    <Project>GUID</Project>
+#    <Name>NAME</Name>
+#  </ProjectReference>
+#
+# to
+#
+# <ProjectReference Include="PATH" />
+
+sed -E \
+	'
+	s,(<ProjectReference.+)">,\1" />,
+	/<Project>/ d
+	/<Name>/ d
+	\,</ProjectReference>, d
+	'
