@@ -20,7 +20,9 @@ while true; do
 	case "$1" in
 		-h ) print-file-comments "$0"; exit ;;
 		-f | --file)
-			file=".$2"
+			if [ ! -z "$2" ]; then
+				file=".$2"
+			fi
 			shift; shift;
 			break ;;
 		-* )
