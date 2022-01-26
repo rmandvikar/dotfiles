@@ -14,3 +14,4 @@ OpaqueWhenFocused=yes
 BackspaceSendsBS=yes
 CtrlShiftShortcuts=yes
 Rows=40
+Columns=100
