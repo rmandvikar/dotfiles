@@ -11,6 +11,10 @@
 #           [--pr --new]
 #           [(-b | --branches)]
 #           [(-r | --releases)]
+#           [(-s | --settings)]
+#           [(--actions)]
+#           [(--issues)]
+#           [(--wiki)]
 #           [(-n | --dry-run)]
 #
 # Browse to remote url or branch's log (commits) or branch's tree
@@ -138,6 +142,22 @@ while true; do
 			break ;;
 		-r | --releases)
 			option="releases"
+			shift
+			break ;;
+		-s | --settings)
+			option="settings"
+			shift
+			break ;;
+		--actions)
+			option="actions"
+			shift
+			break ;;
+		--issues)
+			option="issues"
+			shift
+			break ;;
+		--wiki)
+			option="wiki"
 			shift
 			break ;;
 		* )
@@ -269,6 +289,14 @@ git config --get-regex remote\..*\.url \
 						urlPart="/branches"
 					elif [[ "$option" == "releases" ]]; then
 						urlPart="/releases"
+					elif [[ "$option" == "settings" ]]; then
+						urlPart="/settings"
+					elif [[ "$option" == "actions" ]]; then
+						urlPart="/actions"
+					elif [[ "$option" == "issues" ]]; then
+						urlPart="/issues"
+					elif [[ "$option" == "wiki" ]]; then
+						urlPart="/wiki"
 					fi
 				fi
 				# avoid sed -r as -r is not available on mac
