@@ -6,6 +6,7 @@
 
 [core]
 	autocrlf = true
+	commentChar = "#"
 [rerere]
 	enabled = true
 
@@ -80,6 +81,7 @@
 	# ignore insignificant changes
 	di 		= diff --ignore-all-space --ignore-blank-lines
 	dic 	= diff --ignore-all-space --ignore-blank-lines --staged
+	marker 	= diff --check
 	sb 		= show-branch
 	wc 		= whatchanged --oneline
 	rp 		= rev-parse
@@ -190,7 +192,7 @@
 [merge]
 	log 			= 1000000000 # true defaults to 20
 	ff 				= false
-	conflictStyle 	= diff3
+	conflictStyle 	= zdiff3 # zealous diff3
 
 [merge "ours"]
 	driver = ~/git-merge-keep-ours.sh %O %A %B
