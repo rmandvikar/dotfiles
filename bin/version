@@ -71,6 +71,14 @@ if [[ "$option" == "update" ]]; then
 	git status -s | \
 		cuts | \
 		crlf-file
+	
+	# commit
+	filesSsv=$(cat ".version-files" | sed 's,$, , g' | tr -d '\n')
+	git diff --name-only --diff-filter=M --staged --quiet -- $filesSsv
+	if [ $? -eq 0 ]; then
+		git add -- $filesSsv
+		git commit -m "version: Bump $version"
+	fi
 	exit
 fi
 
