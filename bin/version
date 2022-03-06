@@ -46,6 +46,13 @@ if [ -z "$option" ]; then
 	option="list"
 fi
 
+# csproj
+#   <Version>1.2.3</Version>
+# buildfile.json
+#   "version": "1.2.3"
+# gruntfile.js
+#   version: "1.2.3"
+
 # update
 if [[ "$option" == "update" ]]; then
 	cat "$version_files" | \
@@ -53,9 +60,11 @@ if [[ "$option" == "update" ]]; then
 		sed -i -E \
 			'
 			# csproj
-			s_(<Version>).+(</Version)_\1'"$version"'\2_
+			s_(<Version>).+(</Version>)_\1'"$version"'\2_
 			# buildfile.json
 			s_("version": ?)".+"_\1"'"$version"'"_
+			# gruntfile.json
+			s_(version: ?)".+"_\1"'"$version"'"_
 			' __
 	
 	# crlf file
@@ -69,4 +78,4 @@ fi
 cat "$version_files" | \
 	lf | \
 	xargs -I__ \
-	git grep -i -e '["<]version[>"]' $tree -- __
+	git grep -i -e '(<Version>.+</Version>)|("version": ?".+")|(version: ?".+")' $tree -- __
