@@ -4,6 +4,7 @@
 #   version
 #       [(-l | --list)]
 #       [(-u | --update) <version>]
+#       [<commit>]
 #
 # Show nuget package's version or update version.
 
@@ -56,7 +57,7 @@ if [[ "$option" == "update" ]]; then
 			# buildfile.json
 			s_("version": ?)".+"_\1"'"$version"'"_
 			' __
-
+	
 	# crlf file
 	git status -s | \
 		cuts | \
