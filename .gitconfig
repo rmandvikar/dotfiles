@@ -166,7 +166,7 @@
 	l4 		= log --pretty=four
 	pr 		= log --pretty=subject --no-decorate --no-merges --topo-order --reverse
 	rn 		= log --pretty=rn --no-decorate --first-parent --topo-order --reverse
-	ld 		= log --graph --pretty=two --decorate-refs-exclude=refs/tags
+	lde 	= log --graph --pretty=two --decorate-refs-exclude=refs/tags
 
 # default options for commands
 [log]
