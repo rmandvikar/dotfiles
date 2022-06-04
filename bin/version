@@ -55,6 +55,14 @@ fi
 
 # update
 if [[ "$option" == "update" ]]; then
+	# verify if modified
+	filesSsv=$(cat ".version-files" | sed 's,$, , g' | tr -d '\n')
+	git diff --name-only --diff-filter=M --quiet HEAD -- $filesSsv
+	if [ ! $? -eq 0 ]; then
+		echo 1>&2 "fatal: version file(s) already modified"
+		exit 1
+	fi
+	
 	cat "$version_files" | \
 		xargs -I__ \
 		sed -i -E \
@@ -73,12 +81,9 @@ if [[ "$option" == "update" ]]; then
 		crlf-file
 	
 	# commit
-	filesSsv=$(cat ".version-files" | sed 's,$, , g' | tr -d '\n')
-	git diff --name-only --diff-filter=M --staged --quiet -- $filesSsv
-	if [ $? -eq 0 ]; then
-		git add -- $filesSsv
-		git commit -m "version: Bump $version"
-	fi
+	git add -- $filesSsv
+	git commit -m "version: Bump $version"
+	
 	exit
 fi
 
