@@ -154,6 +154,9 @@
 	l 		= log --graph --pretty=two
 	last 	= log --graph --pretty=two -1
 	lsc 	= log --graph --pretty=two-sc
+	lp 		= log --graph --pretty=two -p
+	lpr 	= log --graph --pretty=two -p --color-words="."
+	lprw 	= log --graph --pretty=two -p --color-words="\\\\w+|."
 	lo 		= log --oneline
 	lg 		= log --graph
 	lgo 	= log --graph --oneline
