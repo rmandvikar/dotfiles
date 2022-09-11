@@ -328,6 +328,10 @@
 [color "blame"]
 	highlightRecent 	= "#abb2b9", 12 month ago, "#ffffff", 1 month ago, "#ffff99"
 
+# https://git-scm.com/docs/git-config#Documentation/git-config.txt-safedirectory
+[safe]
+	directory = *
+
 [include]
 	# user
 	path = user.gitconfig
