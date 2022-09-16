@@ -6,7 +6,7 @@
 #       [(-u | --update) <version>]
 #       [<commit>]
 #
-# Show nuget package's version or update version.
+# Show app's version or update version.
 
 while true; do
 	case "$1" in
