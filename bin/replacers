@@ -1,0 +1,65 @@
+#!/bin/sh
+
+#usage:
+#   ... | replacers
+#            (
+#            ((  -r | --replacer ) <replacer>                   ) |
+#            ((--rs | --replacers) <replacerStart> <replacerEnd>)
+#            )
+#            [-s | --strip]
+#
+# Parse replacers for the given tokens.
+
+if [[ "$1" == "-h" ]]; then print-file-comments "$0"; exit; fi
+
+while true; do
+	case "$1" in
+		-h | --help) print-file-comments "$0"; exit ;;
+		-s | --strip)
+			strip="true"
+			shift ;;
+		-r | --replacer)
+			# same
+			shift
+			replacerStart="$1"
+			replacerEnd="$1"
+			shift ;;
+		--rs | --replacers)
+			# different
+			shift
+			replacerStart="$1"
+			replacerEnd="$2"
+			shift
+			shift ;;
+		-* )
+			if [ ! -z "$1" ]; then
+				echo 1>&2 "fatal: unknown option $1"
+				exit 1
+			fi
+			break ;;
+		* )
+			if [ ! -z "$1" ]; then
+				echo 1>&2 "fatal: unknown option $1"
+				exit 1
+			fi
+			break ;;
+	esac
+done
+
+if [ -z "$replacerStart" ] || [ -z "$replacerEnd" ]; then
+	echo 1>&2 "fatal: replacer(s) required"
+	exit 1
+fi
+
+output=$(sed -E "s,($replacerStart[^ ]+$replacerEnd),\n\1, g" | \
+	egrep "$replacerStart[^ ]+$replacerEnd" | \
+	sed -E "s,.*($replacerStart[^ ]+$replacerEnd).*,\1,")
+
+# print vars without replacer tokens
+if [[ ! -z "$strip" ]]; then
+	sed -E "s,$replacerStart([^ ]+)$replacerEnd,\1," <<< "$output"
+	exit
+fi
+
+# print vars
+printf '%s\n' "$output"
