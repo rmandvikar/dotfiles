@@ -4,7 +4,7 @@
 #            [-w <width>]
 #            [-n <n>]
 #
-# Create random string of chars 'a-zA-Z_-' with width and count.
+# Create random string of chars 'A-Za-z0-9-_' with width and count.
 
 while true; do
 	case "$1" in
@@ -22,6 +22,6 @@ done
 
 # see https://gist.github.com/earthgecko/3089509
 cat /dev/urandom | \
-	tr -dc 'a-zA-Z_-' | \
+	tr -dc 'A-Za-z0-9-_' | \
 	fold -w ${w-8} | \
 	head -n ${n-1}
