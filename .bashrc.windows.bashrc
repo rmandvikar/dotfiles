@@ -22,10 +22,28 @@ export -f vlip
 guidgen() { "guidgen.exe" "$@"; }
 export -f guidgen
 
+md5() { "md5sum.exe" "$@" | sed 's, .*,,'; }
+export -f md5
+sha1() { "sha1sum.exe" "$@" | sed 's, .*,,'; }
+export -f sha1
+sha256() { "sha256sum.exe" "$@" | sed 's, .*,,'; }
+export -f sha256
+xxh() { "xxhsum.exe" "$@" | sed 's, .*,,'; }
+export -f xxh
+xxh32() { "xxh32sum.exe" "$@" | sed 's, .*,,'; }
+export -f xxh32
+xxh64() { "xxh64sum.exe" "$@" | sed 's, .*,,'; }
+export -f xxh64
+xxh128() { "xxh128sum.exe" "$@" | sed 's, .*,,'; }
+export -f xxh128
+
 # WinMergeU is on path
 difftool() { "WinMergeU" -e -u "$@"; }
 export -f difftool
 alias dt=difftool
+
+st() { "speedtest.exe" -p; }
+export -f st
 
 # scite is on path
 export EDITOR=scite # '/d/setups/wscite/SciTE.exe'
