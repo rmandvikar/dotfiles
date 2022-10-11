@@ -66,7 +66,7 @@
 	b 		= branch
 	co 		= checkout
 	eco 	= echeckout
-	coe 	= echeckout
+	#coe 	= echeckout
 	d 		= diff
 	dc 		= diff --staged
 	dt 		= difftool
