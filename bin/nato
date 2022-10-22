@@ -1,0 +1,12 @@
+#!/bin/sh
+
+#usage: nato [word]
+#
+# NATO telephony for word.
+
+file=~/"nato.txt"
+delim="\t"
+
+while IFS='' read -r -d '' -n 1 char; do
+	grep -F -w -i -m 1 "$char" "$file" || printf "%s"$delim"%s\n" "$char" "$char"
+done < <(printf %s "$@")
