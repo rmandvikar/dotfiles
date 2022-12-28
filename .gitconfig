@@ -66,7 +66,7 @@
 	b 		= branch
 	co 		= checkout
 	eco 	= echeckout
-	coe 	= echeckout
+	#coe 	= echeckout
 	d 		= diff
 	dc 		= diff --staged
 	dt 		= difftool
@@ -158,6 +158,7 @@
 	lp 		= log --graph --pretty=two -p
 	lpr 	= log --graph --pretty=two -p --color-words="."
 	lprw 	= log --graph --pretty=two -p --color-words="\\\\w+|."
+	lpi 	= log --graph --pretty=two -p --ignore-all-space --ignore-blank-lines
 	lo 		= log --oneline
 	lg 		= log --graph
 	lgo 	= log --graph --oneline

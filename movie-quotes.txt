@@ -65,7 +65,7 @@
 “Say “hello” to my little friend!” \n\n\t\t- Scarface, 1983
 “What a dump.” \n\n\t\t- Beyond the Forest, 1949
 “Mrs. Robinson, you're trying to seduce me. Aren't you?” \n\n\t\t- The Graduate, 1967
-“Gentlemen, you can't fight in here! This is the War Room!" Dr. Strangelove, 1964
+“Gentlemen, you can't fight in here! This is the War Room!" \n\n\t\t- Dr. Strangelove, 1964
 “Elementary, my dear Watson.” \n\n\t\t- The Adventures of Sherlock Holmes, 1929
 “Get your stinking paws off me, you damned dirty ape.” \n\n\t\t- Planet of the Apes, 1968
 “Of all the gin joints in all the towns in all the world, she walks into mine.” \n\n\t\t- Casablanca, 1942
