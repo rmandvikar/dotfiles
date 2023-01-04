@@ -1,0 +1,7 @@
+#!/bin/sh
+
+#usage: b16d
+#
+# Base16 (hex) decode.
+
+xxd -p -r
