@@ -1,0 +1,12 @@
+#!/bin/sh
+
+#usage:
+#   ... | tag-cleanup
+#
+# Gen bulk-rename script for git tags from 'nuget-' to 'v'.
+
+# todo: cleanup local tags
+sed 's,nuget-,,' | \
+	sed -E 's,(.+),nuget-\1 v\1,' | \
+	sed -E 's,(.+) (.+),git push github refs/tags/\1:refs/tags/\2 :refs/tags/\1,' | \
+	column -t -o ' '

@@ -1,0 +1,11 @@
+#!/bin/sh
+
+#usage:
+#   tag-cleanup2
+#
+# Fix tag name format for "nuget-" scripts.
+
+git g -F 'tag="nuget' | cutg | replace 'tag="nuget-' 'tag="v'
+git s | crlf-file
+
+git acm "nuget: Rename tag name format"
