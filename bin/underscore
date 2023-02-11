@@ -1,0 +1,16 @@
+#!/bin/sh
+
+#usage:
+#   underscore <text>
+#   ... | underscore
+#
+# Underscore.
+
+command='
+	s, ,_,g
+'
+if [ $# -gt 0 ]; then
+	sed "$command" <<< "$1"
+else
+	sed "$command"
+fi
