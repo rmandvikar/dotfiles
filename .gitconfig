@@ -72,6 +72,8 @@
 	dt 		= difftool
 	dtc 	= difftool --staged
 	mt 		= mergetool
+	dns 	= diff --name-status
+	dno 	= diff --name-only
 	dr 		= diff --color-words=.
 	drc 	= diff --color-words=. --staged
 	drw 	= diff --color-words="\\\\w+|."
@@ -155,6 +157,8 @@
 	l 		= log --graph --pretty=two
 	last 	= log --graph --pretty=two -1
 	lsc 	= log --graph --pretty=two-sc
+	lns 	= log --graph --pretty=two --name-status
+	lno 	= log --graph --pretty=two --name-only
 	lp 		= log --graph --pretty=two -p
 	lpr 	= log --graph --pretty=two -p --color-words="."
 	lprw 	= log --graph --pretty=two -p --color-words="\\\\w+|."
