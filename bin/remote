@@ -158,6 +158,10 @@ while true; do
 			option="wiki"
 			shift
 			break ;;
+		--nuget)
+			option="nuget"
+			shift
+			break ;;
 		* )
 			if [ ! -z "$1" ]; then
 				echo 1>&2 "fatal: unknown option $1"
@@ -205,6 +209,11 @@ elif [[ "$option" == "tree" ]]; then
 		echo 1>&2 "fatal: remoteBranch required"
 		exit 1
 	fi
+fi
+
+if [[ "$option" == "nuget" ]]; then
+	git config nuget.url | ${command-browse}
+	exit
 fi
 
 git config --get-regex remote\..*\.url \
