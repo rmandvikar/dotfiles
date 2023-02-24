@@ -117,6 +117,7 @@ while true; do
 			if [ -z "$pr" ]; then
 				pr=$(git config --get branch.$(git branch-name).pr)
 			fi
+			remoteBranch=$(git remote-branch HEAD 2>/dev/null)
 			# set/unset pr, and exit
 			case "$1" in
 				--set )
@@ -129,7 +130,6 @@ while true; do
 					exit ;;
 				--new )
 					option="newpr"
-					remoteBranch=$(git remote-branch HEAD 2>/dev/null)
 					shift
 					break ;;
 			esac
@@ -285,7 +285,7 @@ git config --get-regex remote\..*\.url \
 						urlPart="/compare/$commit1...$commit2"
 					elif [[ "$option" == "pr" ]]; then
 						if [[ -z "$pr" ]]; then
-							urlPart="/pulls"
+							urlPart="/pull/new/$remoteBranch"
 						else
 							urlPart="/pull/$pr"
 						fi
