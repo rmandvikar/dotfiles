@@ -1,0 +1,8 @@
+#!/bin/sh
+
+#usage: ip
+#
+# Print public / external ip.
+
+curl -s ifconfig.me | \
+	eoflf
