@@ -9,6 +9,7 @@
 #           [--pr --set         <pr>]
 #           [--pr --unset       <pr>]
 #           [--pr --new]
+#           [--prs]
 #           [(-b | --branches)]
 #           [(-r | --releases)]
 #           [(-s | --settings)]
@@ -107,7 +108,7 @@ while true; do
 			test ! -z "$1" && shift
 			break ;;
 		--prs)
-			option="pr"
+			option="prs"
 			shift
 			break ;;
 		--pr)
@@ -266,6 +267,8 @@ git config --get-regex remote\..*\.url \
 						urlPart="/branches/compare/$commit2..$commit1#diff"
 					elif [[ "$option" == "pr" ]]; then
 						urlPart="/pull-requests/$pr"
+					elif [[ "$option" == "prs" ]]; then
+						urlPart="/pull-requests"
 					elif [[ "$option" == "branches" ]]; then
 						urlPart="/branches"
 					fi
@@ -291,6 +294,8 @@ git config --get-regex remote\..*\.url \
 						fi
 					elif [[ "$option" == "newpr" ]]; then
 						urlPart="/pull/new/$remoteBranch"
+					elif [[ "$option" == "prs" ]]; then
+						urlPart="/pulls"
 					elif [[ "$option" == "branches" ]]; then
 						urlPart="/branches"
 					elif [[ "$option" == "releases" ]]; then
