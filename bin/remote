@@ -9,6 +9,7 @@
 #           [--pr --set         <pr>]
 #           [--pr --unset       <pr>]
 #           [--pr --new]
+#           [--prs]
 #           [(-b | --branches)]
 #           [(-r | --releases)]
 #           [(-s | --settings)]
@@ -107,7 +108,7 @@ while true; do
 			test ! -z "$1" && shift
 			break ;;
 		--prs)
-			option="pr"
+			option="prs"
 			shift
 			break ;;
 		--pr)
@@ -117,6 +118,7 @@ while true; do
 			if [ -z "$pr" ]; then
 				pr=$(git config --get branch.$(git branch-name).pr)
 			fi
+			remoteBranch=$(git remote-branch HEAD 2>/dev/null)
 			# set/unset pr, and exit
 			case "$1" in
 				--set )
@@ -129,7 +131,6 @@ while true; do
 					exit ;;
 				--new )
 					option="newpr"
-					remoteBranch=$(git remote-branch HEAD 2>/dev/null)
 					shift
 					break ;;
 			esac
@@ -266,6 +267,8 @@ git config --get-regex remote\..*\.url \
 						urlPart="/branches/compare/$commit2..$commit1#diff"
 					elif [[ "$option" == "pr" ]]; then
 						urlPart="/pull-requests/$pr"
+					elif [[ "$option" == "prs" ]]; then
+						urlPart="/pull-requests"
 					elif [[ "$option" == "branches" ]]; then
 						urlPart="/branches"
 					fi
@@ -285,12 +288,14 @@ git config --get-regex remote\..*\.url \
 						urlPart="/compare/$commit1...$commit2"
 					elif [[ "$option" == "pr" ]]; then
 						if [[ -z "$pr" ]]; then
-							urlPart="/pulls"
+							urlPart="/pull/new/$remoteBranch"
 						else
 							urlPart="/pull/$pr"
 						fi
 					elif [[ "$option" == "newpr" ]]; then
 						urlPart="/pull/new/$remoteBranch"
+					elif [[ "$option" == "prs" ]]; then
+						urlPart="/pulls"
 					elif [[ "$option" == "branches" ]]; then
 						urlPart="/branches"
 					elif [[ "$option" == "releases" ]]; then
