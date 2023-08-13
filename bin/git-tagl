@@ -1,0 +1,11 @@
+#!/bin/sh
+
+#usage: git tagl
+#
+# List tags.
+
+# note:
+#   log's -n option resets the --no-walk option, i.e. --no-walk option
+#   should be present after -n option
+# see: https://stackoverflow.com/questions/67235470/how-i-can-filter-git-log-on-multiple-tags
+git l $@ --no-walk --no-graph
