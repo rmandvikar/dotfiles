@@ -1,0 +1,11 @@
+#!/bin/sh
+
+#usage:
+#   www <query>
+#
+# Search query on www.
+
+if [[ "$1" == "-h" ]]; then print-file-comments "$0"; exit; fi
+
+q=$(sed 's, ,+,g' <<< "$*")
+browse "https://www.google.com/search?q=$q"
