@@ -1,0 +1,12 @@
+#!/bin/sh
+
+#usage:
+#   why <COMMAND>
+#
+# But why? Why 'why'?
+
+if [[ "$1" == "-h" ]]; then print-file-comments "$0"; exit; fi
+
+builtin why "$@"
+echo 1>&2 "ok, dum dum!"
+exit 1
