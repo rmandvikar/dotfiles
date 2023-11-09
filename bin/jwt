@@ -11,21 +11,21 @@
 #       jwt.header, jwt.payload: files for jwt header, payload
 #       
 #       To create a private rsa key from pfx,
-#       $ winpty openssl pkcs12 -in <name>.pfx -nocerts -out <name>.key.pem
-#       $ winpty openssl rsa -in <name>.key.pem -out <name>.key
+#       $ winpty openssl pkcs12 -in $name.pfx -nocerts -out $name.key.pem
+#       $ winpty openssl rsa -in $name.key.pem -out $name.key
 #       
 #       To create a private rsa key from ssh (with empty password),
 #       (see https://gist.github.com/ygotthilf/baa58da5c3dd1f69fae9)
-#       $ ssh-keygen -t rsa -b 4096 -f <name>.key
+#       $ ssh-keygen -t rsa -b 4096 -f $name.key
 #       
 #       To create a certificate from private rsa key,
-#       $ winpty openssl pkcs12 -in <name>.pfx -nokeys -clcerts -out <name>.cer
+#       $ winpty openssl pkcs12 -in $name.pfx -nokeys -clcerts -out $name.cer
 #       
 #       To see certificate's contents,
-#       $ openssl x509 -noout -text -in <name>.cer
+#       $ openssl x509 -noout -text -in $name.cer
 #       
 #       To see certificate's expiry,
-#       $ openssl x509 -noout -enddate -in <name>.cer
+#       $ openssl x509 -noout -enddate -in $name.cer
 
 while true; do
 	case "$1" in
