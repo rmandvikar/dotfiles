@@ -9,12 +9,12 @@
 #       jwtRS256.key.pub: pem encoded file with rsa public key
 #       
 #       To create a public rsa key,
-#       $ winpty openssl pkcs12 -in <name>.pfx -nokeys -clcerts -out <name>.cer
-#       $ openssl x509 -in <name>.cer -pubkey -noout > <name>.key.pub
+#       $ winpty openssl pkcs12 -in $name.pfx -nokeys -clcerts -out $name.cer
+#       $ openssl x509 -in $name.cer -pubkey -noout > $name.key.pub
 #       
 #       To create a public rsa key from ssh,
 #       (see https://gist.github.com/ygotthilf/baa58da5c3dd1f69fae9)
-#       $ openssl rsa -in <name>.key -pubout -outform PEM -out <name>.key.pub
+#       $ openssl rsa -in $name.key -pubout -outform PEM -out $name.key.pub
 
 while true; do
 	case "$1" in
