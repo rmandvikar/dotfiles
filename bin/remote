@@ -146,6 +146,10 @@ while true; do
 		-s | --settings)
 			option="settings"
 			shift
+			if [ ! -z "$1" ]; then
+				settingsPath="$1"
+				shift
+			fi
 			break ;;
 		--actions)
 			option="actions"
@@ -301,7 +305,11 @@ git config --get-regex remote\..*\.url \
 					elif [[ "$option" == "releases" ]]; then
 						urlPart="/releases"
 					elif [[ "$option" == "settings" ]]; then
-						urlPart="/settings"
+						if [[ ! -z "$settingsPath" ]]; then
+							urlPart="/settings/$settingsPath"
+						else
+							urlPart="/settings"
+						fi
 					elif [[ "$option" == "actions" ]]; then
 						urlPart="/actions"
 					elif [[ "$option" == "issues" ]]; then
