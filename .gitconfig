@@ -16,6 +16,7 @@
 	fscache 		= true
 	pager 			= less -x4 -q
 	quotePath 		= false
+	longPaths 		= true
 [gc]
 	#auto = 256 #default 6700
 
