@@ -1,0 +1,59 @@
+#!/bin/sh
+
+#usage: protection
+#               [(-n | --dry-run)]
+#               (--enable | --disable)
+#               [(-b | --branch) <branch>]
+#
+# Enable/Disable branch protection.
+
+while true; do
+	case "$1" in
+		-h | --help) print-file-comments "$0"; exit ;;
+		--disable)
+			shift
+			action="disable"
+			continue ;;
+		--enable)
+			shift
+			action="enable"
+			continue ;;
+		-b | --branch)
+			shift
+			branch="$1"
+			shift
+			continue ;;
+		-n | --dry-run)
+			dryRun="true"
+			shift
+			continue ;;
+		-* )
+			if [ ! -z "$1" ]; then
+				echo 1>&2 "fatal: unknown option $1"
+				exit 1
+			fi
+			break ;;
+		* )
+			break ;;
+	esac
+done
+
+if [[ -z "$branch" ]]; then
+	branch=$(git branch --show-current)
+fi
+
+repo=$(gh repo view --json 'nameWithOwner' | jq -r '.nameWithOwner')
+
+if [[ "$action" = "disable" ]]; then
+	gh api \
+		--method DELETE \
+		-H "Accept: application/vnd.github+json" \
+		-H "X-GitHub-Api-Version: 2022-11-28" \
+		"repos/$repo/branches/$branch/protection/enforce_admins" -q '.'
+elif [[ "$action" = "enable" ]]; then
+	gh api \
+		--method POST \
+		-H "Accept: application/vnd.github+json" \
+		-H "X-GitHub-Api-Version: 2022-11-28" \
+		"repos/$repo/branches/$branch/protection/enforce_admins" -q '.'
+fi
