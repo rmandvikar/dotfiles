@@ -77,7 +77,7 @@ fi
 #	<file>: <package-name> <version>
 text=$(
 	git grep -E -i "((Include|id)=.+ Version=)|(HintPath)" \
-		-- "*csproj" "*packages.config" | \
+		-- "*Directory.Packages.props" "*csproj" "*packages.config" | \
 	sed -E \
 		'
 		# PackageReference: Include="name" Version="1.2.3"
@@ -117,7 +117,7 @@ fi
 if [[ "$option" == "update" ]]; then
 	# narrow down files for speed
 	git grep -E -i -l "$name" \
-		-- "*csproj" "*packages.config" | \
+		-- "*Directory.Packages.props" "*csproj" "*packages.config" | \
 	xargs -I_ \
 	sed -i -E \
 		'
@@ -140,7 +140,7 @@ fi
 if [[ "$option" == "delete" ]]; then
 	# narrow down files for speed
 	git grep -E -i -l "$name" \
-		-- "*csproj" "*packages.config" | \
+		-- "*Directory.Packages.props" "*csproj" "*packages.config" | \
 	xargs -I_ \
 	sed -i -E \
 		'
