@@ -21,6 +21,7 @@ alias prs="remote --prs"
 alias branch="git branch-name"
 alias     _b="git branch-name"
 alias npv=nuget-package-version
+alias npv-dirs=nuget-package-version-dirs
 alias web=www
 
 tabs 4
