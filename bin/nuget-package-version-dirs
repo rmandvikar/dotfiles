@@ -1,0 +1,31 @@
+#!/usr/bin/env bash
+
+#usage:
+#   nuget-package-version-dirs
+#           <search>
+#
+# Loop through sub-dirs and run 'nuget-package-version'.
+
+if [[ "$1" == "-h" ]]; then print-file-comments "$0"; exit; fi
+
+search="$1"
+if [[ -z "$search" ]]; then
+	echo 1>&2 "fatal: search required"
+	exit 1
+fi
+
+for dir in ./*; do
+	if [[ -d "$dir" ]]; then
+		cd "$dir"
+		subdir=$(pwd)
+		text=$(nuget-package-version | \
+			grep -F "$search" | \
+			sed "s,^,$dir/,")
+		# echo only if non-empty
+		if [[ ! -z "$text" ]]; then
+			echo "$text"
+		fi
+		# don't print output
+		cd - >/dev/null 2>&1
+	fi
+done
