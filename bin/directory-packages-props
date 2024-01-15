@@ -15,9 +15,25 @@ git grep --quiet 'PackageReference.+Version="[^"]+"' || \
 	exit
 
 # create Directory.Packages.props
-text=$(git grep PackageReference -- "*csproj" | \
-	cutgv | \
-	sed 's,PackageReference,PackageVersion,' | \
+text=$(git lsf "*csproj" | \
+	xargs -I__ sed -E \
+		'
+		# see https://unix.stackexchange.com/questions/295199/sed-awk-remove-newline-on-two-pattern-matches/295200#295200
+		# multiline PackageReference to singleline
+		# if line starts with start pattern, enter block
+		\_<PackageReference [^/]+>_ {
+			# create loop label
+			:loop
+			# read Next line of the input if current line is not the last line $
+			$! N
+			# remove newline and trailing whitespaces
+			s,\n[[:space:]]+,,
+			# if next line ends with end pattern, break the loop, else loop
+			\_PackageReference>_ ! b loop
+		}
+		' __ | \
+	grep '<PackageReference' | \
+	sed 's,PackageReference,PackageVersion, g' | \
 	# natural sort -V will put aa,a instead of a,aa, so not using
 	sort -u -f -b | \
 	uniq
@@ -37,7 +53,26 @@ crlf-file "$file"
 
 # remove "Version" numbers from csproj files
 git grep -l PackageReference -- "*csproj" | \
-	xargs -I__ sed -i -E 's,Version="[^"]+" ,, i' __
+	xargs -I__ sed -i -E \
+		'
+		# see https://unix.stackexchange.com/questions/295199/sed-awk-remove-newline-on-two-pattern-matches/295200#295200
+		# multiline PackageReference to singleline
+		# if line starts with start pattern, enter block
+		\_<PackageReference [^/]+>_ {
+			# create loop label
+			:loop
+			# read Next line of the input if current line is not the last line $
+			$! N
+			# remove newline and trailing whitespaces
+			s,\n[[:space:]]+,,
+			# if next line ends with end pattern, break the loop, else loop
+			\_PackageReference>_ ! b loop
+		}
+		# singleline PackageReference
+		\,<PackageReference .+/>, { s,Version="[^"]+" ,, i }
+		# multiline PackageReference
+		\,<PackageReference .+>, { s,Version="[^"]+".+>,/>, i }
+		' __
 # crlf file
 git status -s | \
 	cuts | \
