@@ -1,0 +1,44 @@
+#!/bin/sh
+
+#usage:
+#   directory-packages-props
+#
+# Read "PackageReference"s from csproj files, and spit a
+# "Directory.Packages.props" file using Directory.Packages.props.example.
+# Also, remove the "Version" numbers from csproj files.
+
+# Verify dupes using,
+# $ npv | cutgv | trim | sed -E 's,[[:space:]].+,, g' | sort | uniq -d
+
+# bust out if already converted
+git grep --quiet 'PackageReference.+Version="[^"]+"' || \
+	exit
+
+# create Directory.Packages.props
+text=$(git grep PackageReference -- "*csproj" | \
+	cutgv | \
+	sed 's,PackageReference,PackageVersion,' | \
+	# natural sort -V will put aa,a instead of a,aa, so not using
+	sort -u -f -b | \
+	uniq
+	)
+tmpfile=$(tmpfile)
+echo "$text" > "$tmpfile"
+file="Directory.Packages.props"
+cp ~/"$file".example "$file"
+sed -i \
+	"/PACKAGES/ {
+		r $tmpfile
+		d
+	}" "$file"
+cat "$file" | xml fo -o > "$file"
+# crlf file
+crlf-file "$file"
+
+# remove "Version" numbers from csproj files
+git grep -l PackageReference -- "*csproj" | \
+	xargs -I__ sed -i -E 's,Version="[^"]+" ,, i' __
+# crlf file
+git status -s | \
+	cuts | \
+	crlf-file
