@@ -1,0 +1,79 @@
+#!/bin/sh
+
+#usage:
+#   directory-packages-props
+#
+# Read "PackageReference"s from csproj files, and spit a
+# "Directory.Packages.props" file using Directory.Packages.props.example.
+# Also, remove the "Version" numbers from csproj files.
+
+# Verify dupes using,
+# $ npv | cutgv | trim | sed -E 's,[[:space:]].+,, g' | sort | uniq -d
+
+# bust out if already converted
+git grep --quiet 'PackageReference.+Version="[^"]+"' || \
+	exit
+
+# create Directory.Packages.props
+text=$(git lsf "*csproj" | \
+	xargs -I__ sed -E \
+		'
+		# see https://unix.stackexchange.com/questions/295199/sed-awk-remove-newline-on-two-pattern-matches/295200#295200
+		# multiline PackageReference to singleline
+		# if line starts with start pattern, enter block
+		\_<PackageReference [^/]+>_ {
+			# create loop label
+			:loop
+			# read Next line of the input if current line is not the last line $
+			$! N
+			# remove newline and trailing whitespaces
+			s,\n[[:space:]]+,,
+			# if next line ends with end pattern, break the loop, else loop
+			\_PackageReference>_ ! b loop
+		}
+		' __ | \
+	grep '<PackageReference' | \
+	sed 's,PackageReference,PackageVersion, g' | \
+	# natural sort -V will put aa,a instead of a,aa, so not using
+	sort -u -f -b | \
+	uniq
+	)
+tmpfile=$(tmpfile)
+echo "$text" > "$tmpfile"
+file="Directory.Packages.props"
+cp ~/"$file".example "$file"
+sed -i \
+	"/PACKAGES/ {
+		r $tmpfile
+		d
+	}" "$file"
+cat "$file" | xml fo -o > "$file"
+# crlf file
+crlf-file "$file"
+
+# remove "Version" numbers from csproj files
+git grep -l PackageReference -- "*csproj" | \
+	xargs -I__ sed -i -E \
+		'
+		# see https://unix.stackexchange.com/questions/295199/sed-awk-remove-newline-on-two-pattern-matches/295200#295200
+		# multiline PackageReference to singleline
+		# if line starts with start pattern, enter block
+		\_<PackageReference [^/]+>_ {
+			# create loop label
+			:loop
+			# read Next line of the input if current line is not the last line $
+			$! N
+			# remove newline and trailing whitespaces
+			s,\n[[:space:]]+,,
+			# if next line ends with end pattern, break the loop, else loop
+			\_PackageReference>_ ! b loop
+		}
+		# singleline PackageReference
+		\,<PackageReference .+/>, { s,Version="[^"]+" ,, i }
+		# multiline PackageReference
+		\,<PackageReference .+>, { s,Version="[^"]+".+>,/>, i }
+		' __
+# crlf file
+git status -s | \
+	cuts | \
+	crlf-file
