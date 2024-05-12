@@ -50,3 +50,14 @@ def tocsv:
 # tsv
 def totsv:
 	toxsv(@tsv);
+
+# unflatten
+# see https://stackoverflow.com/questions/57154970/how-to-get-inverse-operation-of-flatten-for-objects-using-jq/57155523#57155523
+def un_flatten(delim):
+	reduce to_entries[] as $kv ({}; setpath($kv.key|split(delim); $kv.value));
+
+def unflatten:
+	un_flatten(".");
+
+def unflatten(delim):
+	un_flatten(delim);
