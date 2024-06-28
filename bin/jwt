@@ -40,8 +40,16 @@ while true; do
 			sub="$2"
 			shift; shift;
 			continue ;;
+		--nbf)
+			nbf="$2"
+			shift; shift;
+			continue ;;
 		--exp)
 			exp="$2"
+			shift; shift;
+			continue ;;
+		--iat)
+			iat="$2"
 			shift; shift;
 			continue ;;
 		--iss)
@@ -74,9 +82,11 @@ if [ -z "$sub" ]; then
 	sub=$(jq -r '.sub // empty' <<< "$settings")
 fi
 
-nbf=$(jq '.nbf // empty' <<< "$settings")
 if [ -z "$nbf" ]; then
-	nbf="$now"
+	nbf=$(jq '.nbf // empty' <<< "$settings")
+	if [ -z "$nbf" ]; then
+		nbf="$now"
+	fi
 fi
 if [ -z "$exp" ]; then
 	exp=$(jq '.exp // empty' <<< "$settings")
@@ -88,9 +98,11 @@ if [ -z "$exp" ]; then
 		exp=$(("$now" + "$lifetime"))
 	fi
 fi
-iat=$(jq '.iat // empty' <<< "$settings")
 if [ -z "$iat" ]; then
-	iat="$now"
+	iat=$(jq '.iat // empty' <<< "$settings")
+	if [ -z "$iat" ]; then
+		iat="$now"
+	fi
 fi
 
 if [ -z "$iss" ]; then
