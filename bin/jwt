@@ -11,10 +11,12 @@
 #       jwt.header, jwt.payload: files for jwt header, payload
 #       
 #       To create a private rsa key from pfx,
-#       $ winpty openssl pkcs12 -in $name.pfx -nocerts -out $name.key.pem
-#       $ winpty openssl rsa -in $name.key.pem -out $name.key
+#       $ winpty openssl pkcs12 -in $name.pfx -nocerts -out $name.key.encrypted
+#       $ winpty openssl rsa -in $name.key.encrypted -out $name.key
+#       Or without passphrase,
+#       $ winpty openssl rsa -in $name.pfx -out $name.key
 #       
-#       To create a certificate from private rsa key,
+#       To create a certificate from pfx,
 #       $ winpty openssl pkcs12 -in $name.pfx -nokeys -clcerts -out $name.cer
 #       
 #       To create a private rsa key from ssh (with empty password),
