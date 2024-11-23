@@ -10,14 +10,14 @@
 #       jwtRS256.cer: pem encoded file with certificate (begin certificate, end certificate)
 #       jwt.header, jwt.payload: files for jwt header, payload
 #       
-#       To create a private rsa key from pfx,
+#       To create a private rsa key from pfx without PEM passphrase,
+#       $ winpty openssl pkcs12 -in $name.pfx -passin pass:$pass -nocerts -nodes -out $name.key
+#       Or with PEM passphrase,
 #       $ winpty openssl pkcs12 -in $name.pfx -nocerts -out $name.key.encrypted
 #       $ winpty openssl rsa -in $name.key.encrypted -out $name.key
-#       Or without passphrase,
-#       $ winpty openssl rsa -in $name.pfx -out $name.key
 #       
 #       To create a certificate from pfx,
-#       $ winpty openssl pkcs12 -in $name.pfx -nokeys -clcerts -out $name.cer
+#       $ winpty openssl pkcs12 -in $name.pfx -passin pass:$pass -nokeys -clcerts -out $name.cer
 #       
 #       To create a private rsa key from ssh (with empty password),
 #       (see https://gist.github.com/ygotthilf/baa58da5c3dd1f69fae9)
