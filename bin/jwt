@@ -22,6 +22,10 @@
 #       To create a pfx from private rsa key and certificate, without password
 #       $ winpty openssl pkcs12 -export -inkey $name.key -in $name.cer -out $name.pfx -passout pass:$pass
 #       
+#       To strip Attributes before header from private rsa key and certificate
+#       $ cat $name.key | sed -n '/-----BEGIN /,/-----END / p' > $name.key
+#       $ cat $name.cer | sed -n '/-----BEGIN /,/-----END / p' > $name.cer
+#       
 #       To create a private rsa key from ssh (with empty password),
 #       (see https://gist.github.com/ygotthilf/baa58da5c3dd1f69fae9)
 #       $ ssh-keygen -t rsa -b 4096 -f $name.key
