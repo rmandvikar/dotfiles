@@ -15,6 +15,8 @@
 #       To create a public rsa key from ssh,
 #       (see https://gist.github.com/ygotthilf/baa58da5c3dd1f69fae9)
 #       $ openssl rsa -in $name.key -pubout -outform PEM -out $name.key.pub
+#       
+#       See https://serverfault.com/questions/9708/what-is-a-pem-file-and-how-does-it-differ-from-other-openssl-generated-key-file
 
 while true; do
 	case "$1" in
