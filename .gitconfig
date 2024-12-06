@@ -86,6 +86,8 @@
 	di 		= diff --ignore-all-space --ignore-blank-lines
 	dic 	= diff --ignore-all-space --ignore-blank-lines --staged
 	dni 	= diff --no-index
+	drni 	= diff --color-words=. --no-index
+	drwni 	= diff --color-words="\\\\w+|." --no-index
 	marker 	= diff --check
 	sb 		= show-branch
 	wc 		= whatchanged --oneline
