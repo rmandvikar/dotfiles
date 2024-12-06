@@ -24,6 +24,14 @@ def case_mod_inner(case_mod_function):
 		end
 	);
 
+# downcase keys
+def downcase:
+	with_entries(.key |= ascii_downcase);
+
+# upcase keys
+def upcase:
+	with_entries(.key |= ascii_upcase);
+
 # camelize keys
 def camelize:
 	case_mod_inner(ascii_downcase);
