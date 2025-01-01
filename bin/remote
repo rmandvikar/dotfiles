@@ -16,6 +16,7 @@
 #           [(--actions)]
 #           [(--issues)]
 #           [(--wiki)]
+#           [(--nuget)]
 #           [(-n | --dry-run)]
 #
 # Browse to remote url or branch's log (commits) or branch's tree

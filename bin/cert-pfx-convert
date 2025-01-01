@@ -1,0 +1,47 @@
+#!/bin/sh
+
+#usage: cert-pfx-convert
+#           (--name) <file name>
+#           [(--pass) <password>]
+#
+# Convert certificate pfx file to
+#       PEM-encoded certificate (.cer),
+#       PEM-encoded private key (.key),
+#       PEM-encoded public key (.key.pub).
+#       Combined PEM-encoded file with all above (.pem).
+#
+# See https://serverfault.com/questions/9708/what-is-a-pem-file-and-how-does-it-differ-from-other-openssl-generated-key-file
+
+while true; do
+	case "$1" in
+		-h ) print-file-comments "$0"; exit ;;
+		--name)
+			name="$2"
+			shift; shift;
+			continue ;;
+		--pass)
+			pass="$2"
+			shift; shift;
+			continue ;;
+		-* )
+			if [ ! -z "$1" ]; then
+				echo 1>&2 "fatal: unknown option $1"
+				exit 1
+			fi
+			exit ;;
+		* )
+			break ;;
+	esac
+done
+
+echo "name: $name"
+echo "pass: $pass"
+
+# .cer: pem encoded file with certificate (begin certificate, end certificate)
+winpty openssl pkcs12 -in $name.pfx -passin pass:$pass -nokeys -clcerts -out $name.cer
+# .key: pem encoded file with rsa private key
+winpty openssl pkcs12 -in $name.pfx -passin pass:$pass -nocerts -nodes -out $name.key
+# .key.pub: pem encoded file with rsa public key
+openssl x509 -in $name.cer -noout -pubkey -out $name.key.pub
+# .pem: combined pem encoded file with all above
+cat $name.cer $name.key $name.key.pub > $name.pem

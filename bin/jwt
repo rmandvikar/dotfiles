@@ -10,14 +10,21 @@
 #       jwtRS256.cer: pem encoded file with certificate (begin certificate, end certificate)
 #       jwt.header, jwt.payload: files for jwt header, payload
 #       
-#       To create a private rsa key from pfx,
+#       To create a private rsa key from pfx without PEM passphrase,
+#       $ winpty openssl pkcs12 -in $name.pfx -passin pass:$pass -nocerts -nodes -out $name.key
+#       Or with PEM passphrase,
 #       $ winpty openssl pkcs12 -in $name.pfx -nocerts -out $name.key.encrypted
 #       $ winpty openssl rsa -in $name.key.encrypted -out $name.key
-#       Or without passphrase,
-#       $ winpty openssl rsa -in $name.pfx -out $name.key
 #       
 #       To create a certificate from pfx,
-#       $ winpty openssl pkcs12 -in $name.pfx -nokeys -clcerts -out $name.cer
+#       $ winpty openssl pkcs12 -in $name.pfx -passin pass:$pass -nokeys -clcerts -out $name.cer
+#       
+#       To create a pfx from private rsa key and certificate, without password
+#       $ winpty openssl pkcs12 -export -inkey $name.key -in $name.cer -out $name.pfx -passout pass:$pass
+#       
+#       To strip Attributes before header from private rsa key and certificate
+#       $ cat $name.key | sed -n '/-----BEGIN /,/-----END / p' > $name.key
+#       $ cat $name.cer | sed -n '/-----BEGIN /,/-----END / p' > $name.cer
 #       
 #       To create a private rsa key from ssh (with empty password),
 #       (see https://gist.github.com/ygotthilf/baa58da5c3dd1f69fae9)
@@ -28,6 +35,8 @@
 #       
 #       To see certificate's expiry,
 #       $ openssl x509 -noout -enddate -in $name.cer
+#       
+#       See https://serverfault.com/questions/9708/what-is-a-pem-file-and-how-does-it-differ-from-other-openssl-generated-key-file
 
 while true; do
 	case "$1" in
