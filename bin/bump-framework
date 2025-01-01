@@ -1,0 +1,110 @@
+#!/bin/sh
+
+#usage: bump-framework
+#               --old <old framework>
+#               --new <new framework>
+#               (--new-only | --both | --remove)
+#
+# Bump targetFramework in net files.
+
+while true; do
+	case "$1" in
+		-h | --help) print-file-comments "$0"; exit ;;
+		--old)
+			shift
+			old="$1"
+			shift
+			continue ;;
+		--new)
+			shift
+			new="$1"
+			shift
+			continue ;;
+		--new-only)
+			shift
+			change="$new"
+			action="new only"
+			continue ;;
+		--both)
+			shift
+			change="$new;$old"
+			action="both"
+			continue ;;
+		--remove)
+			shift
+			action="remove"
+			continue ;;
+		-* )
+			if [ ! -z "$1" ]; then
+				echo 1>&2 "fatal: unknown option $1"
+				exit 1
+			fi
+			break ;;
+		* )
+			break ;;
+	esac
+done
+
+# validations
+if [ "$action" == "new only" ]; then
+	if [ -z "$new" ]; then
+		echo 1>&2 "fatal: specify new framework"
+		exit 1
+	fi
+	if [ -z "$change" ]; then
+		echo 1>&2 "fatal: specify some change"
+		exit 1
+	fi
+elif [ "$action" == "both" ]; then
+	if [ -z "$new" ]; then
+		echo 1>&2 "fatal: specify new framework"
+		exit 1
+	fi
+	if [ -z "$change" ]; then
+		echo 1>&2 "fatal: specify some change"
+		exit 1
+	fi
+elif [ "$action" == "remove" ]; then
+	if [ -z "$old" ]; then
+		echo 1>&2 "fatal: specify old framework"
+		exit 1
+	fi
+else
+	if [ -z "$change" ]; then
+		echo 1>&2 "fatal: specify some change"
+		exit 1
+	fi
+fi
+
+if [ -z "$old" ]; then
+	old=">.+<"
+	change=">$new<"
+fi
+
+# print inputs
+echo "   old: $old"
+echo "   new: $new"
+echo "action: $action"
+
+files=$(git grep -l '<TargetFramework.+</TargetFramework')
+while IFS= read -r file; do
+	# sorcery
+	sed -i -E "\_TargetFramework_ \
+		{
+		# remove existing new framework
+		s,$new;?,,
+		# change old framework to what we want
+		s,$old,$change,
+		# only new, add it back again
+		s,><,>$change<,
+		# extra ; chars
+		s,;;+,;, g
+		# extra ; at beginning
+		s,;<,<,
+		# extra ; at end
+		s,>;,>,
+		}
+		" "$file"
+	# fix line endings
+	crlf-file "$file" 2>/dev/null
+done <<< "$files"
