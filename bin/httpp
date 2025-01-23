@@ -1,0 +1,103 @@
+#!/bin/sh
+
+#usage: httpp
+#
+# Pretty-print http log.
+
+declare log=${1:-$(</dev/stdin)}
+
+log=$(jq \
+    '
+    to_entries |
+    sort_by(
+        if .key | contains("MessageTemplate") then
+            "0"
+        elif .key | contains("Request") then
+            if .key | contains("RequestMethod") then
+                "51"
+            elif .key | contains("RequestUri") then
+                "52"
+            elif .key | contains("RequestVersion") then
+                "53"
+            elif .key | contains("RequestHeaders") then
+                ("55" + .key)
+            elif .key | contains("RequestBodyHeaders") then
+                ("56" + .key)
+            elif .key | contains("RequestBody") then
+                ("57" + .key)
+            elif .key | contains("RequestProperties") then
+                ("58" + .key)
+            else
+                ("59" + .key)
+            end
+        elif .key | contains("Response") then
+            if .key | contains("ResponseStatusCode") then
+                "61"
+            elif .key | contains("ResponseReasonPhrase") then
+                "62"
+            elif .key | contains("ResponseVersion") then
+                "63"
+            elif .key | contains("ResponseHeaders") then
+                ("65" + .key)
+            elif .key | contains("ResponseBodyHeaders") then
+                ("66" + .key)
+            elif .key | contains("ResponseBody") then
+                ("67" + .key)
+            elif .key | contains("ResponseTrailingHeaders") then
+                ("68" + .key)
+            else
+                ("69" + .key)
+            end
+        elif .key | contains("Elapsed") then
+            "70"
+        else
+            ("90" + .key)
+        end
+    )
+    | from_entries
+    ' <<< "$log")
+
+log=$(jq \
+    '
+    walk(
+        if type == "object" then
+            with_entries(
+                if .key | endswith("RequestBody") then
+                    .value = (
+                        .value as $requestBody |
+                        (try ($requestBody | fromjson) catch $requestBody))
+                elif .key | endswith("ResponseBody") then
+                    .value = (
+                        .value as $responseBody |
+                        (try ($responseBody | fromjson) catch $responseBody))
+                else
+                    .
+                end)
+        else 
+            .
+        end)
+    ' <<< "$log")
+
+log=$(jq \
+    '
+    walk(
+        if type == "object" then
+            with_entries(
+                if .key | startswith("Request") then
+                    .key = (.key | sub("Request";"Request."))
+                elif .key | startswith("Response") then
+                    .key = (.key | sub("Response";"Response."))
+                else
+                    .
+                end)
+        else
+            .
+        end)
+    ' <<< "$log")
+
+#log=$(jq \
+#    '
+#    unflatten
+#    ' <<< "$log")
+
+jq -C <<< "$log"
