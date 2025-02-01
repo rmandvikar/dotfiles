@@ -26,6 +26,6 @@ fi
 git ls-files | \
 	grep "sfproj$" | \
 	sed 's,$,.user,' | \
-	xargs -I_ sed -i \
+	xargs -I_ sed -b -i \
 		's,<ApplicationDebugMode>.*</ApplicationDebugMode>'`
 		`',<ApplicationDebugMode>'"$mode"'</ApplicationDebugMode>,' _
