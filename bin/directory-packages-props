@@ -42,18 +42,16 @@ tmpfile=$(tmpfile)
 echo "$text" > "$tmpfile"
 file="Directory.Packages.props"
 cp ~/"$file".example "$file"
-sed -i \
+sed -b -i \
 	"/PACKAGES/ {
 		r $tmpfile
 		d
 	}" "$file"
 cat "$file" | xml fo -o > "$file"
-# crlf file
-crlf-file "$file"
 
 # remove "Version" numbers from csproj files
 git grep -l PackageReference -- "*csproj" | \
-	xargs -I__ sed -i -E \
+	xargs -I__ sed -b -i -E \
 		'
 		# see https://unix.stackexchange.com/questions/295199/sed-awk-remove-newline-on-two-pattern-matches/295200#295200
 		# multiline PackageReference to singleline
@@ -73,7 +71,3 @@ git grep -l PackageReference -- "*csproj" | \
 		# multiline PackageReference
 		\,<PackageReference .+>, { s,Version="[^"]+".+>,/>, i }
 		' __
-# crlf file
-git status -s | \
-	cuts | \
-	crlf-file
