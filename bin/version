@@ -65,7 +65,7 @@ if [[ "$option" == "update" ]]; then
 	
 	cat "$version_files" | \
 		xargs -I__ \
-		sed -i -E \
+		sed -b -i -E \
 			'
 			# csproj
 			s_(<Version>).+(</Version>)_\1'"$version"'\2_
@@ -74,11 +74,6 @@ if [[ "$option" == "update" ]]; then
 			# gruntfile.json
 			s_(version: ?)".+"_\1"'"$version"'"_
 			' __
-	
-	# crlf file
-	git status -s | \
-		cuts | \
-		crlf-file
 	
 	# commit
 	git add -- $filesSsv

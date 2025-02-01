@@ -10,14 +10,9 @@ if [[ "$1" == "-h" ]]; then print-file-comments "$0"; exit; fi
 snippet=~/x64.snippet
 git grep -L '<PlatformTarget>x64</PlatformTarget>' -- "*csproj" | \
 	xargs -I_ \
-	sed -i \
+	sed -b -i \
 		"\,^</Project>$, {
 			r $snippet
 			a </Project>
 			d
 		}" _
-
-# crlf file
-git status -s | \
-	cuts | \
-	crlf-file
