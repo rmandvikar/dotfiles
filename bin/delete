@@ -13,8 +13,16 @@ if [[ ! -z "$2" ]]; then
 fi
 pattern="$1"
 
+# pick delim that's not present in sed s/// expression
+for ch in "/" "," "|" "@"; do
+	if [[ "$pattern" != *"$ch"* ]]; then
+		delim="$ch"
+		break
+	fi
+done
+
 xargs -I____ \
-	sed -i -E '/'"$pattern"'/ d' ____
+	sed -i -E '\'"$delim""$pattern""$delim"' d' ____
 git status -s | \
 	cuts | \
 	crlf-file
