@@ -22,7 +22,4 @@ for ch in "/" "," "|" "@"; do
 done
 
 xargs -I____ \
-	sed -i -E '\'"$delim""$pattern""$delim"' d' ____
-git status -s | \
-	cuts | \
-	crlf-file
+	sed -b -i -E '\'"$delim""$pattern""$delim"' d' ____

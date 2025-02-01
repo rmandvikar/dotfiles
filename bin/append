@@ -23,7 +23,4 @@ done
 
 file=".append.in"
 xargs -I____ \
-	sed -i '\'"$delim""$pattern""$delim"' r '"$file" ____
-git status -s | \
-	cuts | \
-	crlf-file
+	sed -b -i '\'"$delim""$pattern""$delim"' r '"$file" ____

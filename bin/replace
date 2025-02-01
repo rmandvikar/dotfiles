@@ -27,7 +27,4 @@ if [[ -z "$delim" ]]; then
 fi
 
 xargs -I____ \
-	sed -i -E 's'"$delim""$pattern""$delim""$replacement""$delim"' g' ____
-git status -s | \
-	cuts | \
-	crlf-file
+	sed -b -i -E 's'"$delim""$pattern""$delim""$replacement""$delim"' g' ____
