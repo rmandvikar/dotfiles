@@ -67,6 +67,10 @@ while true; do
 			iss="$2"
 			shift; shift;
 			continue ;;
+		--claim)
+			claims="$claims $2"
+			shift; shift;
+			continue ;;
 		-* )
 			if [ ! -z "$1" ]; then
 				echo 1>&2 "fatal: unknown option $1"
@@ -144,6 +148,14 @@ payload=$(
 	.sub = ($sub // .sub)
 	'
 )
+payload_claims="{}"
+for claim in $claims; do
+	claimkey=${claim%%:*}
+	claimvalue=${claim#*:}
+	payload_claims=$(jq --arg jclaimkey "$claimkey" --arg jclaimvalue "$claimvalue" \
+		'. + { $jclaimkey: $jclaimvalue }' <<< "$payload_claims")
+done
+payload=$(echo "$payload" "$payload_claims" | jq -s add)
 
 # if cer file present
 if [ -f "$cer" ]; then
