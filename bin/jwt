@@ -38,6 +38,8 @@
 #       
 #       See https://serverfault.com/questions/9708/what-is-a-pem-file-and-how-does-it-differ-from-other-openssl-generated-key-file
 
+set -e
+
 while true; do
 	case "$1" in
 		-h ) print-file-comments "$0"; exit ;;
