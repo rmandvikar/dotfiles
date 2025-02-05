@@ -59,7 +59,7 @@
 
 ;;;; misc applications ;;;;
 
-#w::Run "c:\Program Files (x86)\Winamp\winamp.exe"
+;#w::Run "c:\Program Files (x86)\Winamp\winamp.exe"
 #m::
 	sel := Explorer_GetSelected()
 	loopcount = 0
