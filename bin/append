@@ -13,9 +13,14 @@ if [[ ! -z "$2" ]]; then
 fi
 pattern="$1"
 
+# pick delim that's not present in sed s/// expression
+for ch in "/" "," "|" "@"; do
+	if [[ "$pattern" != *"$ch"* ]]; then
+		delim="$ch"
+		break
+	fi
+done
+
 file=".append.in"
 xargs -I____ \
-	sed -i '/'"$pattern"'/ r '"$file" ____
-git status -s | \
-	cuts | \
-	crlf-file
+	sed -b -i '\'"$delim""$pattern""$delim"' r '"$file" ____

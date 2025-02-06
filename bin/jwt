@@ -38,6 +38,8 @@
 #       
 #       See https://serverfault.com/questions/9708/what-is-a-pem-file-and-how-does-it-differ-from-other-openssl-generated-key-file
 
+set -e
+
 while true; do
 	case "$1" in
 		-h ) print-file-comments "$0"; exit ;;
@@ -65,6 +67,10 @@ while true; do
 			continue ;;
 		--iss)
 			iss="$2"
+			shift; shift;
+			continue ;;
+		--claim)
+			claims="$claims $2"
 			shift; shift;
 			continue ;;
 		-* )
@@ -144,6 +150,14 @@ payload=$(
 	.sub = ($sub // .sub)
 	'
 )
+payload_claims="{}"
+for claim in $claims; do
+	claimkey=${claim%%:*}
+	claimvalue=${claim#*:}
+	payload_claims=$(jq --arg jclaimkey "$claimkey" --arg jclaimvalue "$claimvalue" \
+		'. + { $jclaimkey: $jclaimvalue }' <<< "$payload_claims")
+done
+payload=$(echo "$payload" "$payload_claims" | jq -s add)
 
 # if cer file present
 if [ -f "$cer" ]; then

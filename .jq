@@ -1,5 +1,9 @@
 # jq functions
 
+# round decimal to precision
+def round(precision):
+	. * pow(10; precision) | round / pow(10; precision);
+
 # return value only if not null (update only)
 def replace(value):
 	if . == null then null else value end;
