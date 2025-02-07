@@ -55,7 +55,7 @@
 	Return
 ;;;; files ;;;;
 #g::Run SciTE "%HOMEDRIVE%%HOMEPATH%/.gitconfig"
-#k::Run SciTE "%HOMEDRIVE%%HOMEPATH%/Documents/AutoHotkey.ahk"
+#k::Run SciTE "%HOMEDRIVE%%HOMEPATH%/AutoHotkey.ahk"
 
 ;;;; misc applications ;;;;
 
