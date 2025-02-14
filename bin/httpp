@@ -104,6 +104,41 @@ log=$(jq \
 		end)
 	' <<< "$log")
 
+# pretty-print authorization (jwt)
+log=$(jq \
+	'
+	walk(
+		if type == "object" then
+			with_entries(
+				if .key | startswith("Authorization") then
+					.value = (
+						if .value | startswith("Bearer") then
+							.value as $authorization |
+							try(
+								$authorization | sub("(?<scheme>Bearer) .+"; "\(.scheme)") as $scheme |
+								$authorization | sub(".+ (?<header>\\{.+\\})\\.\\{.+\\}\\..+"; "\(.header)") | fromjson as $header |
+								$authorization | sub(".+ \\{.+\\}\\.(?<payload>\\{.+\\})\\..+"; "\(.payload)") | fromjson as $payload |
+								$authorization | sub(".+ \\{.+\\}\\.\\{.+\\}\\.(?<signature>.+)"; "\(.signature)") as $signature |
+								{
+								  "scheme": $scheme,
+								  "jwt": {
+									"header": $header,
+									"payload": $payload,
+									"signature": $signature,
+								  }
+								})
+							catch $authorization
+						else
+							.
+						end)
+				else
+					.
+				end)
+		else
+			.
+		end)
+	' <<< "$log")
+
 # unflatten
 #log=$(jq \
 #	'
