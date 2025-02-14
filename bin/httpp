@@ -105,6 +105,26 @@ log=$(jq \
 		end)
 	' <<< "$log")
 
+# pretty-print authorization (jwt)
+log=$(jq \
+	'
+	walk(
+		if type == "object" then
+			with_entries(
+				if .key | endswith("Authorization") then
+					.value as $value |
+					.value = ($value |
+						try (beautify_obfuscated_authorization_header) catch
+						try (beautify_authorization_header) catch
+						$value)
+				else
+					.
+				end)
+		else
+			.
+		end)
+	' <<< "$log")
+
 # unflatten
 #log=$(jq \
 #	'
