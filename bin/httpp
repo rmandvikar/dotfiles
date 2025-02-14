@@ -1,0 +1,134 @@
+#!/bin/sh
+
+#usage: httpp
+#
+# Pretty-print http log.
+
+declare log=${1:-$(</dev/stdin)}
+
+# position request, response
+log=$(jq \
+	'
+	walk(
+		if type == "object" then
+			to_entries |
+			sort_by(
+				if .key | test("^[Tt]imestamp$") or test("^@t$") then
+					("0" + .key)
+				elif .key | test("^MessageTemplate$") or test("^@mt$") or test("[Mm]essage$") then
+					("1" + .key)
+				elif .key | test("[Rr]equest") or test("^rq\\.") then
+					if .key | test("[Rr]equest\\.HttpMethod") or test("^rq\\.m$") or test("RequestMethod") then
+						("51" + .key)
+					elif .key | test("[Rr]equest\\.Uri") or test("^rq\\.u$") or test("RequestUri") then
+						("52" + .key)
+					elif .key | test("[Rr]equest\\.Version") or test("^rq\\.v$") or test("RequestVersion") or
+								test("[Rr]equest\\.Protocol") or test("^rq\\.v$") or test("RequestProtocol") then
+						("53" + .key)
+					elif .key | test("[Rr]equest\\.Header\\.") or test("^rq\\.h\\.") or test("RequestHeaders") then
+						("55" + .key)
+					elif .key | test("[Rr]equest\\.Content\\.Header\\.") or test("^rq\\.c\\.h\\.") or test("RequestBodyHeaders") then
+						("56" + .key)
+					elif .key | test("[Rr]equest\\.Content") or test("^rq\\.c$") or test("RequestBody") then
+						("57" + .key)
+					elif .key | test("[Rr]equest\\.Property") or test("^rq\\.p$") or test("RequestProperties") then
+						("58" + .key)
+					else
+						("59" + .key)
+					end
+				elif .key | test("[Rr]esponse") or test("^rs\\.") then
+					if .key | test("[Rr]esponse\\.StatusCode") or test("^rs\\.s$") or test("ResponseStatusCode") then
+						("61" + .key)
+					elif .key | test("[Rr]esponse\\.ReasonPhrase") or test("^rs\\.r$") or test("ResponseReasonPhrase") then
+						("62" + .key)
+					elif .key | test("[Rr]esponse\\.Version") or test("^rs\\.v$") or test("ResponseVersion") then
+						("63" + .key)
+					elif .key | test("[Rr]esponse\\.Header\\.") or test("^rs\\.h\\.") or test("ResponseHeaders") then
+						("65" + .key)
+					elif .key | test("[Rr]esponse\\.Content\\.Header\\.") or test("^rs\\.c\\.h\\.") or test("ResponseBodyHeaders") then
+						("66" + .key)
+					elif .key | test("[Rr]esponse\\.Content") or test("^rs\\.c$") or test("ResponseBody") then
+						("67" + .key)
+					elif .key | test("[Rr]esponse\\.TrailingHeader") or test("^rs\\.th$") or test("ResponseTrailingHeaders") then
+						("68" + .key)
+					else
+						("69" + .key)
+					end
+				elif .key | test("ElapsedMs") or test("^e$") or test("Elapsed") then
+					("70" + .key)
+				else
+					("90" + .key)
+				end
+			)
+			| from_entries
+		else
+			.
+		end
+	)
+	' <<< "$log")
+
+# parse request body, response body as json
+log=$(jq \
+	'
+	walk(
+		if type == "object" then
+			with_entries(
+				if .key | test("Content$") or test("\\.c$") or
+						  test("RequestBody$") or test("ResponseBody$")
+				then
+					.value = (
+						.value as $body |
+						(try ($body | fromjson) catch $body))
+				else
+					.
+				end)
+		else
+			.
+		end)
+	' <<< "$log")
+
+# namespace as "request.", and "response."
+log=$(jq \
+	'
+	walk(
+		if type == "object" then
+			with_entries(
+				if .key | test("^[Rr]equest[^.]") then
+					.key |= sub("equest";"equest.")
+				elif .key | test("^[Rr]esponse[^.]") then
+					.key |= sub("esponse";"esponse.")
+				else
+					.
+				end)
+		else
+			.
+		end)
+	' <<< "$log")
+
+# pretty-print authorization (jwt)
+log=$(jq \
+	'
+	walk(
+		if type == "object" then
+			with_entries(
+				if .key | endswith("Authorization") then
+					.value as $value |
+					.value = ($value |
+						try (beautify_obfuscated_authorization_header) catch
+						try (beautify_authorization_header) catch
+						$value)
+				else
+					.
+				end)
+		else
+			.
+		end)
+	' <<< "$log")
+
+# unflatten
+#log=$(jq \
+#	'
+#	unflatten
+#	' <<< "$log")
+
+jq -C <<< "$log"
