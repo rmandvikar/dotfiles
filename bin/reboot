@@ -1,0 +1,50 @@
+#!/bin/sh
+
+#usage:
+#   reboot
+#       [switches]
+#       [--now | now | -<time>]
+#       [(-n | --dry-run)]
+#
+# shutdown.
+#
+# See https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/shutdown
+
+while true; do
+	case "$1" in
+		-h | --help) print-file-comments "$0"; exit ;;
+		-s | -r | -p | -g)
+			switches="$1"
+			time="-t 0"
+			shift
+			continue ;;
+		--now | now)
+			shift
+			time="-t 0"
+			continue ;;
+		-[0-9]*)
+			set -- "${1:1}" "${@:2}"
+			time="-t $1"
+			shift
+			continue ;;
+		-t)
+			shift
+			time="-t $1"
+			shift
+			continue ;;
+		-n | --dry-run)
+			dryrun="true"
+			shift
+			continue ;;
+		* )
+			break ;;
+	esac
+done
+command="shutdown $switches $@ $time"
+command=$(sed 's,[[:space:]][[:space:]]*, , g' <<< "$command")
+
+echo "$command"
+if [ ! -z "$dryrun" ]; then
+	exit
+fi
+$command
