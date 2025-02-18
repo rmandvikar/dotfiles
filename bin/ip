@@ -1,8 +1,45 @@
 #!/bin/sh
 
 #usage: ip
+#           [-p | --public]
+#           [-a | --all]
 #
 # Print public / external ip.
 
-curl -s ifconfig.me | \
-	eoflf
+while true; do
+	case "$1" in
+		-h | --help) print-file-comments "$0"; exit ;;
+		-p | --public)
+			option="public"
+			shift
+			continue ;;
+		-a | --all)
+			option="all"
+			shift
+			continue ;;
+		-* )
+			if [ ! -z "$1" ]; then
+				echo 1>&2 "fatal: unknown option $1"
+				exit 1
+			fi
+			break ;;
+		* )
+			break ;;
+	esac
+done
+
+if [ "$option" == "" ]; then
+	curl -s ifconfig.me | \
+		eoflf
+elif [ "$option" == "public" ]; then
+	curl -s ifconfig.me/all.json | \
+		jq -r '.forwarded' | \
+		sed 's_,_\n_' | \
+		sed -n '1p' | \
+		eoflf
+elif [ "$option" == "all" ]; then
+	curl -s ifconfig.me/all.json | \
+		jq -r '.forwarded' | \
+		sed 's_,_\n_ g' | \
+		eoflf
+fi
