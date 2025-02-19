@@ -100,9 +100,9 @@ while IFS= read -r file; do
 		# extra ; chars
 		s,;;+,;, g
 		# extra ; at beginning
-		s,;<,<,
-		# extra ; at end
 		s,>;,>,
+		# extra ; at end
+		s,;<,<,
 		}
 		" "$file"
 done <<< "$files"
