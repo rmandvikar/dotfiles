@@ -2,6 +2,7 @@
 
 #usage: ip
 #           [-p | --public]
+#           [-a | --all]
 #
 # Print public / external ip.
 
@@ -10,6 +11,10 @@ while true; do
 		-h | --help) print-file-comments "$0"; exit ;;
 		-p | --public)
 			option="public"
+			shift
+			continue ;;
+		-a | --all)
+			option="all"
 			shift
 			continue ;;
 		-* )
@@ -31,5 +36,10 @@ elif [ "$option" == "public" ]; then
 		jq -r '.forwarded' | \
 		sed 's_,_\n_' | \
 		sed -n '1p' | \
+		eoflf
+elif [ "$option" == "all" ]; then
+	curl -s ifconfig.me/all.json | \
+		jq -r '.forwarded' | \
+		sed 's_,_\n_ g' | \
 		eoflf
 fi
