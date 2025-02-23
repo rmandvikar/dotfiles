@@ -73,3 +73,55 @@ def unflatten:
 
 def unflatten(delim):
 	un_flatten(delim);
+
+def beautify_jwt:
+	. as $jwt |
+	# jwt
+	try(
+		$jwt | sub("(?<header>.+)\\.(?<payload>.+)\\.(?<signature>.*)"; "\(.header)") | @base64d | fromjson as $header |
+		$jwt | sub("(?<header>.+)\\.(?<payload>.+)\\.(?<signature>.*)"; "\(.payload)") | @base64d | fromjson as $payload |
+		$jwt | sub("(?<header>.+)\\.(?<payload>.+)\\.(?<signature>.*)"; "*") as $signature |
+		{
+		  "header": $header,
+		  "payload": $payload,
+		  "signature": $signature,
+		})
+	catch error;
+
+def beautify_authorization_header:
+	if . | startswith("Bearer") then
+		. as $authorization |
+		# Bearer jwt
+		try(
+			$authorization | sub("(?<scheme>Bearer) (?<jwt>.+)"; "\(.scheme)") as $scheme |
+			$authorization | sub("(?<scheme>Bearer) (?<jwt>.+)"; "\(.jwt)") | beautify_jwt as $jwt |
+			{
+			  "scheme": $scheme,
+			  "jwt": $jwt,
+			})
+		catch error
+	else
+		.
+	end;
+
+def beautify_obfuscated_authorization_header:
+	if . | startswith("Bearer") then
+		. as $authorization |
+		# Bearer obfuscated jwt
+		try(
+			$authorization | sub("(?<scheme>Bearer) (?<header>\\{.+\\})\\.(?<payload>\\{.+\\})\\.(?<signature>.*)"; "\(.scheme)") as $scheme |
+			$authorization | sub("(?<scheme>Bearer) (?<header>\\{.+\\})\\.(?<payload>\\{.+\\})\\.(?<signature>.*)"; "\(.header)") | fromjson as $header |
+			$authorization | sub("(?<scheme>Bearer) (?<header>\\{.+\\})\\.(?<payload>\\{.+\\})\\.(?<signature>.*)"; "\(.payload)") | fromjson as $payload |
+			$authorization | sub("(?<scheme>Bearer) (?<header>\\{.+\\})\\.(?<payload>\\{.+\\})\\.(?<signature>.*)"; "*") as $signature |
+			{
+			  "scheme": $scheme,
+			  "jwt": {
+			    "header": $header,
+			    "payload": $payload,
+			    "signature": $signature,
+			  },
+			})
+		catch error
+	else
+		.
+	end;
