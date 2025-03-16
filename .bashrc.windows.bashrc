@@ -42,7 +42,7 @@ difftool() { "WinMergeU" -e -u "$@"; }
 export -f difftool
 alias dt=difftool
 
-st() { "speedtest.exe" -p; }
+st() { "speedtest.exe" -p "$@"; }
 export -f st
 
 # scite is on path
