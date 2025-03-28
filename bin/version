@@ -52,6 +52,8 @@ fi
 #   "version": "1.2.3"
 # gruntfile.js
 #   version: "1.2.3"
+# build.sh
+#   Version="0.6.0"
 
 # update
 if [[ "$option" == "update" ]]; then
@@ -73,6 +75,8 @@ if [[ "$option" == "update" ]]; then
 			s_("version": ?)".+"_\1"'"$version"'"_
 			# gruntfile.json
 			s_(version: ?)".+"_\1"'"$version"'"_
+			# build.sh
+			s_(Version=)".+"_\1"'"$version"'"_
 			' __
 	
 	# commit
@@ -86,4 +90,4 @@ fi
 cat "$version_files" | \
 	lf | \
 	xargs -I__ \
-	git grep -i -e '(<Version>.+</Version>)|("version": ?".+")|(version: ?".+")' $tree -- __
+	git grep -i -e '(<Version>.+</Version>)|("version": ?".+")|(version: ?".+")|(Version=".+")' $tree -- __
