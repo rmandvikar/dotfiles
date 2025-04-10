@@ -38,8 +38,8 @@
 
 ;;;; browsers ;;;;
 
-#c::Run "C:\Program Files (x86)\Google\Chrome\Application\chrome.exe"
-#+c::Run "C:\Program Files (x86)\Google\Chrome\Application\chrome.exe" --incognito
+#c::Run "C:\Program Files\Google\Chrome\Application\chrome.exe"
+#+c::Run "C:\Program Files\Google\Chrome\Application\chrome.exe" --incognito
 #x::Run "C:\Program Files\Mozilla Firefox\firefox.exe"
 #i::Run C:\Program Files\Internet Explorer\iexplore.exe
 
