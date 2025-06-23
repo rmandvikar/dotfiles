@@ -12,7 +12,7 @@
 
 while true; do
 	case "$1" in
-		-h | --help) print-file-comments "$0"; exit ;;
+		--help) print-file-comments "$0"; exit ;;
 		-s | -r | -p | -g)
 			switches="$1"
 			time="-t 0"
