@@ -81,29 +81,33 @@ while true; do
 			if [[ -z "$head" ]]; then
 				head=$(git rev-parse HEAD)
 			fi
-			commit1="$1"
-			commit1=$(sed -E 's,(HEAD|@),'$head',i' <<< "$commit1")
-			if [[ -z "$commit1" ]]; then
-				echo 1>&2 "fatal: unknown commit1 '$1'"
-				exit 1
-			fi
-			if ! git cat-file -e "$commit1" 2>/dev/null; then
-				echo 1>&2 "fatal: unknown commit1 '$1'"
-				exit 1
-			fi
-			# get remote branch name if local branch
-			if git branch-exists "$commit1"; then
-				commit1=$(git remote-branch "$commit1")
-			fi
-			commit2="${2-HEAD}"
-			commit2=$(sed -E 's,(HEAD|@),'$head',i' <<< "$commit2")
-			if ! git cat-file -e "$commit2" 2>/dev/null; then
-				echo 1>&2 "fatal: unknown commit2 '$2'"
-				exit 1
-			fi
-			# get remote branch name if local branch
-			if git branch-exists "$commit2"; then
-				commit2=$(git remote-branch "$commit2")
+			if grep -q -F '..' <<< "$1"; then
+				commits="$1"
+			else
+				commit1="$1"
+				commit1=$(sed -E 's,(HEAD|@),'$head',i' <<< "$commit1")
+				if [[ -z "$commit1" ]]; then
+					echo 1>&2 "fatal: unknown commit1 '$1'"
+					exit 1
+				fi
+				if ! git cat-file -e "$commit1" 2>/dev/null; then
+					echo 1>&2 "fatal: unknown commit1 '$1'"
+					exit 1
+				fi
+				# get remote branch name if local branch
+				if git branch-exists "$commit1"; then
+					commit1=$(git remote-branch "$commit1")
+				fi
+				commit2="${2-HEAD}"
+				commit2=$(sed -E 's,(HEAD|@),'$head',i' <<< "$commit2")
+				if ! git cat-file -e "$commit2" 2>/dev/null; then
+					echo 1>&2 "fatal: unknown commit2 '$2'"
+					exit 1
+				fi
+				# get remote branch name if local branch
+				if git branch-exists "$commit2"; then
+					commit2=$(git remote-branch "$commit2")
+				fi
 			fi
 			shift
 			test ! -z "$1" && shift
@@ -269,7 +273,11 @@ git config --get-regex remote\..*\.url \
 							urlPart="$urlPart/$file"
 						fi
 					elif [[ "$option" == "diff" ]]; then
-						urlPart="/branches/compare/$commit2..$commit1#diff"
+						if [[ -z "$commits" ]]; then
+							urlPart="/branches/compare/$commit2..$commit1#diff"
+						else
+							urlPart="/branches/compare/$commits#diff"
+						fi
 					elif [[ "$option" == "pr" ]]; then
 						urlPart="/pull-requests/$pr"
 					elif [[ "$option" == "prs" ]]; then
@@ -290,7 +298,11 @@ git config --get-regex remote\..*\.url \
 							urlPart="$urlPart/$file"
 						fi
 					elif [[ "$option" == "diff" ]]; then
-						urlPart="/compare/$commit1...$commit2"
+						if [[ -z "$commits" ]]; then
+							urlPart="/compare/$commit1...$commit2"
+						else
+							urlPart="/compare/$commits"
+						fi
 					elif [[ "$option" == "pr" ]]; then
 						if [[ -z "$pr" ]]; then
 							urlPart="/pull/new/$remoteBranch"
