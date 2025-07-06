@@ -30,10 +30,11 @@ callSubhooks() {
 	fi
 	# hookname is passed as env variable
 	hookdir="$hookname.d"
-	if [[ -d ~/.git-hooks/"$hookdir" || -d .git/hooks/"$hookdir" ]]; then
+	hooksPathAdditional=$(getConfig "core.hooksPathAdditional" | sed 's,/$,,')
+	if [[ -d ~/.git-hooks/"$hookdir" || -d "$hooksPathAdditional"/"$hookdir" || -d .git/hooks/"$hookdir" ]]; then
 		# ignore files with extensions
 		subhooks=$(
-			find ~/.git-hooks/"$hookdir" .git/hooks/"$hookdir" \
+			find ~/.git-hooks/"$hookdir" "$hooksPathAdditional"/"$hookdir" .git/hooks/"$hookdir" \
 				! -name '*.*' -type f -maxdepth 1 2>/dev/null \
 			| awk -F "/" '{print $NF"|"$0}' | sort -ns | cut -f2- -d'|' \
 			)
