@@ -24,8 +24,18 @@ export -f getConfig
 # Call sub-hooks in <hook>.d dir.
 callSubhooks() {
 	# skip hooks
-	skipHooks=${SKIP_HOOKS-"$skip_hooks"}
+	skipHooks="${SKIP_HOOKS:-${skip_hooks}}"
 	if [[ "$skipHooks" == "1" || "$skipHooks" == "true" ]]; then
+		return
+	fi
+	# skip a hook
+	skipHookUpperVar=SKIP_HOOK_$(sed 's,-,_, g' <<< "$hookname" | upper)
+	skipHookLowerVar=$(lower <<< "$skipHookUpperVar")
+	skipHook="${!skipHookUpperVar:-${!skipHookLowerVar}}"
+	if [[ "$skipHook" == "1" || "$skipHook" == "true" ]]; then
+		return
+	fi
+	if [[ $(getConfig "hook.$hookname") == "false" ]]; then
 		return
 	fi
 	# hookname is passed as env variable
