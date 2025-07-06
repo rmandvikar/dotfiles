@@ -24,16 +24,27 @@ export -f getConfig
 # Call sub-hooks in <hook>.d dir.
 callSubhooks() {
 	# skip hooks
-	skipHooks=${SKIP_HOOKS-"$skip_hooks"}
+	skipHooks="${SKIP_HOOKS:-${skip_hooks}}"
 	if [[ "$skipHooks" == "1" || "$skipHooks" == "true" ]]; then
+		return
+	fi
+	# skip a hook
+	skipHookUpperVar=SKIP_HOOK_$(sed 's,-,_, g' <<< "$hookname" | upper)
+	skipHookLowerVar=$(lower <<< "$skipHookUpperVar")
+	skipHook="${!skipHookUpperVar:-${!skipHookLowerVar}}"
+	if [[ "$skipHook" == "1" || "$skipHook" == "true" ]]; then
+		return
+	fi
+	if [[ $(getConfig "hook.$hookname") == "false" ]]; then
 		return
 	fi
 	# hookname is passed as env variable
 	hookdir="$hookname.d"
-	if [[ -d ~/.git-hooks/"$hookdir" || -d .git/hooks/"$hookdir" ]]; then
+	hooksPathAdditional=$(getConfig "core.hooksPathAdditional" | sed 's,/$,,')
+	if [[ -d ~/.git-hooks/"$hookdir" || -d "$hooksPathAdditional"/"$hookdir" || -d .git/hooks/"$hookdir" ]]; then
 		# ignore files with extensions
 		subhooks=$(
-			find ~/.git-hooks/"$hookdir" .git/hooks/"$hookdir" \
+			find ~/.git-hooks/"$hookdir" "$hooksPathAdditional"/"$hookdir" .git/hooks/"$hookdir" \
 				! -name '*.*' -type f -maxdepth 1 2>/dev/null \
 			| awk -F "/" '{print $NF"|"$0}' | sort -ns | cut -f2- -d'|' \
 			)
@@ -41,6 +52,9 @@ callSubhooks() {
 			# echo hook name only if there are subhooks
 			echo "hooks/$hookname"
 			for subhook in $subhooks; do
+				# echo subhook name
+				subhookname=$(bn $subhook)
+				echo "hooks/$hookname/$subhookname"
 				"$subhook" "$@"
 				# check exit code and exit if needed
 				exitcode=$?
