@@ -251,7 +251,7 @@
 	templateDir 	= ~/.git-templates
 	defaultBranch 	= main
 [core]
-	#hooksPath 		= ~/.git-hooks
+	hooksPath 		= ~/.git-hooks
 	# note: core.hooksPathAdditional
 	excludesfile 	= ~/.gitexcludes
 
