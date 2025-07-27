@@ -42,6 +42,9 @@ callSubhooks() {
 			# echo hook name only if there are subhooks
 			echo "hooks/$hookname"
 			for subhook in $subhooks; do
+				# echo subhook name
+				subhookname=$(bn $subhook)
+				echo "hooks/$hookname/$subhookname"
 				"$subhook" "$@"
 				# check exit code and exit if needed
 				exitcode=$?
