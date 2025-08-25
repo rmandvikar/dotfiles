@@ -76,7 +76,7 @@ if [[ "$option" == "update" ]]; then
 			# gruntfile.json
 			s_(version: ?)".+"_\1"'"$version"'"_
 			# build.sh
-			s_(Version=)".+"_\1"'"$version"'"_
+			s_(export Version=)".+"_\1"'"$version"'"_
 			' __
 	
 	# commit
@@ -90,4 +90,4 @@ fi
 cat "$version_files" | \
 	lf | \
 	xargs -I__ \
-	git grep -i -e '(<Version>.+</Version>)|("version": ?".+")|(version: ?".+")|(Version=".+")' $tree -- __
+	git grep -i -e '(<Version>.+</Version>)|("version": ?".+")|(version: ?".+")|(export Version=".+")' $tree -- __
