@@ -128,6 +128,7 @@
 	acan 	= !"git add --all && git can" # --date=now
 	acf 	= !"git add --all && git cf"
 	cf 		= commit --fixup
+	cdiag 	= commit --allow-empty -m "DIAG"
 	del 	= rm
 	ren 	= mv
 	hide 	= update-index --assume-unchanged
