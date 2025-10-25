@@ -20,7 +20,7 @@
 #       $ winpty openssl pkcs12 -in $name.pfx -passin pass:$pass -nokeys -clcerts -out $name.cer
 #       
 #       To create a pfx from private rsa key and certificate, without password
-#       $ winpty openssl pkcs12 -export -inkey $name.key -in $name.cer -out $name.pfx -passout pass:$pass
+#       $ winpty openssl pkcs12 -export -inkey $name.key -in $name.cer -out $name.pfx -passout pass:
 #       
 #       To strip Attributes before header from private rsa key and certificate
 #       $ cat $name.key | sed -n '/-----BEGIN /,/-----END / p' > $name.key
