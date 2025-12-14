@@ -1,0 +1,50 @@
+#!/bin/sh
+
+#usage:
+#   get-ini-value
+#       --file <ini-file>
+#       --key <ini-key-name>
+#
+# Get value of key from ini file.
+
+while true; do
+	case "$1" in
+		-h | --help) print-file-comments "$0"; exit ;;
+		--file)
+			shift
+			file="$1"
+			shift
+			continue ;;
+		--key)
+			shift
+			key="$1"
+			shift
+			continue ;;
+		-* )
+			if [ ! -z "$1" ]; then
+				echo 1>&2 "fatal: unknown option $1"
+				exit 1
+			fi
+			break ;;
+		* )
+			break ;;
+	esac
+done
+
+if [ -z "$file" ]; then
+	echo 1>&2 "fatal: specify ini file"
+	exit 1
+fi
+if [ -z "$key" ]; then
+	echo 1>&2 "fatal: specify ini key name"
+	exit 1
+fi
+
+cat "$file" | \
+	# remove comments first
+	sed "s,[#;].*,," | \
+	grep "^[[:blank:]]*$key[[:blank:]]*=" | \
+	# last value wins
+	tail -1 | \
+	sed "s,[^=]*=,," | \
+	trim

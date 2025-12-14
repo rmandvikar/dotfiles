@@ -33,6 +33,8 @@ SciTE.session
 !winmerge.empty
 !readme.txt
 
+*.user.ini
+
 .bashrc.local.bashrc
 .bashrc.work.bashrc
 
