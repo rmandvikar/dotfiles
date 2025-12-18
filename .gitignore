@@ -42,3 +42,19 @@ work-user.gitconfig
 ostype.gitconfig
 overrides.gitconfig
 alias-work.gitconfig
+
+# encryption
+*.key
+*.key.pub
+*.key.asc
+*.key.pub.asc
+# encryption genned files
+data
+data.encrypted
+data.encrypted.b64
+data.decrypted
+data.signed
+*.decrypted.symmetric.key
+*.encrypted.symmetric.key
+*.encrypted.symmetric.key.b64
+*.symmetric.key
