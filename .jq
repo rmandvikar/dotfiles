@@ -81,6 +81,21 @@ def beautify_jwt:
 		$jwt | sub("(?<header>.+)\\.(?<payload>.+)\\.(?<signature>.*)"; "\(.header)") | @base64d | fromjson as $header |
 		$jwt | sub("(?<header>.+)\\.(?<payload>.+)\\.(?<signature>.*)"; "\(.payload)") | @base64d | fromjson as $payload |
 		$jwt | sub("(?<header>.+)\\.(?<payload>.+)\\.(?<signature>.*)"; "\(.signature)") as $signature |
+		$payload |
+			if has("p-tok") then
+				.["p-tok"] as $ptok |
+				.["p-tok"] =
+					if $ptok | type == "string" then
+						$ptok | beautify_jwt
+					elif $ptok | type == "array" then
+						$ptok | map(beautify_jwt)
+					else
+						.
+					end
+			else
+				.
+			end
+		as $payload |
 		{
 		  "header": $header,
 		  "payload": $payload,
