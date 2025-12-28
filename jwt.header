@@ -3,5 +3,6 @@
   "typ": "jwt",
   "kid": "<KID>",
   "x5t": "<X5T>",
-  "x5c": "<X5C>"
+  "x5c": "<X5C>",
+  "p-tok": "<P-TOK>"
 }
