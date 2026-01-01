@@ -45,7 +45,7 @@
 
 ;;;; code editors ;;;;
 
-#v::Run "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\devenv.exe"
+;#v::Run "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\devenv.exe"
 ;#q::Run C:\Program Files\Microsoft SQL Server\90\Tools\Binn\VSShell\Common7\IDE\SqlWb.exe
 #s::
 	sel := Explorer_GetSelected()
