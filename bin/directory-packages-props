@@ -47,7 +47,7 @@ sed -b -i \
 		r $tmpfile
 		d
 	}" "$file"
-cat "$file" | xml fo -o > "$file"
+cat "$file" | xml fo -o | sed -b 's,/>, />,' > "$file"
 
 # remove "Version" numbers from csproj files
 git grep -l PackageReference -- "*csproj" | \
