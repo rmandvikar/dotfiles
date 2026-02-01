@@ -80,7 +80,22 @@ def beautify_jwt:
 	try(
 		$jwt | sub("(?<header>.+)\\.(?<payload>.+)\\.(?<signature>.*)"; "\(.header)") | @base64d | fromjson as $header |
 		$jwt | sub("(?<header>.+)\\.(?<payload>.+)\\.(?<signature>.*)"; "\(.payload)") | @base64d | fromjson as $payload |
-		$jwt | sub("(?<header>.+)\\.(?<payload>.+)\\.(?<signature>.*)"; "*") as $signature |
+		$jwt | sub("(?<header>.+)\\.(?<payload>.+)\\.(?<signature>.*)"; "\(.signature)") as $signature |
+		$payload |
+			if has("p-tok") then
+				.["p-tok"] as $ptok |
+				.["p-tok"] =
+					if $ptok | type == "string" then
+						$ptok | beautify_jwt
+					elif $ptok | type == "array" then
+						$ptok | map(beautify_jwt)
+					else
+						.
+					end
+			else
+				.
+			end
+		as $payload |
 		{
 		  "header": $header,
 		  "payload": $payload,
@@ -112,7 +127,7 @@ def beautify_obfuscated_authorization_header:
 			$authorization | sub("(?<scheme>Bearer) (?<header>\\{.+\\})\\.(?<payload>\\{.+\\})\\.(?<signature>.*)"; "\(.scheme)") as $scheme |
 			$authorization | sub("(?<scheme>Bearer) (?<header>\\{.+\\})\\.(?<payload>\\{.+\\})\\.(?<signature>.*)"; "\(.header)") | fromjson as $header |
 			$authorization | sub("(?<scheme>Bearer) (?<header>\\{.+\\})\\.(?<payload>\\{.+\\})\\.(?<signature>.*)"; "\(.payload)") | fromjson as $payload |
-			$authorization | sub("(?<scheme>Bearer) (?<header>\\{.+\\})\\.(?<payload>\\{.+\\})\\.(?<signature>.*)"; "*") as $signature |
+			$authorization | sub("(?<scheme>Bearer) (?<header>\\{.+\\})\\.(?<payload>\\{.+\\})\\.(?<signature>.*)"; "\(.signature)") as $signature |
 			{
 			  "scheme": $scheme,
 			  "jwt": {

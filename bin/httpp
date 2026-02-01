@@ -112,11 +112,11 @@ log=$(jq \
 		if type == "object" then
 			with_entries(
 				if .key | endswith("Authorization") then
-					.value as $value |
-					.value = ($value |
-						try (beautify_obfuscated_authorization_header) catch
-						try (beautify_authorization_header) catch
-						$value)
+					.value = (
+						.value as $authorization |
+						try ($authorization | beautify_obfuscated_authorization_header) catch
+						try ($authorization | beautify_authorization_header) catch
+						{error: ., arg: $authorization})
 				else
 					.
 				end)

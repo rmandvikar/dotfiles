@@ -1,0 +1,99 @@
+#!/bin/sh
+
+#usage: exchange
+#               (encrypt | decrypt | roundtrip)
+#               [--name <name>]
+#
+# For secret exchange encrypt/decrypt.
+#
+#       Files:
+#
+#       To gen private key,
+#       openssl genrsa -out "$name".key 4096
+#       To gen public key,
+#       openssl rsa -in "$name".key -outform PEM -pubout -out "$name".key.pub
+
+while true; do
+	case "$1" in
+		-h | --help) print-file-comments "$0"; exit ;;
+		# action
+		encrypt)
+			action="encrypt"
+			shift
+			continue ;;
+		decrypt)
+			action="decrypt"
+			shift
+			continue ;;
+		roundtrip)
+			action="roundtrip"
+			shift
+			continue ;;
+		--name)
+			shift
+			name="$1"
+			shift
+			continue ;;
+		-* )
+			if [ ! -z "$1" ]; then
+				echo 1>&2 "fatal: unknown option $1"
+				exit 1
+			fi
+			break ;;
+		* )
+			break ;;
+	esac
+done
+
+encrypt()
+{
+	openssl rand -base64 32 > "$name".symmetric.key
+	openssl aes-256-cbc -a -pbkdf2 -salt -in data -out data.encrypted -kfile "$name".symmetric.key
+
+	# encrypt symmetric.key
+	openssl pkeyutl -encrypt -pubin -inkey "$name".key.pub -in "$name".symmetric.key \
+		-pkeyopt rsa_padding_mode:oaep -pkeyopt rsa_oaep_md:sha256 -pkeyopt rsa_mgf1_md:sha256 \
+		-out "$name".encrypted.symmetric.key
+
+	cat "$name".encrypted.symmetric.key | base64 -w 64 > "$name".encrypted.symmetric.key.b64
+
+	echo ""
+	echo "./data.encrypted"
+	cat data.encrypted
+
+	echo ""
+	echo "./$name.encrypted.symmetric.key.b64"
+	cat "$name".encrypted.symmetric.key.b64
+}
+
+decrypt()
+{
+	cat "$name".encrypted.symmetric.key.b64 | base64 -d > "$name".encrypted.symmetric.key
+	# decrypt symmetric.key
+	openssl pkeyutl -decrypt -inkey "$name".key -in "$name".encrypted.symmetric.key \
+		-pkeyopt rsa_padding_mode:oaep -pkeyopt rsa_oaep_md:sha256 -pkeyopt rsa_mgf1_md:sha256 \
+		-out "$name".decrypted.symmetric.key
+	# decrypt
+	openssl aes-256-cbc -d -a -pbkdf2 -in data.encrypted -out data.decrypted -kfile "$name".decrypted.symmetric.key
+
+	echo ""
+	echo "./data.decrypted"
+	cat data.decrypted
+}
+
+# defaults
+name="${name:-rmandvikar}"
+
+if [ "$action" == "encrypt" ]; then
+	encrypt
+elif [ "$action" == "decrypt" ]; then
+	decrypt
+elif [ "$action" == "roundtrip" ]; then
+	encrypt
+	decrypt    
+	echo './data'
+	cat data
+else
+	echo 1>&2 "fatal: action required"
+	exit 1
+fi

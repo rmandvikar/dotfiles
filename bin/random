@@ -5,7 +5,7 @@
 #            [-n <n>]
 #            [--charset <charset>]
 #
-# Create random string of given charset (default 'A-Za-z0-9_-') with
+# Create random string of given charset (default 'A-Za-z0-9-_') with
 # width and count.
 
 while true; do
@@ -26,7 +26,8 @@ done
 # see https://gist.github.com/earthgecko/3089509
 #   note: for literal '-' char, place at end to avoid range notation
 #   see https://serverfault.com/questions/283294/how-to-read-in-n-random-characters-from-dev-urandom/481171#481171
+#   note: literal '-' char works in the middle as it's first char and not part of range
 cat /dev/urandom | \
-	tr -dc ${charset-'A-Za-z0-9_-'} | \
+	tr -dc ${charset-'A-Za-z0-9-_'} | \
 	fold -w ${w-8} | \
 	head -n ${n-1}

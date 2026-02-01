@@ -1,0 +1,16 @@
+#!/bin/sh
+
+#usage:
+#   st [args]
+#
+# speedtest cli.
+
+# config
+server_id=$(get-ini-value --file ~/".speedtest.user.ini" --key "server-id")
+if [ ! -z "$server_id" ]; then
+	args="--server-id $server_id"
+fi
+
+command="speedtest -p $args $@"
+echo "$command"
+$command
