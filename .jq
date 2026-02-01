@@ -44,7 +44,7 @@ def camelize:
 def pascalize:
 	case_mod_inner(ascii_upcase);
 
-# ref: https://stackoverflow.com/a/34282594/58678
+# ref: https://stackoverflow.com/questions/32960857/how-to-convert-arbitrary-simple-json-to-csv-using-jq/34282594#34282594
 def toxsv(transform_function):
 	if length == 0 then empty
 	else

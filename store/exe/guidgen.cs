@@ -1,4 +1,4 @@
-// https://stackoverflow.com/a/4313468/58678
+// https://stackoverflow.com/questions/4313422/generate-guid-in-windows-with-batch-file/4313468#4313468
 // %WINDIR%\Microsoft.NET\Framework\v2.0.50727\csc.exe guidgen.cs
 // %WINDIR%\Microsoft.NET\Framework\v4.0.30319\csc.exe guidgen.cs
 
