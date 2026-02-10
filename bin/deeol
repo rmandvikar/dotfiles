@@ -1,0 +1,8 @@
+#!/bin/sh
+
+#usage:
+#   ... | deeol
+#
+# Remove eol, if present.
+
+tr -d "\r\n"
