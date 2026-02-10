@@ -140,14 +140,14 @@ if [[ "$option" == "delete" ]]; then
 	xargs -I_ \
 	sed -b -i -E \
 		'
-		# PackageReference: Include="name" Version="1.2.3"
-		\|(Include="'"$name"'") Version="[^"]+"| d
-		# packages.config: id="name" version="1.2.3"
-		\|(id="'"$name"'") version="[^"]+"| d
+		# PackageReference: Include="name"
+		\|(Include="'"$name"'") | d
+		# packages.config: id="name"
+		\|(id="'"$name"'") | d
 		# Reference
-		# Reference: Include="name, Version=1.2.3.4
+		# Reference: Include="name,
 		# Reference: <HintPath>..\..\packages\name.1.2.3
-		\|(Include="'"$name"',) Version=[^,]+|,\|</Reference>| d
+		\|(Include="'"$name"',) | d
 		' _
 	exit
 fi
