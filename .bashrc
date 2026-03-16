@@ -24,6 +24,8 @@ alias web=www
 
 tabs 4
 
+export ADR_PAGER="less -x4 -q"
+
 # colors
 export     White='\033[1;37m'
 export    Yellow='\033[1;33m'
