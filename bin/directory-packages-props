@@ -41,7 +41,7 @@ text=$(git lsf "*csproj" | \
 tmpfile=$(tmpfile)
 echo "$text" > "$tmpfile"
 file="Directory.Packages.props"
-cp ~/"$file".example "$file"
+cp ~/"$file".example.Packages.props "$file"
 sed -b -i \
 	"/PACKAGES/ {
 		r $tmpfile
