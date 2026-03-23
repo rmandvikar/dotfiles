@@ -5,5 +5,5 @@
 #
 # Add EOF linefeed, if not present.
 
-# see https://stackoverflow.com/a/16198793/58678
+# see https://stackoverflow.com/questions/10082204/add-a-newline-only-if-it-doesnt-exist/16198793#16198793
 sed '$ a\'

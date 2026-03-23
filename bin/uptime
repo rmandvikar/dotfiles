@@ -8,13 +8,19 @@ if [[ "$1" == "-h" ]]; then print-file-comments "$0"; exit; fi
 
 #systeminfo | \
 #	grep "System Boot Time" | \
-#	sed -r 's/System Boot Time:\s+//'
+#	sed -r 's/System Boot Time:\s+//' | \
+#	sed 's/,//'
+
+#net statistics workstation | \
+#	grep "Statistics since " | \
+#	sed 's/Statistics since //'
 
 # show uptime
-up=$(net statistics workstation | \
-	grep "Statistics since " | \
-	sed 's/Statistics since //')
-echo "$up"
+up=$(wmic os get lastbootuptime | \
+	grep -v "LastBootUpTime" | \
+	sed 's,\..*,,' | \
+	sed -E 's/(....)(..)(..)(..)(..)(..)/\1-\2-\3 \4:\5:\6/')
+date -d "$up" +"%d-%b-%Y %H:%M:%S"
 
 # show uptime delta
 upepoch=$(date -d "$up" +%s)
