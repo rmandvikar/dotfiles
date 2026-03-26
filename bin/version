@@ -53,7 +53,7 @@ fi
 # gruntfile.js
 #   version: "1.2.3"
 # build.sh
-#   Version="0.6.0"
+#   export Version="1.2.3"
 
 # update
 if [[ "$option" == "update" ]]; then
