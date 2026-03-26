@@ -82,12 +82,13 @@ if [[ "$option" == "update" ]]; then
 	# commit
 	git add -- $filesSsv
 	git commit -m "version: Bump $version"
-	
-	exit
-fi
-
 # list
-cat "$version_files" | \
-	lf | \
-	xargs -I__ \
-	git grep -i -e '(<Version>.+</Version>)|("version": ?".+")|(version: ?".+")|(export Version=".+")' $tree -- __
+elif [[ "$option" == "list" ]]; then
+	cat "$version_files" | \
+		lf | \
+		xargs -I__ \
+		git grep -i -e '(<Version>.+</Version>)|("version": ?".+")|(version: ?".+")|(export Version=".+")' $tree -- __
+else
+	echo 1>&2 "fatal: unknown option $1"
+	exit 1
+fi
