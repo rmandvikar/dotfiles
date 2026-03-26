@@ -3,7 +3,7 @@
 #usage:
 #   version
 #       [(-l | --list)]
-#       [(-u | --update) <version>]
+#       [(-u | --update) (<version> | major | minor | patch)]
 #       [<commit>]
 #
 # Show app's version or update version.
@@ -64,6 +64,22 @@ if [[ "$option" == "update" ]]; then
 	if ! git diff --name-only --diff-filter=M --quiet HEAD -- $filesSsv -eq 0; then
 		echo 1>&2 "fatal: version file(s) already modified"
 		exit 1
+	fi
+	
+	if [[ "$version" == "major" ]] || [[ "$version" == "minor" ]] || [[ "$version" == "patch" ]]; then
+		bump="$version"
+		current_version=$(
+			version | # woah!
+				cutgv |
+				sed -E 's,<Version>(.+)</Version>,\1,' |
+				sed -E 's,"version": ?"(.+)",\1,' |
+				sed -E 's,version: ?"(.+)",\1,' |
+				sed -E 's,export Version="(.+)",\1,' |
+				trim
+			)
+		version=$(semver --update "$bump" "$current_version")
+	else
+		semver --check "$version"
 	fi
 	
 	cat "$version_files" | \
