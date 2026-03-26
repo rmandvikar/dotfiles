@@ -8,6 +8,8 @@
 #
 # Show app's version or update version.
 
+set -e
+
 while true; do
 	case "$1" in
 		-h | --help) print-file-comments "$0"; exit ;;
@@ -59,8 +61,7 @@ fi
 if [[ "$option" == "update" ]]; then
 	# verify if modified
 	filesSsv=$(cat ".version-files" | sed 's,$, , g' | tr -d '\n')
-	git diff --name-only --diff-filter=M --quiet HEAD -- $filesSsv
-	if [ ! $? -eq 0 ]; then
+	if ! git diff --name-only --diff-filter=M --quiet HEAD -- $filesSsv -eq 0; then
 		echo 1>&2 "fatal: version file(s) already modified"
 		exit 1
 	fi
