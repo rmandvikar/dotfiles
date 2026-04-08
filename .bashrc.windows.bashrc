@@ -36,6 +36,8 @@ xxh64() { "xxh64sum.exe" "$@" | sed 's, .*,,'; }
 export -f xxh64
 xxh128() { "xxh128sum.exe" "$@" | sed 's, .*,,'; }
 export -f xxh128
+xml() { "xmlstarlet.exe" "$@"; } # '/d/setups/PATH/xmlstarlet.exe'
+export -f xml
 
 # WinMergeU is on path
 difftool() { "WinMergeU" -e -u "$@"; }
