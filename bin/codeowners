@@ -6,7 +6,7 @@
 # Prep codeowners file.
 
 sed -E 's,[[:blank:]]+,\n, g' | \
-	sort -u | \
+	sort -u --ignore-case | \
 	sed 's,$, ,' | \
 	tr -d '\n' | \
 	rtrim | \
