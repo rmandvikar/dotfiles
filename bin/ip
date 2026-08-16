@@ -28,18 +28,33 @@ while true; do
 	esac
 done
 
+format_ifconfig_output() {
+	sed 's_,_\n_' |
+		eoflf
+}
+
 if [ "$option" == "" ]; then
-	curl -s ifconfig.me | \
-		eoflf
+	curl -s ifconfig.me |
+		format_ifconfig_output
 elif [ "$option" == "public" ]; then
-	curl -s ifconfig.me/all.json | \
-		jq -r '.forwarded' | \
-		sed 's_,_\n_' | \
-		sed -n '1p' | \
-		eoflf
+	curl -s ifconfig.me/all.json |
+		jq -r '.forwarded' |
+		format_ifconfig_output |
+		sed -n '1p'
 elif [ "$option" == "all" ]; then
-	curl -s ifconfig.me/all.json | \
-		jq -r '.forwarded' | \
-		sed 's_,_\n_ g' | \
-		eoflf
+	curl -s ifconfig.me/all.json |
+		jq -r '.forwarded' |
+		format_ifconfig_output
+	
+	echo ""
+	echo "ip4:"
+	curl -s -4 ifconfig.me/all.json |
+		jq -r '.forwarded' |
+		format_ifconfig_output
+	
+	echo ""
+	echo "ip6:"
+	curl -s -6 ifconfig.me/all.json |
+		jq -r '.forwarded' |
+		format_ifconfig_output
 fi
