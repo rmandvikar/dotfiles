@@ -60,3 +60,5 @@ data.signed
 *.encrypted.symmetric.key
 *.encrypted.symmetric.key.b64
 *.symmetric.key
+
+.python_history

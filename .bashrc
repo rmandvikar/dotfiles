@@ -21,6 +21,7 @@ alias     _b="git branch-name"
 alias npv=nuget-package-version
 alias npv-dirs=nuget-package-version-dirs
 alias web=www
+alias k=kubectl
 
 tabs 4
 
