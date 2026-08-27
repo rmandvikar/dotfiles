@@ -140,3 +140,26 @@ def beautify_obfuscated_authorization_header:
 	else
 		.
 	end;
+
+# mask object's key/value pair's value
+#   "abcd...wxyz", or "abcd...", or "abc...xyz", or "..."
+def mask:
+	walk(
+		if type == "string" then
+			if length >= 11 then
+				.[0:4] + "..." + .[-4:]
+			elif length >= 7 then
+				.[0:4] + "..."
+			elif length >= 6 then
+				.[0:3] + "..."
+			else
+				"..."
+			end
+		elif type == "object" then
+			with_entries(.value |= mask)
+		elif type == "array" then
+			map(mask)
+		else
+			.
+		end
+	);
