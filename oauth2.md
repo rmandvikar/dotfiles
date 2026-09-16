@@ -67,3 +67,41 @@ sequenceDiagram
 	AS-->>App: Returns Attacker's Access Token
 	App-->>Browser: "Login Successful! Welcome to your Dashboard."
 ```
+
+### oauth2 auth code flow
+
+```mermaid
+sequenceDiagram
+	title auth code flow
+	
+	autonumber
+	participant user
+	participant browser
+	participant app
+	participant auth
+	participant resource
+	
+	user->>browser: click link for resource
+	browser->>app: GET /resource
+	app-->>app: create state
+	app-->>browser: redirect GET /authorize?redirect_uri,client_id,state,scope,response_type=code and state httpOnly cookie
+	browser->>auth: GET /authorize?redirect_uri,client_id,state,scope,response_type=code
+	auth-->>auth: verify redirect_uri, client_id combination
+	auth-->>auth: save redirect_uri in oauth session
+	auth->>browser: consent: authN, permissions
+	user->>browser: consent, and credentials
+	browser->>auth: POST /login-consent
+	auth-->>auth: create code in db (map to user, ttl, scope)
+	auth-->>browser: redirect /callback?code,state
+	browser->>app: GET /callback?code,state with state httpOnly cookie
+	app-->>app: verify state matches from httpOnly cookie
+	app->>auth: POST /token form(grant_type=authorization_code,code,client_id,client_secret,redirect_uri)
+	auth-->>auth: verify client_id, client_secret
+	auth-->>auth: verify code (not used before, valid ttl, issued to client_id) <br> note: user is not passed so user cannot be directly verified
+	auth-->>auth: verify redirect_uri from POST and oauth session
+	auth-->>auth: delete code from db
+	auth->>app: access_token, refresh_token
+	app->>resource: GET /resource with Bearer access_token
+	resource->>app: resource
+	app->>browser: resource, delete state cookie
+```
