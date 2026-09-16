@@ -68,11 +68,11 @@ sequenceDiagram
 	App-->>Browser: "Login Successful! Welcome to your Dashboard."
 ```
 
-### oauth2 auth code flow
+### oauth2 auth code with pkce flow
 
 ```mermaid
 sequenceDiagram
-	title auth code flow
+	title auth code with pkce flow
 	
 	autonumber
 	participant user
@@ -83,25 +83,26 @@ sequenceDiagram
 	
 	user->>browser: click link for resource
 	browser->>app: GET /resource
-	app-->>app: create state
-	app-->>browser: redirect GET /authorize?redirect_uri,client_id,state,scope,response_type=code and state httpOnly cookie
-	browser->>auth: GET /authorize?redirect_uri,client_id,state,scope,response_type=code
+	app-->>app: create state, code_verifier, code_challenge, code_challenge_method=S256
+	app-->>browser: redirect GET /authorize?redirect_uri,client_id,state,scope,code_challenge,code_challenge_method=S256,response_type=code and state/verifier httpOnly cookie
+	browser->>auth: GET /authorize?redirect_uri,client_id,state,scope,code_challenge,code_challenge_method=S256,response_type=code
 	auth-->>auth: verify redirect_uri, client_id combination
-	auth-->>auth: save redirect_uri in oauth session
+	auth-->>auth: save redirect_uri, code_challenge, code_challenge_method in oauth session
 	auth->>browser: consent: authN, permissions
 	user->>browser: consent, and credentials
 	browser->>auth: POST /login-consent
-	auth-->>auth: create code in db (map to user, ttl, scope)
+	auth-->>auth: create code in db (map to user, ttl, scope, code_challenge, code_challenge_method)
 	auth-->>browser: redirect /callback?code,state
-	browser->>app: GET /callback?code,state with state httpOnly cookie
+	browser->>app: GET /callback?code,state with state/verifier httpOnly cookie
 	app-->>app: verify state matches from httpOnly cookie
-	app->>auth: POST /token form(grant_type=authorization_code,code,client_id,client_secret,redirect_uri)
+	app->>auth: POST /token form(grant_type=authorization_code,code,code_verifier,client_id,client_secret,redirect_uri)
 	auth-->>auth: verify client_id, client_secret
 	auth-->>auth: verify code (not used before, valid ttl, issued to client_id) <br> note: user is not passed so user cannot be directly verified
+	auth-->>auth: verify code_verifier (roundtrip code_verifier by comparing its S256 hash against code_challenge)
 	auth-->>auth: verify redirect_uri from POST and oauth session
 	auth-->>auth: delete code from db
 	auth->>app: access_token, refresh_token
 	app->>resource: GET /resource with Bearer access_token
 	resource->>app: resource
-	app->>browser: resource, delete state cookie
+	app->>browser: resource, delete state/verifier cookie
 ```
