@@ -129,6 +129,7 @@
 	acf 	= !"git add --all && git cf"
 	cf 		= commit --fixup
 	cdiag 	= commit --allow-empty -m "DIAG"
+	cbuild 	= commit --allow-empty -m "BUILD"
 	del 	= rm
 	ren 	= mv
 	hide 	= update-index --assume-unchanged
