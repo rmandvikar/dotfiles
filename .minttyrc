@@ -15,3 +15,5 @@ BackspaceSendsBS=yes
 CtrlShiftShortcuts=yes
 Rows=40
 Columns=100
+Locale=en_US
+Charset=UTF-8
