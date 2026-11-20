@@ -28,7 +28,9 @@ date -d "$up" +"%d-%b-%Y %H:%M:%S"
 
 # show uptime delta
 upepoch=$(date -d "$up" +%s)
-nowepoch=$(date -d "$(date)" +%s)
+now=$(date +"%d-%b-%Y %H:%M:%S")
+nowepoch=$(date -d "$now" +%s)
+
 # days 60*60*24
 delta=$(($nowepoch-$upepoch))
 echo -n "$(($delta /(60*60*24)))d "
